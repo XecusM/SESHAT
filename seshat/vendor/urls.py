@@ -5,7 +5,7 @@ from . import views
 # applicaton name
 app_name = 'vendor'
 
- # patterns
+# patterns
 urlpatterns = [
     # Create new company
     path(

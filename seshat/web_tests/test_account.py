@@ -193,7 +193,7 @@ class AccountWebTests(StaticLiveServerTestCase):
 
         self.browser.get(self.live_server_url + reverse(
                                         'account:edit',
-                                         kwargs={'pk': self.another_user.id}))
+                                        kwargs={'pk': self.another_user.id}))
 
     def test_user_details(self):
         '''
@@ -212,7 +212,7 @@ class AccountWebTests(StaticLiveServerTestCase):
 
         self.browser.get(self.live_server_url + reverse(
                                         'account:details',
-                                         kwargs={'pk': self.another_user.id}))
+                                        kwargs={'pk': self.another_user.id}))
 
     def test_user_profile(self):
         '''
@@ -231,7 +231,7 @@ class AccountWebTests(StaticLiveServerTestCase):
 
         self.browser.get(self.live_server_url + reverse(
                                 'account:profile_details',
-                                 kwargs={
+                                kwargs={
                                         'pk':
                                         self.another_user.user_profile.id}))
 
@@ -247,7 +247,7 @@ class AccountWebTests(StaticLiveServerTestCase):
 
         self.browser.get(self.live_server_url + reverse(
                                     'account:profile_edit',
-                                     kwargs={'pk': self.user.user_profile.id}))
+                                    kwargs={'pk': self.user.user_profile.id}))
 
     def test_user_settings(self):
         '''
@@ -261,7 +261,7 @@ class AccountWebTests(StaticLiveServerTestCase):
 
         self.browser.get(self.live_server_url + reverse(
                                 'account:settings_details',
-                                 kwargs={'pk': self.user.user_settings.id}))
+                                kwargs={'pk': self.user.user_settings.id}))
 
     def test_edit_user_settings(self):
         '''
@@ -275,7 +275,7 @@ class AccountWebTests(StaticLiveServerTestCase):
 
         self.browser.get(self.live_server_url + reverse(
                                 'account:settings_edit',
-                                 kwargs={'pk': self.user.user_settings.id}))
+                                kwargs={'pk': self.user.user_settings.id}))
 
     def test_user_activity(self):
         '''
@@ -297,7 +297,7 @@ class AccountWebTests(StaticLiveServerTestCase):
 
         self.browser.get(self.live_server_url + reverse(
                                         'account:activities_list',
-                                         kwargs={'pk': self.another_user.id}))
+                                        kwargs={'pk': self.another_user.id}))
 
     def test_all_activities(self):
         '''
@@ -337,7 +337,7 @@ class AccountWebTests(StaticLiveServerTestCase):
 
         self.browser.get(self.live_server_url + reverse(
                                         'account:reset_password',
-                                         kwargs={'pk': self.another_user.id}))
+                                        kwargs={'pk': self.another_user.id}))
 
     def test_user_change_password(self):
         '''
@@ -351,4 +351,4 @@ class AccountWebTests(StaticLiveServerTestCase):
 
         self.browser.get(self.live_server_url + reverse(
                                             'account:password_change',
-                                             kwargs={'pk': self.user.id}))
+                                            kwargs={'pk': self.user.id}))

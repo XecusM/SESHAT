@@ -5,7 +5,7 @@ from . import views
 # applicaton name
 app_name = 'stock'
 
- # patterns
+# patterns
 urlpatterns = [
     path('', views.Index.as_view(), name='index'),
     # Create new category

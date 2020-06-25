@@ -1,21 +1,15 @@
-from django.shortcuts import render
-from django.views.generic import (
-                                TemplateView, CreateView,
-                                UpdateView, ListView, DetailView)
+from django.views.generic import TemplateView, DetailView
 from django.contrib.auth.mixins import (
                                 LoginRequiredMixin,
                                 UserPassesTestMixin,
                                 PermissionRequiredMixin, )
 from django.contrib.auth.decorators import (
                                             login_required,
-                                            permission_required )
-from django.conf import settings
-from django.contrib.auth import get_user_model
+                                            permission_required)
 from django.shortcuts import render, get_object_or_404, redirect
 from django.urls import reverse_lazy, reverse
-from django.http import HttpResponse, HttpResponseRedirect, Http404
+from django.http import HttpResponseRedirect, Http404
 from django.utils.translation import ugettext_lazy as _
-from django.db import transaction
 from x_django_app.views import XListView
 
 from report.models import Activity
@@ -37,7 +31,8 @@ class Index(LoginRequiredMixin, TemplateView):
         Get the context for this view.
         '''
         context = super().get_context_data(**kwargs)
-        context['itemmove_list'] = stock_models.ItemMove.objects.all().order_by('created_at')[:10]
+        context['itemmove_list'] = stock_models.ItemMove.objects.all(
+                                                ).order_by('created_at')[:10]
         return context
 
 
@@ -286,13 +281,13 @@ class CreateItem(LoginRequiredMixin, PermissionRequiredMixin, TemplateView):
             sub_items_data = [{
                 'name': f"{i}sub_item",
                 'value': int(request.POST[f"{i}sub_item"]),
-                'quantity':  int(
-                        request.POST[f"{i}quantity"])}  for i in range(
-                                        1, int(request.POST['items']) + 1 )]
+                'quantity': int(
+                        request.POST[f"{i}quantity"])} for i in range(
+                                        1, int(request.POST['items']) + 1)]
             sub_items_values = [int(
                         request.POST[f"{i}sub_item"]) for i in range(
-                                        1, int(request.POST['items']) + 1 )]
-            for i in range(1, int(request.POST['items']) + 1 ):
+                                        1, int(request.POST['items']) + 1)]
+            for i in range(1, int(request.POST['items']) + 1):
                 if len(
                     list(dict.fromkeys(sub_items_values))
                                                 ) != len(sub_items_values):
@@ -313,7 +308,7 @@ class CreateItem(LoginRequiredMixin, PermissionRequiredMixin, TemplateView):
             if 'is_assembly' in request.POST:
                 self.object.is_assembly = True
                 self.object.save()
-                for i in range(1, int(request.POST['items']) + 1 ):
+                for i in range(1, int(request.POST['items']) + 1):
                     sub_item = stock_models.Item.objects.get(
                                             id=request.POST[f"{i}sub_item"])
                     stock_models.AssemblyItem.objects.create(
@@ -415,13 +410,13 @@ class EditItem(LoginRequiredMixin, PermissionRequiredMixin, TemplateView):
             sub_items_data = [{
                 'name': f"{i}sub_item",
                 'value': int(request.POST[f"{i}sub_item"]),
-                'quantity':  int(
-                        request.POST[f"{i}quantity"])}  for i in range(
-                                        1, int(request.POST['items']) + 1 )]
+                'quantity': int(
+                        request.POST[f"{i}quantity"])} for i in range(
+                                        1, int(request.POST['items']) + 1)]
             sub_items_values = [int(
                         request.POST[f"{i}sub_item"]) for i in range(
-                                        1, int(request.POST['items']) + 1 )]
-            for i in range(1, int(request.POST['items']) + 1 ):
+                                        1, int(request.POST['items']) + 1)]
+            for i in range(1, int(request.POST['items']) + 1):
                 if len(
                     list(dict.fromkeys(sub_items_values))
                                                 ) != len(sub_items_values):
@@ -442,7 +437,7 @@ class EditItem(LoginRequiredMixin, PermissionRequiredMixin, TemplateView):
                 while int(
                     request.POST['items']
                                 ) <= self.object.get_assembly_items().count():
-                    removed_item =  self.object.get_assembly_items(
+                    removed_item = self.object.get_assembly_items(
                             )[self.object.get_assembly_items().count() - 1]
                     removed_item.delete()
 
@@ -456,7 +451,7 @@ class EditItem(LoginRequiredMixin, PermissionRequiredMixin, TemplateView):
                                                             'quantity', )]
                     if i <= len(old_sub_items):
                         assembly_item = stock_models.AssemblyItem.objects.get(
-                                            id=int(old_sub_items[i-1]['id']))
+                                            id=int(old_sub_items[i - 1]['id']))
                         assembly_item.sub_item = sub_item
                         assembly_item.quantity = request.POST[f"{i}quantity"]
                         assembly_item.save()
@@ -512,7 +507,7 @@ class EditItem(LoginRequiredMixin, PermissionRequiredMixin, TemplateView):
                     sub_items_data.append({
                         'name': f"{i}sub_item",
                         'value': item.sub_item.id,
-                        'quantity':  item.quantity})
+                        'quantity': item.quantity})
                 context['sub_items_data'] = json.dumps(sub_items_data)
 
         if 'error_message' in kwargs:
@@ -725,7 +720,7 @@ class CreateItemTransfer(
         '''
         object = self.get_object()
         return not object.is_assembly and \
-                self.request.user.has_perm('stock.add_itemtransfer')
+                        self.request.user.has_perm('stock.add_itemtransfer')
 
     def get_object(self):
         '''
@@ -745,9 +740,9 @@ class CreateItemTransfer(
         if form.is_valid():
             item = self.get_object()
             old_location = stock_models.SubLocation.objects.get(
-                                                id=request.POST['old_location'])
+                                            id=request.POST['old_location'])
             new_location = stock_models.SubLocation.objects.get(
-                                                id=request.POST['new_location'])
+                                            id=request.POST['new_location'])
             remove_move = stock_models.ItemMove.objects.create(
                                 item=item,
                                 location=old_location,

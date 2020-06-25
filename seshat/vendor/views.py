@@ -1,24 +1,16 @@
-from django.shortcuts import render
-from django.views.generic import (
-                                TemplateView, CreateView,
-                                UpdateView, ListView, DetailView)
+from django.views.generic import DetailView
 from django.contrib.auth.mixins import (
                                 LoginRequiredMixin,
-                                UserPassesTestMixin,
                                 PermissionRequiredMixin, )
 from django.contrib.auth.decorators import (
                                             login_required,
-                                            permission_required )
-from django.conf import settings
-from django.contrib.auth import get_user_model
+                                            permission_required)
 from django.shortcuts import render, get_object_or_404, redirect
 from django.urls import reverse_lazy, reverse
-from django.http import HttpResponse, HttpResponseRedirect, Http404
+from django.http import Http404
 from django.utils.translation import ugettext_lazy as _
-from django.db import transaction
 from x_django_app.views import XListView
 
-from report.models import Activity
 from report.views import RCreateView, RUpdateView, record_delete_object
 from vendor import forms, models as vendors_models
 
@@ -263,7 +255,7 @@ def vendor_delete(request, pk):
     if request.method == "POST":
         vendor = get_object_or_404(vendors_models.Vendor, pk=pk)
         # store user activity
-        delete_object =  record_delete_object(
+        delete_object = record_delete_object(
                                         request,
                                         vendor,
                                         "Vendor-{0}-{1}".format(

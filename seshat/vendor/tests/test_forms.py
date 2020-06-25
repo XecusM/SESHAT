@@ -1,5 +1,4 @@
 from django.test import TestCase
-from django.contrib.auth import get_user_model
 
 from vendor import forms, models
 
@@ -42,7 +41,7 @@ class VendorFormsTests(TestCase):
         expected = [
                     'company', 'first_name', 'last_name', 'email',
                     'phone', 'department', 'job'
-            ]
+        ]
 
         actual = list(forms.VendorForm().fields)
         self.assertSequenceEqual(expected, actual)

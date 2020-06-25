@@ -77,8 +77,8 @@ class StockWebTests(StaticLiveServerTestCase):
                                 location=self.sublocation,
                                 type=models.ItemMove.REMOVE,
                                 related_to=models.ItemMove.ASSEMBLY,
-                                quantity=self.assembled_item_move.quantity \
-                                        * self.assembly_item.quantity)
+                                quantity=self.assembled_item_move.quantity *\
+                                                self.assembly_item.quantity)
 
         if os.name == 'nt':
             self.browser = webdriver.Firefox(
@@ -401,7 +401,8 @@ class StockWebTests(StaticLiveServerTestCase):
         '''
         Test sublocations list page with delete sublocation permission
         '''
-        delete_permission = Permission.objects.get(codename='delete_sublocation')
+        delete_permission = Permission.objects.get(
+                                                codename='delete_sublocation')
         self.user.user_permissions.add(delete_permission)
 
         self.user.refresh_from_db()
@@ -437,7 +438,8 @@ class StockWebTests(StaticLiveServerTestCase):
         '''
         Test edit sublocation page
         '''
-        change_permission = Permission.objects.get(codename='change_sublocation')
+        change_permission = Permission.objects.get(
+                                                codename='change_sublocation')
         self.user.user_permissions.add(change_permission)
 
         self.user.refresh_from_db()
@@ -449,8 +451,8 @@ class StockWebTests(StaticLiveServerTestCase):
         self.browser.find_element_by_id('login').click()
 
         self.browser.get(self.live_server_url + reverse(
-                                            'stock:sublocation_edit',
-                                            kwargs={'pk': self.sublocation.id}))
+                                        'stock:sublocation_edit',
+                                        kwargs={'pk': self.sublocation.id}))
 
     def test_items_list(self):
         '''
@@ -556,6 +558,7 @@ class StockWebTests(StaticLiveServerTestCase):
         self.browser.get(self.live_server_url + reverse(
                                             'stock:item_edit',
                                             kwargs={'pk': self.item.id}))
+
     def test_item_details(self):
         '''
         Test item details page

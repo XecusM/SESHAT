@@ -661,7 +661,8 @@ class ItemMove(models.Model):
                                                                 'id', flat=True)
                     item_moves = ItemMove.objects.filter(id__in=moves_values)
                     for item_move in item_moves:
-                        item_move.quantity = self.quantity * (sub_item.quantity for sub_item in self.item.get_assembly_items() if sub_item == self.item)
+                        item_move.quantity = self.quantity * (
+                            sub_item.quantity for sub_item in self.item.get_assembly_items() if sub_item == self.item)
                         item_move.save()
                 else:
                     sub_item_list = list()
@@ -774,9 +775,8 @@ class ItemTransfer(models.Model):
                             'ItemMove',
                             verbose_name=_('Add Move'),
                             limit_choices_to={
-                                        'type': ItemMove.ADD,
-                                        'related_to': ItemMove.TRANSFER
-                                        },
+                                    'type': ItemMove.ADD,
+                                    'related_to': ItemMove.TRANSFER},
                             related_name='item_move_transfer_add',
                             on_delete=models.PROTECT,
                             blank=False,
@@ -786,9 +786,8 @@ class ItemTransfer(models.Model):
                             'ItemMove',
                             verbose_name=_('Remove Move'),
                             limit_choices_to={
-                                        'type': ItemMove.REMOVE,
-                                        'related_to': ItemMove.TRANSFER
-                                        },
+                                    'type': ItemMove.REMOVE,
+                                    'related_to': ItemMove.TRANSFER},
                             related_name='item_move_transfer_remove',
                             on_delete=models.PROTECT,
                             blank=False,
@@ -841,7 +840,7 @@ def auto_delete_file_on_change(sender, instance, **kwargs):
         old_photo = Item.objects.get(pk=instance.pk).photo
         new_photo = instance.photo
         if not old_photo == new_photo and old_photo and \
-            os.path.isfile(old_photo.path):
+                os.path.isfile(old_photo.path):
             os.remove(old_photo.path)
 
 

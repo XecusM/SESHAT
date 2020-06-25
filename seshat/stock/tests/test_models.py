@@ -17,7 +17,7 @@ class StockModelsTests(TestCase):
                                                 username='xecus',
                                                 first_name='Mohamed',
                                                 last_name='Aboel-fotouh',
-                                                password='Testpass123',)
+                                                password='Testpass123', )
 
     def test_create_category(self):
         '''
@@ -37,7 +37,7 @@ class StockModelsTests(TestCase):
 
         sub_location = stock_models.SubLocation.objects.create(
                                         location=location,
-                                        name='new sublocation' )
+                                        name='new sublocation')
 
         stock_models.Item.objects.create(
                                         code='code',
@@ -57,7 +57,7 @@ class StockModelsTests(TestCase):
 
         sub_location = stock_models.SubLocation.objects.create(
                                         location=location,
-                                        name='new sublocation' )
+                                        name='new sublocation')
 
         item = stock_models.Item.objects.create(
                                         code='code',
@@ -95,7 +95,7 @@ class StockModelsTests(TestCase):
 
         stock_models.SubLocation.objects.create(
                                         location=location,
-                                        name='new sublocation' )
+                                        name='new sublocation')
 
         self.assertEqual(stock_models.SubLocation.objects.all().count(), 1)
 
@@ -109,7 +109,7 @@ class StockModelsTests(TestCase):
 
         sub_location = stock_models.SubLocation.objects.create(
                                         location=location,
-                                        name='new sublocation' )
+                                        name='new sublocation')
 
         item = stock_models.Item.objects.create(
                                         code='code',
@@ -122,7 +122,7 @@ class StockModelsTests(TestCase):
                                         location=sub_location,
                                         type=stock_models.ItemMove.ADD,
                                         related_to=stock_models.ItemMove.SELL,
-                                        quantity=5 )
+                                        quantity=5)
 
         self.assertEqual(stock_models.ItemMove.objects.all().count(), 1)
 
@@ -136,7 +136,7 @@ class StockModelsTests(TestCase):
 
         sub_location = stock_models.SubLocation.objects.create(
                                     location=location,
-                                    name='new sublocation' )
+                                    name='new sublocation')
 
         sub_item = stock_models.Item.objects.create(
                                     code='code',
@@ -182,7 +182,7 @@ class StockModelsTests(TestCase):
 
         old_location = stock_models.SubLocation.objects.create(
                                     location=location,
-                                    name='old sublocation' )
+                                    name='old sublocation')
 
         item = stock_models.Item.objects.create(
                                     code='code',
@@ -192,35 +192,35 @@ class StockModelsTests(TestCase):
 
         new_location = stock_models.SubLocation.objects.create(
                                     location=location,
-                                    name='new sublocation' )
+                                    name='new sublocation')
 
-        item_move = stock_models.ItemMove.objects.create(
+        stock_models.ItemMove.objects.create(
                                     item=item,
                                     location=old_location,
                                     type=stock_models.ItemMove.ADD,
                                     related_to=stock_models.ItemMove.PURCHASE,
-                                    quantity=5 )
+                                    quantity=5)
 
         remove_move = stock_models.ItemMove.objects.create(
                                     item=item,
                                     location=old_location,
                                     type=stock_models.ItemMove.REMOVE,
                                     related_to=stock_models.ItemMove.TRANSFER,
-                                    quantity=5 )
+                                    quantity=5)
 
         add_move = stock_models.ItemMove.objects.create(
                                     item=item,
                                     location=new_location,
                                     type=stock_models.ItemMove.ADD,
                                     related_to=stock_models.ItemMove.TRANSFER,
-                                    quantity=5 )
+                                    quantity=5)
 
         stock_models.ItemTransfer.objects.create(
                                     item=item,
                                     old_location=old_location,
                                     new_location=new_location,
-                                    add_move = add_move,
-                                    remove_move = remove_move)
+                                    add_move=add_move,
+                                    remove_move=remove_move)
 
         self.assertEqual(stock_models.ItemTransfer.objects.all().count(), 1)
 
