@@ -1,0 +1,194 @@
+{% extends 'base_.html' %}
+{% load static %}
+{% load i18n %}
+{% load x_tags %}
+{% block content %}
+<nav aria-label="breadcrumb">
+  <ol class="breadcrumb">
+    <li class="breadcrumb-item">
+      <a href="{% url 'stock:index' %}">{% trans 'Stock Dashboard' %}</a>
+    </li>
+    <li class="breadcrumb-item">
+      <a href="{% url 'stock:items_list' %}">{% trans 'Items' %}</a>
+    </li>
+    <li class="breadcrumb-item active" aria-current="page">
+      {% trans 'Item Details' %}
+    </li>
+  </ol>
+</nav>
+{% include 'stock/_item.html' %}
+<div>
+  <div class="row">
+    <div class="col-md-4 text-center">
+      {% if item.photo %}
+        <img class="rounded img-fluid image-200" src="{{ item.photo.url }}" alt="....">
+      {% else %}
+        <img class="rounded img-fluid image-200" src="{% static 'images/item.png' %}" alt="....">
+      {% endif %}
+    </div>
+    <div class="col-md-8">
+      <div class="table-responsive-md">
+        <table class="table table-striped table-sm">
+          <tbody>
+            <tr>
+              <th scope="row">{% trans 'Code' %}</th>
+              <td>
+                {% if item.is_assembly %}
+                <i class='fas fa-bezier-curve'></i>
+                {% endif %}
+                {{ item.code }}
+              </td>
+            </tr>
+            <tr>
+              <th scope="row">{% trans 'Desciption' %}</th>
+              <td>{{ item.desciption|default_if_none:'' }}</td>
+            </tr>
+            <tr>
+              <th scope="row">{% trans 'Barcode' %}</th>
+              <td>{{ item.barcode|default_if_none:'' }}</td>
+            </tr>
+            <tr>
+              <th scope="row">{% trans 'Stock limit' %}</th>
+              <td>{{ item.stock_limit|default_if_none:'' }}</td>
+            </tr>
+            <tr>
+              <th scope="row">{% trans 'Default Location' %}</th>
+              <td>{{ item.location }}</td>
+            </tr>
+            <tr>
+              <th scope="row">{% trans 'Category' %}</th>
+              <td>{{ item.category }}</td>
+            </tr>
+            <tr>
+              <th scope="row">{% trans 'Enabled' %}</th>
+              <td>
+                {% if item.is_active %}
+                  {% trans 'Yes' %}
+                {% else %}
+                  {% trans 'No' %}
+                {% endif %}
+              </td>
+            </tr>
+            <tr>
+              <th scope="row">{% trans 'Assembly' %}</th>
+              <td>
+                {% if item.is_assembly %}
+                  {% trans 'Yes' %}
+                {% else %}
+                  {% trans 'No' %}
+                {% endif %}
+              </td>
+            </tr>
+            <tr>
+              <th scope="row">{% trans 'Notes' %}</th>
+              <td>{{ item.note|default_if_none:''|safe }}</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-md-6">
+      <div class="table-responsive-md">
+        <table class="table table-striped table-sm">
+          <tbody>
+            <tr>
+              <th scope="row">
+                {% trans 'Total Quantity' %}
+              </th>
+              <td>
+                {{ item.quantity }}
+              </td>
+            </tr>
+            {% for location in item.get_locations %}
+            <tr class="table-row">
+              <th scope="row">
+                {{ location.name }}
+              </th>
+              <td>
+                {{ location.quantity }}
+              </td>
+            </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+
+      </div>
+    </div>
+    <div class="col-md-6">
+      <div class="text-right">
+        {% if perms.stock.delete_item %}
+        <a
+          class="btn btn-secondary"
+          href="#"
+          data-toggle="modal"
+          data-target="#delete_item{{ item.id }}">
+          {% trans "Delete" %}
+        </a>
+        {% endif %}
+        {% if perms.stock.change_item %}
+        <a
+          class="btn btn-secondary"
+          href="{% url 'stock:item_edit' pk=item.id %}?next={% url 'stock:item_details' pk=item.id %}">
+          {% trans 'Edit' %}
+        </a>
+        {% endif %}
+      </div>
+    </div>
+  </div>
+</div>
+{% if perms.stock.delete_item %}
+  {% include 'stock/_item_delete.html' %}
+{% endif %}
+{% if item.is_assembly %}
+<br>
+<hr>
+<div class="text-center">
+  <h5><strong>{% trans 'Assembly BOM' %}</strong></h5>
+</div>
+<hr>
+<div class="table-responsive-md">
+  <table class="table table-striped table-sm">
+    <tbody>
+      <tr>
+        <th scope="row">
+          <a href="{% x_sort sort 'sub_item__code' %}">
+            {% trans 'Code' %}
+          </a>
+        </th>
+        <td>
+          <strong>
+            <a href="{% x_sort sort 'sub_item__desciption' %}">
+              {% trans 'Desciption' %}
+            </a>
+          </strong>
+        </td>
+        <td>
+          <strong>
+            <a href="{% x_sort sort 'quantity' %}">
+              {% trans 'Quantity' %}
+            </a>
+          </strong>
+        </td>
+      </tr>
+      {% for sub_item in item.get_assembly_items %}
+      <tr class="table-row">
+        <th scope="row">
+          <a href="{% url 'stock:item_details' pk=sub_item.sub_item.id %}">
+            {{ sub_item.sub_item.code }}
+          </a>
+        </th>
+        <td>
+          {{ sub_item.sub_item.desciption|trunc:50|default_if_none:'' }}
+        </td>
+        <td>
+          {{ sub_item.quantity }}
+        </td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</div>
+{% endif %}
+{% endblock %}

@@ -1,0 +1,1803 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the PACKAGE package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: PACKAGE VERSION\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2020-06-25 21:30+0200\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"Language: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=6; plural=n==0 ? 0 : n==1 ? 1 : n==2 ? 2 : n%100>=3 "
+"&& n%100<=10 ? 3 : n%100>=11 && n%100<=99 ? 4 : 5;\n"
+
+#: account/forms.py:21
+msgid "The two password fields didn't match."
+msgstr "كلمتي المرور غير مطتابقين"
+
+#: account/forms.py:22 account/forms.py:56
+msgid "This email already exists."
+msgstr "هذا البريد الإلكتروني مسجل بالفعل"
+
+#: account/forms.py:23 account/forms.py:57
+msgid "This username already exists."
+msgstr "إسم مستخدم موجود بالفعل"
+
+#: account/forms.py:40 account/forms.py:74
+msgid "Enter user first name"
+msgstr "أدخل الإسم الأول للمستخدم"
+
+#: account/forms.py:41 account/forms.py:75
+msgid "Enter user last name"
+msgstr "أدخل الإسم الأخير للمستخدم"
+
+#: account/forms.py:42 account/forms.py:76
+msgid "Enter a unique username"
+msgstr "أدخل إسم مستخدم غير مسجل مسبقاً"
+
+#: account/forms.py:43 account/forms.py:77
+msgid "Enter user job title"
+msgstr "أدخل الوظيفة"
+
+#: account/forms.py:113
+msgid "Profile photo must be at least 200x200"
+msgstr "صورة المستخد لابد ألا تقل عن 200*200"
+
+#: account/forms.py:114
+msgid "Add your email"
+msgstr "أدخل بريدك الإلكتروني"
+
+#: account/forms.py:115 customer/forms.py:26 customer/forms.py:54
+#: vendor/forms.py:26 vendor/forms.py:54
+msgid "+999999999"
+msgstr "+999999999"
+
+#: account/forms.py:117 customer/forms.py:27 customer/forms.py:55
+#: vendor/forms.py:27 vendor/forms.py:55
+msgid "format: '+999999999'. Up to 15 digits allowed"
+msgstr "لابد أن تكون الصيغ '+999999999' وألا تقل عن 15 رقم"
+
+#: account/forms.py:140
+msgid "Image file too small ( < 200kb )"
+msgstr "صوره صغيرة جداً ( < 200kb )"
+
+#: account/forms.py:171
+msgid "Select you interface language"
+msgstr "أختر لفة الواجهه"
+
+#: account/forms.py:172
+msgid "Number of items per page"
+msgstr "عدد النتائج في الصفحه الواحدة"
+
+#: account/forms.py:174
+msgid "Select you favorite page after login"
+msgstr "إختر صفحتك المفضله"
+
+#: account/forms.py:183
+msgid "Current Password"
+msgstr "كلمة المرور الحالية"
+
+#: account/forms.py:184
+msgid "Enter your old password"
+msgstr "أدخل كلمة المرور القديمة"
+
+#: account/forms.py:186
+msgid "Enter the same new password"
+msgstr "أدخل كلمة المرور مره أخرى"
+
+#: account/functools.py:12
+msgid "Add user"
+msgstr "أضف مستخدم"
+
+#: account/functools.py:13
+msgid "Edit user"
+msgstr "تعديل مستخدم"
+
+#: account/functools.py:14
+msgid "Delete user"
+msgstr "حذف مستخدم"
+
+#: account/functools.py:15
+msgid "View user"
+msgstr "عرض مستخدم"
+
+#: account/functools.py:16
+msgid "View activity"
+msgstr "عرض النشاطات"
+
+#: account/functools.py:17
+msgid "Reset password"
+msgstr "إعادة تعيين كلمة المرور"
+
+#: account/functools.py:18
+msgid "Import data"
+msgstr "إسيتراد بيانات"
+
+#: account/functools.py:19
+msgid "Export data"
+msgstr "تصدير بيانات"
+
+#: account/functools.py:20
+msgid "Backup database"
+msgstr "نسخه إحتياطيه من قاعدة البيانات"
+
+#: account/functools.py:21
+msgid "Restore database"
+msgstr "إعادة تعيين جديع بيانات قاعدة اليانات"
+
+#: account/functools.py:25
+msgid "Add Category"
+msgstr "أضف تصنيف"
+
+#: account/functools.py:26 stock/templates/stock/category_edit.html:16
+msgid "Edit Category"
+msgstr "تعديل تصنيف"
+
+#: account/functools.py:27 stock/templates/stock/_category_delete.html:10
+#: stock/templates/stock/_location_delete.html:10
+msgid "Delete Category"
+msgstr "حذف تصنيف"
+
+#: account/functools.py:28 purchase/templates/purchase/order_edit.html:28
+#: purchase/templates/purchase/order_new.html:28
+#: sale/templates/sale/order_edit.html:28 sale/templates/sale/order_new.html:28
+#: stock/templates/stock/item_edit.html:37
+#: stock/templates/stock/item_new.html:47
+msgid "Add Item"
+msgstr "أضف صنف"
+
+#: account/functools.py:29 stock/templates/stock/item_edit.html:20
+msgid "Edit Item"
+msgstr "تعديل صنف"
+
+#: account/functools.py:30 purchase/templates/purchase/_order_delete.html:10
+#: sale/templates/sale/_order_delete.html:10
+#: stock/templates/stock/_item_delete.html:10
+msgid "Delete Item"
+msgstr "حذف صنف"
+
+#: account/functools.py:31
+msgid "Add Location"
+msgstr "أضف مكان"
+
+#: account/functools.py:32 stock/templates/stock/location_edit.html:16
+msgid "Edit Location"
+msgstr "تعديل مكان"
+
+#: account/functools.py:33
+msgid "Delete Location"
+msgstr "حذف مكان"
+
+#: account/functools.py:34
+msgid "Add Sub-location"
+msgstr "أضف مكان فرعي"
+
+#: account/functools.py:35 stock/templates/stock/sublocation_edit.html:16
+msgid "Edit Sub-location"
+msgstr "تعديل مكان فرعي"
+
+#: account/functools.py:36 stock/templates/stock/_sublocation_delete.html:10
+msgid "Delete Sub-location"
+msgstr "حذف مكان فرعي"
+
+#: account/functools.py:37
+msgid "Move Item"
+msgstr "حركة صنف"
+
+#: account/functools.py:38
+msgid "Tranfer move"
+msgstr "نقل صنف"
+
+#: account/functools.py:42 account/functools.py:53
+msgid "Add Company"
+msgstr "أضف شركة"
+
+#: account/functools.py:43 account/functools.py:54
+#: customer/templates/customer/company_edit.html:13
+#: vendor/templates/vendor/company_edit.html:13
+msgid "Edit Company"
+msgstr "تعديل شركة"
+
+#: account/functools.py:44 account/functools.py:55
+#: customer/templates/customer/_company_delete.html:10
+#: vendor/templates/vendor/_company_delete.html:10
+msgid "Delete Company"
+msgstr "حذف شركة"
+
+#: account/functools.py:45 account/functools.py:56
+msgid "View Company"
+msgstr "عرض شركة"
+
+#: account/functools.py:46
+msgid "Add Customer"
+msgstr "أضف عميل"
+
+#: account/functools.py:47 customer/templates/customer/customer_edit.html:16
+msgid "Edit Customer"
+msgstr "تعديل عميل"
+
+#: account/functools.py:48 customer/templates/customer/_customer_delete.html:10
+msgid "Delete Customer"
+msgstr "حذف عميل"
+
+#: account/functools.py:49
+msgid "View Customer"
+msgstr "عرض عميل"
+
+#: account/functools.py:57
+msgid "Add Vendor"
+msgstr "أضف مورد"
+
+#: account/functools.py:58 vendor/templates/vendor/vendor_edit.html:16
+msgid "Edit Vendor"
+msgstr "تعديل مورد"
+
+#: account/functools.py:59 vendor/templates/vendor/_vendor_delete.html:10
+msgid "Delete Vendor"
+msgstr "حذف مورد"
+
+#: account/functools.py:60
+msgid "View Vendor"
+msgstr "عرض مورد"
+
+#: account/functools.py:64 account/functools.py:70
+msgid "Add Order"
+msgstr "أضف إذن"
+
+#: account/functools.py:65 account/functools.py:71
+msgid "Edit Order"
+msgstr "تعديل إذن"
+
+#: account/functools.py:66 account/functools.py:72
+msgid "Delete Order"
+msgstr "حذف إذن"
+
+#: account/models.py:67 account/templates/account/details.html:26
+#: account/templates/account/list.html:50
+msgid "Username"
+msgstr "إسم مستخدم"
+
+#: account/models.py:74 customer/models.py:135 vendor/models.py:128
+msgid "First Name"
+msgstr "الإسم الأول"
+
+#: account/models.py:81 customer/models.py:142 vendor/models.py:135
+msgid "Last Name"
+msgstr "الإسم الأخير"
+
+#: account/models.py:88 account/templates/account/details.html:34
+#: customer/models.py:171 customer/templates/customer/company_details.html:72
+#: customer/templates/customer/customer_details.html:40 vendor/models.py:164
+#: vendor/templates/vendor/company_details.html:72
+#: vendor/templates/vendor/vendor_details.html:40
+msgid "Job"
+msgstr "الوظيفة"
+
+#: account/models.py:95 account/models.py:244
+#: account/templates/account/details.html:38 templates/base_.html:75
+msgid "Admin"
+msgstr "مشرف"
+
+#: account/models.py:99 stock/models.py:160
+#: stock/templates/stock/item_details.html:63
+#: stock/templates/stock/moves_list.html:55
+msgid "Enabled"
+msgstr "فعال"
+
+#: account/models.py:103
+msgid "IT"
+msgstr "خبير"
+
+#: account/models.py:107 account/templates/account/details.html:58
+msgid "Joined at"
+msgstr "إنضم في"
+
+#: account/models.py:156
+msgid "Male"
+msgstr "ذكر"
+
+#: account/models.py:157
+msgid "Female"
+msgstr "أنثى"
+
+#: account/models.py:162 customer/models.py:16 customer/models.py:123
+#: vendor/models.py:15 vendor/models.py:116
+msgid ""
+"Phone number must be entered in the                         format: "
+"'+999999999'. Up to 15 digits allowed."
+msgstr "يجب أن يكون رقم التليفون مكون من 15 رقم"
+
+#: account/models.py:168 account/models.py:255 report/models.py:58
+msgid "User"
+msgstr "مستخدم"
+
+#: account/models.py:174 account/templates/account/profile_details.html:34
+#: customer/models.py:149 customer/templates/customer/customer_details.html:28
+#: vendor/models.py:142 vendor/templates/vendor/vendor_details.html:28
+msgid "Email"
+msgstr "بريد إلكتروني"
+
+#: account/models.py:181 account/templates/account/profile_details.html:38
+#: customer/models.py:34 customer/models.py:156
+#: customer/templates/customer/company_details.html:29
+#: customer/templates/customer/customer_details.html:32 vendor/models.py:33
+#: vendor/models.py:149 vendor/templates/vendor/company_details.html:29
+#: vendor/templates/vendor/vendor_details.html:32
+msgid "Phone"
+msgstr "تليفون"
+
+#: account/models.py:189 account/templates/account/profile_details.html:42
+msgid "Birthdate"
+msgstr "تاريخ الميلاد"
+
+#: account/models.py:196 account/templates/account/profile_details.html:46
+msgid "Gender"
+msgstr "الجنس"
+
+#: account/models.py:203
+msgid "Profile Picture"
+msgstr "صورة المستخدم"
+
+#: account/models.py:231
+msgid "English"
+msgstr "إنجليزية"
+
+#: account/models.py:232
+msgid "Arabic"
+msgstr "عربية"
+
+#: account/models.py:243
+msgid "Dashboard"
+msgstr "اللوحة الرئيسية"
+
+#: account/models.py:245 templates/base_.html:88
+msgid "Stock"
+msgstr "المخزن"
+
+#: account/models.py:246 customer/templates/customer/companies_list.html:41
+#: customer/templates/customer/companies_list.html:68
+#: seshat/templates/seshat/export.html:37
+#: seshat/templates/seshat/import.html:59 templates/base_.html:143
+msgid "Customers"
+msgstr "العملاء"
+
+#: account/models.py:247 seshat/templates/seshat/export.html:43
+#: seshat/templates/seshat/import.html:65 templates/base_.html:129
+#: vendor/templates/vendor/companies_list.html:41
+#: vendor/templates/vendor/companies_list.html:68
+msgid "Vendors"
+msgstr "الموردين"
+
+#: account/models.py:248 templates/base_.html:101
+msgid "Purchases"
+msgstr "شراء"
+
+#: account/models.py:249 seshat/templates/seshat/index.html:70
+#: templates/base_.html:115
+msgid "Sales"
+msgstr "بيع"
+
+#: account/models.py:261 account/models.py:274
+#: account/templates/account/settings_details.html:27
+msgid "Language"
+msgstr "اللغة"
+
+#: account/models.py:267
+msgid "Page Limit"
+msgstr "حد الصفحة"
+
+#: account/templates/account/_delete.html:10
+msgid "Delete account"
+msgstr "حذف حساب"
+
+#: account/templates/account/_delete.html:16
+msgid "Are you sure you want to delete this account"
+msgstr "هل أنت متأكد من حذف ها الحساب"
+
+#: account/templates/account/_delete.html:22
+#: account/templates/account/details.html:43
+#: account/templates/account/details.html:53
+#: customer/templates/customer/_company_delete.html:22
+#: customer/templates/customer/_customer_delete.html:22
+#: purchase/templates/purchase/_order_delete.html:22
+#: sale/templates/sale/_order_delete.html:22
+#: stock/templates/stock/_category_delete.html:22
+#: stock/templates/stock/_item_delete.html:22
+#: stock/templates/stock/_location_delete.html:22
+#: stock/templates/stock/_sublocation_delete.html:22
+#: stock/templates/stock/item_details.html:68
+#: stock/templates/stock/item_details.html:78
+#: stock/templates/stock/moves_list.html:60
+#: stock/templates/stock/moves_list.html:70
+#: vendor/templates/vendor/_company_delete.html:22
+#: vendor/templates/vendor/_vendor_delete.html:22
+msgid "No"
+msgstr "لا"
+
+#: account/templates/account/_delete.html:24
+#: account/templates/account/details.html:41
+#: account/templates/account/details.html:51
+#: customer/templates/customer/_company_delete.html:24
+#: customer/templates/customer/_customer_delete.html:24
+#: purchase/templates/purchase/_order_delete.html:24
+#: sale/templates/sale/_order_delete.html:24
+#: stock/templates/stock/_category_delete.html:24
+#: stock/templates/stock/_item_delete.html:24
+#: stock/templates/stock/_location_delete.html:24
+#: stock/templates/stock/_sublocation_delete.html:24
+#: stock/templates/stock/item_details.html:66
+#: stock/templates/stock/item_details.html:76
+#: stock/templates/stock/moves_list.html:58
+#: stock/templates/stock/moves_list.html:68
+#: vendor/templates/vendor/_company_delete.html:24
+#: vendor/templates/vendor/_vendor_delete.html:24
+msgid "Yes"
+msgstr "نعم"
+
+#: account/templates/account/_permissions.html:10
+msgid "Permissions"
+msgstr "الأذونات"
+
+#: account/templates/account/_user.html:17
+msgid "Account"
+msgstr "الحساب"
+
+#: account/templates/account/_user.html:26
+msgid "Profile"
+msgstr "الملف الشخصي"
+
+#: account/templates/account/_user.html:36
+msgid "Settings"
+msgstr "الإعدادات"
+
+#: account/templates/account/_user.html:47
+#: account/templates/account/all_activities.html:12
+#: account/templates/account/index.html:20
+msgid "Activities"
+msgstr "النشاطات"
+
+#: account/templates/account/activity.html:10
+#: account/templates/account/all_activities.html:9
+#: account/templates/account/details.html:9
+#: account/templates/account/edit.html:10
+#: account/templates/account/list.html:11 account/templates/account/new.html:10
+#: account/templates/account/password_change.html:11
+#: account/templates/account/password_reset.html:9
+#: account/templates/account/profile_details.html:10
+#: account/templates/account/profile_edit.html:15
+#: account/templates/account/settings_details.html:10
+#: account/templates/account/settings_edit.html:11
+#: seshat/templates/seshat/backup.html:9 seshat/templates/seshat/export.html:8
+#: seshat/templates/seshat/import.html:9 seshat/templates/seshat/restore.html:8
+msgid "Admin Dashboard"
+msgstr "لوحة الإشراف"
+
+#: account/templates/account/activity.html:13
+#: account/templates/account/details.html:12
+#: account/templates/account/edit.html:13
+#: account/templates/account/index.html:15
+#: account/templates/account/list.html:14 account/templates/account/new.html:13
+#: account/templates/account/password_change.html:14
+#: account/templates/account/password_reset.html:12
+#: account/templates/account/profile_details.html:13
+#: account/templates/account/profile_edit.html:18
+#: account/templates/account/settings_details.html:13
+#: account/templates/account/settings_edit.html:14
+msgid "Accounts"
+msgstr "حسابات"
+
+#: account/templates/account/activity.html:16
+msgid "User activities"
+msgstr "نشاطات المستخدم"
+
+#: account/templates/account/activity.html:30
+#: account/templates/account/all_activities.html:39
+#: account/templates/account/index.html:59 report/models.py:64
+msgid "Activity"
+msgstr "نشاطات"
+
+#: account/templates/account/activity.html:36
+#: account/templates/account/all_activities.html:45
+#: account/templates/account/index.html:63
+msgid "Object"
+msgstr "موضوع"
+
+#: account/templates/account/activity.html:43
+#: account/templates/account/all_activities.html:52
+#: account/templates/account/list.html:63 customer/models.py:76
+#: customer/models.py:198 customer/templates/customer/companies_list.html:74
+#: customer/templates/customer/company_details.html:75
+#: customer/templates/customer/customers_list.html:57 purchase/models.py:59
+#: purchase/models.py:176 purchase/templates/purchase/orders_list.html:72
+#: report/models.py:95 sale/models.py:58 sale/models.py:176
+#: sale/templates/sale/orders_list.html:72 stock/models.py:54
+#: stock/models.py:184 stock/models.py:368 stock/models.py:412
+#: stock/models.py:485 stock/models.py:613 stock/models.py:716
+#: stock/models.py:803 stock/templates/stock/categories_list.html:66
+#: stock/templates/stock/locations_list.html:66
+#: stock/templates/stock/moves_list.html:184
+#: stock/templates/stock/sublocations_list.html:67 vendor/models.py:75
+#: vendor/models.py:191 vendor/templates/vendor/companies_list.html:74
+#: vendor/templates/vendor/company_details.html:75
+#: vendor/templates/vendor/vendors_list.html:57
+msgid "Created at"
+msgstr "تم الإنشاء"
+
+#: account/templates/account/activity.html:56
+#: account/templates/account/all_activities.html:73
+#: account/templates/account/index.html:80
+msgid "No activity found"
+msgstr "لا يوجد نشاطات"
+
+#: account/templates/account/all_activities.html:27
+#: account/templates/account/list.html:30
+#: customer/templates/customer/companies_list.html:24
+#: customer/templates/customer/customers_list.html:25
+#: purchase/templates/purchase/orders_list.html:22
+#: sale/templates/sale/orders_list.html:22
+#: stock/templates/stock/categories_list.html:28
+#: stock/templates/stock/items_list.html:41
+#: stock/templates/stock/locations_list.html:28
+#: stock/templates/stock/moves_list.html:122
+#: stock/templates/stock/sublocations_list.html:31
+#: vendor/templates/vendor/companies_list.html:24
+#: vendor/templates/vendor/vendors_list.html:25
+msgid "Search"
+msgstr "بحث"
+
+#: account/templates/account/all_activities.html:59
+#: account/templates/account/index.html:68 customer/models.py:82
+#: customer/models.py:204 purchase/models.py:65 purchase/models.py:182
+#: sale/models.py:64 sale/models.py:182 stock/models.py:60 stock/models.py:190
+#: stock/models.py:418 stock/models.py:491 stock/models.py:619
+#: stock/templates/stock/index.html:59 vendor/models.py:81 vendor/models.py:197
+msgid "Created by"
+msgstr "أنشئ بواسطة"
+
+#: account/templates/account/details.html:15
+msgid "User account"
+msgstr "حساب مستخدم"
+
+#: account/templates/account/details.html:30
+#: account/templates/account/list.html:56 customer/models.py:20
+#: customer/templates/customer/companies_list.html:56
+#: customer/templates/customer/company_details.html:21
+#: customer/templates/customer/company_details.html:67
+#: customer/templates/customer/customer_details.html:24
+#: customer/templates/customer/customers_list.html:44
+#: seshat/templates/seshat/backup.html:41
+#: stock/templates/stock/categories_list.html:55
+#: stock/templates/stock/locations_list.html:55 vendor/models.py:19
+#: vendor/templates/vendor/companies_list.html:56
+#: vendor/templates/vendor/company_details.html:21
+#: vendor/templates/vendor/company_details.html:67
+#: vendor/templates/vendor/vendor_details.html:24
+#: vendor/templates/vendor/vendors_list.html:44
+msgid "Name"
+msgstr "الإسم"
+
+#: account/templates/account/details.html:48
+msgid "Active"
+msgstr "النشاط"
+
+#: account/templates/account/details.html:69
+#: account/templates/account/password_reset.html:15 report/models.py:47
+msgid "Reset Password"
+msgstr "إعادة تعيين كلمة المرور"
+
+#: account/templates/account/details.html:76
+#: account/templates/account/password_change.html:17
+msgid "Change Password"
+msgstr "تغيير كلمة المرور"
+
+#: account/templates/account/details.html:85
+#: account/templates/account/list.html:110
+#: account/templates/account/list.html:121
+#: customer/templates/customer/companies_list.html:113
+#: customer/templates/customer/company_details.html:110
+#: customer/templates/customer/customer_details.html:55
+#: customer/templates/customer/customers_list.html:95
+#: purchase/templates/purchase/order_details.html:79
+#: purchase/templates/purchase/orders_list.html:117 report/models.py:46
+#: sale/templates/sale/order_details.html:79
+#: sale/templates/sale/orders_list.html:117
+#: stock/templates/stock/categories_list.html:100
+#: stock/templates/stock/item_details.html:127
+#: stock/templates/stock/items_list.html:141
+#: stock/templates/stock/locations_list.html:100
+#: stock/templates/stock/sublocations_list.html:101
+#: vendor/templates/vendor/companies_list.html:113
+#: vendor/templates/vendor/company_details.html:110
+#: vendor/templates/vendor/vendor_details.html:55
+#: vendor/templates/vendor/vendors_list.html:95
+msgid "Delete"
+msgstr "حذف"
+
+#: account/templates/account/details.html:92
+#: account/templates/account/list.html:90
+#: account/templates/account/list.html:98
+#: account/templates/account/profile_details.html:56
+#: customer/templates/customer/companies_list.html:103
+#: customer/templates/customer/company_details.html:57
+#: customer/templates/customer/company_details.html:100
+#: customer/templates/customer/customer_details.html:62
+#: customer/templates/customer/customers_list.html:85
+#: purchase/templates/purchase/order_details.html:86
+#: purchase/templates/purchase/orders_list.html:107 report/models.py:45
+#: sale/templates/sale/order_details.html:86
+#: sale/templates/sale/orders_list.html:107
+#: stock/templates/stock/categories_list.html:90
+#: stock/templates/stock/item_details.html:134
+#: stock/templates/stock/items_list.html:131
+#: stock/templates/stock/locations_list.html:90
+#: stock/templates/stock/sublocations_list.html:91
+#: vendor/templates/vendor/companies_list.html:103
+#: vendor/templates/vendor/company_details.html:57
+#: vendor/templates/vendor/company_details.html:100
+#: vendor/templates/vendor/vendor_details.html:62
+#: vendor/templates/vendor/vendors_list.html:85
+msgid "Edit"
+msgstr "تعديل"
+
+#: account/templates/account/edit.html:16
+msgid "Edit user account"
+msgstr "تعديل حساب المستخدم"
+
+#: account/templates/account/edit.html:30
+#: account/templates/account/edit.html:34
+#: account/templates/account/password_change.html:31
+#: account/templates/account/password_change.html:35
+#: account/templates/account/password_reset.html:42
+#: account/templates/account/password_reset.html:46
+#: account/templates/account/profile_edit.html:42
+#: account/templates/account/profile_edit.html:46
+#: account/templates/account/profile_edit.html:73
+#: account/templates/account/settings_edit.html:30
+#: account/templates/account/settings_edit.html:34
+#: customer/templates/customer/company_edit.html:24
+#: customer/templates/customer/company_edit.html:28
+#: customer/templates/customer/customer_edit.html:33
+#: customer/templates/customer/customer_edit.html:37
+#: purchase/templates/purchase/order_edit.html:91
+#: purchase/templates/purchase/order_edit.html:95
+#: sale/templates/sale/order_edit.html:81
+#: sale/templates/sale/order_edit.html:85
+#: stock/templates/stock/categories_list.html:141
+#: stock/templates/stock/category_edit.html:27
+#: stock/templates/stock/category_edit.html:31
+#: stock/templates/stock/item_edit.html:81
+#: stock/templates/stock/item_edit.html:85
+#: stock/templates/stock/item_edit.html:112
+#: stock/templates/stock/item_new.html:113
+#: stock/templates/stock/location_edit.html:27
+#: stock/templates/stock/location_edit.html:31
+#: stock/templates/stock/locations_list.html:141
+#: stock/templates/stock/sublocation_edit.html:27
+#: stock/templates/stock/sublocation_edit.html:31
+#: stock/templates/stock/sublocations_list.html:143
+#: vendor/templates/vendor/company_edit.html:24
+#: vendor/templates/vendor/company_edit.html:28
+#: vendor/templates/vendor/vendor_edit.html:33
+#: vendor/templates/vendor/vendor_edit.html:37
+msgid "Cancel"
+msgstr "إلغاء"
+
+#: account/templates/account/edit.html:37
+#: account/templates/account/profile_edit.html:49
+#: account/templates/account/settings_edit.html:37
+#: customer/templates/customer/company_edit.html:31
+#: customer/templates/customer/customer_edit.html:40
+#: purchase/templates/purchase/order_edit.html:98
+#: sale/templates/sale/order_edit.html:88
+#: stock/templates/stock/category_edit.html:34
+#: stock/templates/stock/item_edit.html:88
+#: stock/templates/stock/location_edit.html:34
+#: stock/templates/stock/sublocation_edit.html:34
+#: vendor/templates/vendor/company_edit.html:31
+#: vendor/templates/vendor/vendor_edit.html:40
+msgid "Save"
+msgstr "حفظ"
+
+#: account/templates/account/index.html:10 stock/templates/stock/index.html:10
+msgid "Tools"
+msgstr "أدوات"
+
+#: account/templates/account/index.html:26 report/models.py:49
+#: seshat/templates/seshat/backup.html:12
+msgid "Backup"
+msgstr "نسخ إحتياطي"
+
+#: account/templates/account/index.html:31 report/models.py:50
+#: seshat/templates/seshat/restore.html:11
+#: seshat/templates/seshat/restore.html:39
+msgid "Restore"
+msgstr "إستعادة البيانات"
+
+#: account/templates/account/index.html:37 report/models.py:52
+#: seshat/templates/seshat/import.html:12
+#: seshat/templates/seshat/import.html:40
+msgid "Import"
+msgstr "إستيراد بيانات"
+
+#: account/templates/account/index.html:42 report/models.py:51
+#: seshat/templates/seshat/export.html:11
+#: seshat/templates/seshat/export.html:54
+msgid "Export"
+msgstr "تصدير بيانات"
+
+#: account/templates/account/index.html:51
+msgid "Latest Activities"
+msgstr "آخر النشاطات"
+
+#: account/templates/account/list.html:37 account/templates/account/new.html:16
+msgid "New Account"
+msgstr "حساب جديد"
+
+#: account/templates/account/list.html:134
+msgid "No accounts Found!"
+msgstr "لا يوجد حسابات"
+
+#: account/templates/account/login.html:46
+msgid "Login"
+msgstr "تسجيل دخول"
+
+#: account/templates/account/new.html:26
+#: customer/templates/customer/company_new.html:22
+#: customer/templates/customer/customer_new.html:31
+#: purchase/templates/purchase/order_new.html:89 report/models.py:44
+#: sale/templates/sale/order_new.html:86
+#: stock/templates/stock/categories_list.html:146
+#: stock/templates/stock/category_new.html:25
+#: stock/templates/stock/item_new.html:89
+#: stock/templates/stock/location_new.html:25
+#: stock/templates/stock/locations_list.html:143
+#: stock/templates/stock/move_new.html:45
+#: stock/templates/stock/sublocation_new.html:25
+#: stock/templates/stock/sublocations_list.html:145
+#: stock/templates/stock/transfer_new.html:45
+#: vendor/templates/vendor/company_new.html:22
+#: vendor/templates/vendor/vendor_new.html:31
+msgid "Create"
+msgstr "إنشاء"
+
+#: account/templates/account/password_change.html:24
+msgid "Change my password"
+msgstr "تعديل كلمة مرور"
+
+#: account/templates/account/password_change.html:38
+msgid "Change"
+msgstr "تعديل"
+
+#: account/templates/account/password_changed.html:8
+msgid "Your password has been successfully changed."
+msgstr "تم تغيير كلمة المرور الخاصة بك"
+
+#: account/templates/account/password_reset.html:27
+msgid "Reset password for user"
+msgstr "إعادة تعيين كلمة مرور لمستخدم"
+
+#: account/templates/account/password_reset.html:32
+#: account/templates/account/password_reset.html:33
+msgid "New Password"
+msgstr "كلمة مرور جديدة"
+
+#: account/templates/account/password_reset.html:36
+#: account/templates/account/password_reset.html:37
+msgid "Confirm Password"
+msgstr "تأكيد كلمة المرور"
+
+#: account/templates/account/password_reset.html:49
+msgid "Reset"
+msgstr "تعيين"
+
+#: account/templates/account/profile_details.html:16
+msgid "User profile"
+msgstr "ملف شخصي"
+
+#: account/templates/account/profile_edit.html:21
+msgid "Edit Profile"
+msgstr "تعديل الملف الشخصي"
+
+#: account/templates/account/profile_edit.html:59
+#: stock/templates/stock/item_edit.html:98
+#: stock/templates/stock/item_new.html:99
+msgid "Crop the photo"
+msgstr "قص الصورة"
+
+#: account/templates/account/profile_edit.html:74
+#: stock/templates/stock/item_edit.html:113
+#: stock/templates/stock/item_new.html:114
+msgid "Crop"
+msgstr "قص"
+
+#: account/templates/account/settings_details.html:16
+msgid "User settings"
+msgstr "أدوات المستخدم"
+
+#: account/templates/account/settings_details.html:31
+msgid "Page limit"
+msgstr "حد الصفحة"
+
+#: account/templates/account/settings_details.html:35
+msgid "Default page"
+msgstr "الصفحة الأساسية"
+
+#: account/templates/account/settings_details.html:45
+msgid "Change Settings"
+msgstr "تغيير الأدوات"
+
+#: account/templates/account/settings_edit.html:17
+msgid "Edit user settings"
+msgstr "تعديل أدوات مستخدم"
+
+#: account/views.py:103
+msgid ""
+"Your account is not active please contact                             "
+"adminstartor for more details."
+msgstr "حسابك غير مفعل .. برجاء التواصل مع المشرف"
+
+#: account/views.py:587
+msgid "Couldn't delete the selected user"
+msgstr "لا يمكن حذف هشا المستخدم"
+
+#: account/views.py:608
+msgid "Password not matches or one of the passwords are blank"
+msgstr "كلمة المرور غير متطابقه"
+
+#: customer/forms.py:24 vendor/forms.py:24
+msgid "Company name"
+msgstr "إسم الشركة"
+
+#: customer/forms.py:25 vendor/forms.py:25
+msgid "Company desciption"
+msgstr "وصف الشركة"
+
+#: customer/forms.py:28 vendor/forms.py:28
+msgid "https://www.example.com/"
+msgstr "https://www.example.com/"
+
+#: customer/forms.py:29 vendor/forms.py:29
+msgid "Company website i.e. https://www.example.com/"
+msgstr "الموقع الإلكتروني للشركة https://www.example.com/"
+
+#: customer/forms.py:30
+msgid "Compay tax's code"
+msgstr "رقم التسجيل الضريبي"
+
+#: customer/forms.py:51 purchase/forms.py:26 sale/forms.py:26
+#: vendor/forms.py:51
+msgid "Select company"
+msgstr "إختار الشركة"
+
+#: customer/forms.py:52 customer/forms.py:53 vendor/forms.py:52
+#: vendor/forms.py:53
+msgid "Enter name"
+msgstr "أدخل الإسم"
+
+#: customer/forms.py:56 vendor/forms.py:56
+msgid "email address"
+msgstr "البريد الإلكتروني"
+
+#: customer/forms.py:57 vendor/forms.py:57
+msgid "i.e. name@email.com"
+msgstr "i.e. name@email.com"
+
+#: customer/forms.py:58 customer/models.py:164
+#: customer/templates/customer/company_details.html:69
+#: customer/templates/customer/customer_details.html:36 vendor/forms.py:58
+#: vendor/models.py:157 vendor/templates/vendor/company_details.html:69
+#: vendor/templates/vendor/vendor_details.html:36
+msgid "Department"
+msgstr "القسم"
+
+#: customer/forms.py:59 vendor/forms.py:59
+msgid "Job title"
+msgstr "المسمى الوظيفي"
+
+#: customer/models.py:27 customer/templates/customer/companies_list.html:62
+#: customer/templates/customer/company_details.html:25
+#: purchase/templates/purchase/order_details.html:33
+#: sale/templates/sale/order_details.html:33
+#: seshat/templates/seshat/index.html:19 stock/models.py:106
+#: stock/templates/stock/item_details.html:43
+#: stock/templates/stock/item_details.html:163
+#: stock/templates/stock/items_list.html:67
+#: stock/templates/stock/moves_list.html:35 vendor/models.py:26
+#: vendor/templates/vendor/companies_list.html:62
+#: vendor/templates/vendor/company_details.html:25
+msgid "Desciption"
+msgstr "الوصف"
+
+#: customer/models.py:42 customer/templates/customer/company_details.html:33
+#: vendor/models.py:41 vendor/templates/vendor/company_details.html:33
+msgid "Website"
+msgstr "الموقع الإلكتروني"
+
+#: customer/models.py:49 vendor/models.py:48
+msgid "Taxs code"
+msgstr "الرقم الضريبي"
+
+#: customer/models.py:56 customer/models.py:178 purchase/models.py:39
+#: purchase/models.py:156 purchase/templates/purchase/order_details.html:37
+#: purchase/templates/purchase/order_details.html:68
+#: purchase/templates/purchase/order_edit.html:76
+#: purchase/templates/purchase/order_new.html:76 sale/models.py:38
+#: sale/models.py:156 sale/templates/sale/order_details.html:37
+#: sale/templates/sale/order_details.html:68
+#: sale/templates/sale/order_edit.html:66 sale/templates/sale/order_new.html:72
+#: stock/models.py:164 stock/models.py:593
+#: stock/templates/stock/item_details.html:83
+#: stock/templates/stock/moves_list.html:75 vendor/models.py:55
+#: vendor/models.py:171
+msgid "Notes"
+msgstr "ملاحظات"
+
+#: customer/models.py:63 customer/models.py:185 purchase/models.py:46
+#: purchase/models.py:163 sale/models.py:45 sale/models.py:163
+#: stock/models.py:41 stock/models.py:171 stock/models.py:399
+#: stock/models.py:472 stock/models.py:600 stock/models.py:711
+#: stock/models.py:798 vendor/models.py:62 vendor/models.py:178
+msgid "Edited at"
+msgstr "تعديل"
+
+#: customer/models.py:69 customer/models.py:191 purchase/models.py:52
+#: purchase/models.py:169 sale/models.py:51 sale/models.py:169
+#: stock/models.py:47 stock/models.py:177 stock/models.py:405
+#: stock/models.py:478 stock/models.py:606 vendor/models.py:68
+#: vendor/models.py:184
+msgid "Edited by"
+msgstr "تعديل بواسطة"
+
+#: customer/models.py:128 customer/templates/customer/customers_list.html:50
+#: purchase/models.py:20 purchase/templates/purchase/order_details.html:18
+#: purchase/templates/purchase/orders_list.html:42 sale/models.py:19
+#: sale/templates/sale/order_details.html:18
+#: sale/templates/sale/orders_list.html:42
+#: seshat/templates/seshat/index.html:68 seshat/templates/seshat/index.html:104
+#: seshat/templates/seshat/index.html:153 vendor/models.py:121
+#: vendor/templates/vendor/vendors_list.html:50
+msgid "Company"
+msgstr "شركة"
+
+#: customer/templates/customer/_company_delete.html:16
+#: vendor/templates/vendor/_company_delete.html:16
+msgid "Are you sure you want to delete this company"
+msgstr "هل أنت متأكد من حذف هذه الشركة"
+
+#: customer/templates/customer/_customer_delete.html:16
+msgid "Are you sure you want to delete this customer"
+msgstr "هل أنت متأكد من حذف هذا العميل"
+
+#: customer/templates/customer/companies_list.html:9
+#: customer/templates/customer/company_details.html:9
+#: customer/templates/customer/company_edit.html:10
+#: customer/templates/customer/company_new.html:10
+#: customer/templates/customer/customer_details.html:9
+#: customer/templates/customer/customer_edit.html:10
+#: customer/templates/customer/customer_new.html:10
+#: customer/templates/customer/customers_list.html:8
+msgid "Customers companies"
+msgstr "شركات العملاء"
+
+#: customer/templates/customer/companies_list.html:33
+#: customer/templates/customer/company_new.html:13
+#: vendor/templates/vendor/companies_list.html:33
+#: vendor/templates/vendor/company_new.html:13
+msgid "New Company"
+msgstr "شركة جديدة"
+
+#: customer/templates/customer/companies_list.html:125
+#: seshat/templates/seshat/index.html:84
+#: vendor/templates/vendor/companies_list.html:125
+msgid "No companies Found!"
+msgstr "لا يوجد شركات"
+
+#: customer/templates/customer/company_details.html:12
+#: vendor/templates/vendor/company_details.html:12
+msgid "Company details"
+msgstr "تفاصيل الشركة"
+
+#: customer/templates/customer/company_details.html:37
+#: vendor/templates/vendor/company_details.html:37
+msgid "Taxs Code"
+msgstr "الرقم الضريبي"
+
+#: customer/templates/customer/company_details.html:41
+#: customer/templates/customer/customer_details.html:44
+#: vendor/templates/vendor/company_details.html:41
+#: vendor/templates/vendor/vendor_details.html:44
+msgid "Note"
+msgstr "ملاحظة"
+
+#: customer/templates/customer/company_details.html:50
+#: customer/templates/customer/customer_new.html:16
+msgid "New Customer"
+msgstr "عميل جديد"
+
+#: customer/templates/customer/company_details.html:122
+#: customer/templates/customer/customers_list.html:107
+msgid "No customers Found!"
+msgstr "لا يوجد عملاء"
+
+#: customer/templates/customer/customer_details.html:15
+msgid "Customer Details"
+msgstr "تفاصيل عميل"
+
+#: customer/templates/customer/customers_list.html:11
+#: vendor/templates/vendor/vendors_list.html:11
+msgid "Customers list"
+msgstr "قائمة العملاء"
+
+#: customer/templates/customer/customers_list.html:32
+#: vendor/templates/vendor/vendors_list.html:32
+msgid "Companies"
+msgstr "الشركات"
+
+#: customer/views.py:251 vendor/views.py:251
+msgid "Couldn't delete the selected company"
+msgstr "لا يمكن حذف هذه الشركة"
+
+#: customer/views.py:280
+msgid "Couldn't delete the selected customer"
+msgstr "لا يمكن حذف هذا العميل"
+
+#: purchase/forms.py:28 purchase/models.py:27 sale/forms.py:28
+#: sale/models.py:26
+msgid "Invoice number"
+msgstr "رقم الفاتورة"
+
+#: purchase/forms.py:29 sale/forms.py:29
+msgid "Order notes"
+msgstr "ملاحظات الإذن"
+
+#: purchase/models.py:34 sale/models.py:33
+msgid "Invoice date"
+msgstr "تاريخ الفاتورة"
+
+#: purchase/models.py:117 sale/models.py:116
+msgid "Must complete invoice details"
+msgstr "لا بد من إستكمال بيانات الفاترة"
+
+#: purchase/models.py:132 sale/models.py:131
+msgid "Order"
+msgstr "إذن"
+
+#: purchase/models.py:141 sale/models.py:141 stock/models.py:346
+#: stock/models.py:355 stock/models.py:556 stock/models.py:695
+#: stock/models.py:751
+msgid "Item"
+msgstr "صنف"
+
+#: purchase/models.py:148 sale/models.py:148 stock/models.py:146
+msgid "Unit Price"
+msgstr "سعر الجزء"
+
+#: purchase/templates/purchase/_order_delete.html:16
+#: sale/templates/sale/_order_delete.html:16
+msgid "Are you sure you want to delete this order"
+msgstr "هل أنت متأكد من حذف هذا الإذن"
+
+#: purchase/templates/purchase/order_details.html:9
+#: purchase/templates/purchase/order_edit.html:10
+#: purchase/templates/purchase/order_new.html:10
+#: purchase/templates/purchase/orders_list.html:8
+msgid "Purchase orders"
+msgstr "أذون شراء"
+
+#: purchase/templates/purchase/order_details.html:12
+#: sale/templates/sale/order_details.html:12
+msgid "Order details"
+msgstr "تفاصيل إذن"
+
+#: purchase/templates/purchase/order_details.html:21
+#: purchase/templates/purchase/orders_list.html:48
+#: sale/templates/sale/order_details.html:21
+#: sale/templates/sale/orders_list.html:48
+msgid "Invoice"
+msgstr "فاتورة"
+
+#: purchase/templates/purchase/order_details.html:24
+#: purchase/templates/purchase/orders_list.html:55
+#: sale/templates/sale/order_details.html:24
+#: sale/templates/sale/orders_list.html:55
+msgid "Date"
+msgstr "تاريخ"
+
+#: purchase/templates/purchase/order_details.html:32
+#: sale/templates/sale/order_details.html:32
+#: seshat/templates/seshat/index.html:17 stock/models.py:99
+#: stock/templates/stock/item_details.html:34
+#: stock/templates/stock/item_details.html:157
+#: stock/templates/stock/items_list.html:61
+#: stock/templates/stock/moves_list.html:26
+msgid "Code"
+msgstr "الكود"
+
+#: purchase/templates/purchase/order_details.html:34
+#: sale/templates/sale/order_details.html:34
+msgid "Unit price"
+msgstr "سعر الجزء"
+
+#: purchase/templates/purchase/order_details.html:35
+#: purchase/templates/purchase/order_edit.html:56
+#: purchase/templates/purchase/order_new.html:56
+#: sale/templates/sale/order_details.html:35
+#: sale/templates/sale/order_edit.html:56 sale/templates/sale/order_new.html:62
+#: stock/models.py:362 stock/models.py:578 stock/templates/stock/index.html:49
+#: stock/templates/stock/item_details.html:170
+#: stock/templates/stock/item_edit.html:64
+#: stock/templates/stock/item_new.html:74
+#: stock/templates/stock/items_list.html:87
+#: stock/templates/stock/moves_list.html:170
+msgid "Quantity"
+msgstr "الكمية"
+
+#: purchase/templates/purchase/order_details.html:36
+#: sale/templates/sale/order_details.html:36
+msgid "Total Price"
+msgstr "إجمالي السعر"
+
+#: purchase/templates/purchase/order_details.html:56
+#: sale/templates/sale/order_details.html:56
+#: sale/templates/sale/order_new.html:55
+msgid "Total"
+msgstr "إجمالي"
+
+#: purchase/templates/purchase/order_edit.html:13
+#: sale/templates/sale/order_edit.html:13
+msgid "Edit order"
+msgstr "تعديل إذن"
+
+#: purchase/templates/purchase/order_edit.html:42
+#: purchase/templates/purchase/order_new.html:42
+#: sale/templates/sale/order_edit.html:42 sale/templates/sale/order_new.html:45
+#: stock/templates/stock/item_edit.html:51
+#: stock/templates/stock/item_new.html:61
+msgid "Select item"
+msgstr "إختار صنف"
+
+#: purchase/templates/purchase/order_edit.html:65
+#: purchase/templates/purchase/order_new.html:65
+#: purchase/templates/purchase/orders_list.html:66
+#: sale/templates/sale/orders_list.html:66
+#: seshat/templates/seshat/index.html:113
+#: seshat/templates/seshat/index.html:162
+msgid "Price"
+msgstr "السعر"
+
+#: purchase/templates/purchase/order_edit.html:84
+#: purchase/templates/purchase/order_new.html:84
+#: sale/templates/sale/order_edit.html:74 sale/templates/sale/order_new.html:81
+#: stock/templates/stock/item_edit.html:73
+#: stock/templates/stock/item_new.html:83
+msgid "Remove Item"
+msgstr "حذف صنف"
+
+#: purchase/templates/purchase/order_new.html:13
+#: sale/templates/sale/order_new.html:13
+msgid "New order"
+msgstr "إذن جديد"
+
+#: purchase/templates/purchase/orders_list.html:29
+#: sale/templates/sale/orders_list.html:29
+msgid "New Order"
+msgstr "إذن جديد"
+
+#: purchase/templates/purchase/orders_list.html:61
+#: sale/templates/sale/orders_list.html:61
+#: seshat/templates/seshat/export.html:28
+#: seshat/templates/seshat/import.html:50
+#: seshat/templates/seshat/index.html:108
+#: seshat/templates/seshat/index.html:157
+#: stock/templates/stock/categories_list.html:60
+#: stock/templates/stock/category_edit.html:10
+#: stock/templates/stock/category_new.html:10
+#: stock/templates/stock/index.html:14
+#: stock/templates/stock/item_details.html:12
+#: stock/templates/stock/item_edit.html:17
+#: stock/templates/stock/item_new.html:17
+#: stock/templates/stock/items_list.html:12
+#: stock/templates/stock/location_edit.html:10
+#: stock/templates/stock/location_new.html:10
+#: stock/templates/stock/move_new.html:13
+#: stock/templates/stock/moves_list.html:12
+#: stock/templates/stock/sublocation_edit.html:10
+#: stock/templates/stock/sublocation_new.html:10
+#: stock/templates/stock/transfer_new.html:13
+msgid "Items"
+msgstr "الأصناف"
+
+#: purchase/templates/purchase/orders_list.html:129
+#: sale/templates/sale/orders_list.html:129
+#: seshat/templates/seshat/index.html:133
+#: seshat/templates/seshat/index.html:182
+msgid "No orders Found!"
+msgstr "لا يوجد أذونات"
+
+#: purchase/views.py:57 purchase/views.py:183 sale/views.py:57
+#: sale/views.py:223 stock/views.py:299 stock/views.py:428
+msgid "Can't choose the same item twice."
+msgstr "لا يمكن إختيار نفس الصنف مرتين"
+
+#: purchase/views.py:359 sale/views.py:432
+msgid "Couldn't delete the selected order"
+msgstr "لا يمكن حذف الإذن"
+
+#: report/models.py:48
+msgid "Download"
+msgstr "تنزيل"
+
+#: report/models.py:71
+msgid "Acitivty model"
+msgstr "نموذج الأنشطة"
+
+#: report/models.py:77
+msgid "Acitivty message"
+msgstr "رسالة النشاط"
+
+#: report/models.py:89
+msgid "Activity object id"
+msgstr "موضوع النشاط"
+
+#: sale/templates/sale/order_details.html:9
+msgid "Sale orders"
+msgstr "فواتير البيع"
+
+#: sale/templates/sale/order_edit.html:10 sale/templates/sale/order_new.html:10
+#: sale/templates/sale/orders_list.html:8
+msgid "Sales orders"
+msgstr "فواتير البيع"
+
+#: sale/templates/sale/order_new.html:35
+msgid "Select item "
+msgstr "إختر الصنف"
+
+#: sale/templates/sale/order_new.html:55
+msgid "Available"
+msgstr "متاح"
+
+#: seshat/templates/seshat/backup.html:24
+msgid "Create Backup File"
+msgstr "إنشاء نسخة إحتياطية"
+
+#: seshat/templates/seshat/backup.html:32
+msgid "Delete File(s)"
+msgstr "حذف ملفات"
+
+#: seshat/templates/seshat/backup.html:63
+msgid "No files Found!"
+msgstr "لايوجد ملفات"
+
+#: seshat/templates/seshat/export.html:17
+msgid "Select module to export ...."
+msgstr "إختار القسم المراد تصدير بياناته ..."
+
+#: seshat/templates/seshat/export.html:25
+msgid "Select Export"
+msgstr "إختر تصدير"
+
+#: seshat/templates/seshat/export.html:31
+#: seshat/templates/seshat/import.html:53
+msgid "Items' categories"
+msgstr "تصنيفات الأصناف"
+
+#: seshat/templates/seshat/export.html:34
+#: seshat/templates/seshat/import.html:56
+msgid "Items' locations"
+msgstr "أماكن الأصناف"
+
+#: seshat/templates/seshat/export.html:40
+#: seshat/templates/seshat/import.html:62
+msgid "Customers' companies"
+msgstr "شركات العملاء"
+
+#: seshat/templates/seshat/export.html:46
+#: seshat/templates/seshat/import.html:68
+msgid "Vendors' companies"
+msgstr "شركات الموردين"
+
+#: seshat/templates/seshat/import.html:19
+msgid "This process will create any missing sub-item ..."
+msgstr "هذه العمليه سوف تنشئ اي بيانات فرعية مرتبطه بالبيانات الرئيسية ..."
+
+#: seshat/templates/seshat/import.html:23
+msgid "Please select the right template to avoid any errors"
+msgstr "رجاء إختيار الملف الصحيح لتلافي اي أخطاء"
+
+#: seshat/templates/seshat/import.html:35
+#: seshat/templates/seshat/restore.html:34
+msgid "Choose file..."
+msgstr "إختر الملف ..."
+
+#: seshat/templates/seshat/import.html:47
+msgid "Select Import"
+msgstr "إختر الإستيراد"
+
+#: seshat/templates/seshat/import.html:78
+msgid "Templates"
+msgstr "قوالب"
+
+#: seshat/templates/seshat/import.html:91
+msgid "No templates found!"
+msgstr "لا يوجد قوالب"
+
+#: seshat/templates/seshat/index.html:10
+msgid "High demanded items"
+msgstr "الأصناف الأكثر حركة"
+
+#: seshat/templates/seshat/index.html:22 stock/models.py:131
+#: stock/templates/stock/item_details.html:59
+#: stock/templates/stock/items_list.html:74
+#: stock/templates/stock/moves_list.html:51
+msgid "Category"
+msgstr "تصنيف"
+
+#: seshat/templates/seshat/index.html:25 stock/templates/stock/_item.html:25
+msgid "Moves"
+msgstr "تحركات"
+
+#: seshat/templates/seshat/index.html:49
+#: stock/templates/stock/categories_list.html:112
+#: stock/templates/stock/items_list.html:153
+msgid "No items Found!"
+msgstr "لا يوجد أصناف"
+
+#: seshat/templates/seshat/index.html:61
+msgid "High demanded companies"
+msgstr "أكثر الشركات تعاملاً"
+
+#: seshat/templates/seshat/index.html:96
+msgid "Latest sales' orders"
+msgstr "آخر فواتير البيع"
+
+#: seshat/templates/seshat/index.html:145
+msgid "Latest purchase orders"
+msgstr "آخر أذونات الشراء"
+
+#: seshat/templates/seshat/restore.html:18
+msgid "This process will restore all your backup database data..."
+msgstr "هذه العمليه سوف تعيد جديع البيانات القديمة ..."
+
+#: seshat/templates/seshat/restore.html:22
+msgid "This will delete all existing data"
+msgstr "هذه العملية ستحذف جميع البيانات الحالية"
+
+#: seshat/views.py:91
+msgid "Backup file(s) has been deleted"
+msgstr "تم حذف الملف"
+
+#: seshat/views.py:122
+msgid "Backup has completed successfully"
+msgstr "تم أخذ النسخه الإحتياطية بنجاح"
+
+#: seshat/views.py:190
+msgid "Restore has completed successfully"
+msgstr "تم إعادة البيانات بنجاح"
+
+#: seshat/views.py:277
+msgid "successfully imported"
+msgstr "تم إستيراد البيانات بنجاح"
+
+#: stock/forms.py:23 stock/models.py:34
+msgid "Category name"
+msgstr "إسم التصنيف"
+
+#: stock/forms.py:52
+msgid "Item code"
+msgstr "كود لصنف"
+
+#: stock/forms.py:54
+msgid "Item desciption"
+msgstr "وصف الصنف"
+
+#: stock/forms.py:55
+msgid "item barcode"
+msgstr "باركود الصنف"
+
+#: stock/forms.py:56
+msgid "Enter itme's selling unit price"
+msgstr "أدخل سعر الوحدة للصنف"
+
+#: stock/forms.py:57
+msgid "item price"
+msgstr "سعر الصنف"
+
+#: stock/forms.py:58 stock/templates/stock/items_list.html:81
+msgid "Limit"
+msgstr "حدالطلب"
+
+#: stock/forms.py:60
+msgid "Enter the warning stock limit to re-order item"
+msgstr "أدخل حد الطلب"
+
+#: stock/forms.py:62
+msgid "Item photo must be at least 500x500"
+msgstr "صورة الصنف لآبد ألا تقل عن 500*500"
+
+#: stock/forms.py:85
+msgid "Image file too small ( < 500kb )"
+msgstr "الصوره صغيرة جداً ( < 500kb )"
+
+#: stock/forms.py:126 stock/forms.py:145 stock/models.py:392
+msgid "Location name"
+msgstr "إسم المكان"
+
+#: stock/forms.py:144 stock/forms.py:208
+#: stock/templates/stock/move_new.html:129
+msgid "Select location"
+msgstr "أختر المكان"
+
+#: stock/forms.py:146 stock/models.py:465
+msgid "Sub-location name"
+msgstr "إسم المكان الفرعي"
+
+#: stock/forms.py:156 stock/models.py:653
+msgid "Quantity can't be negative for the selected location"
+msgstr "لا يمكن أن تصبح الكميه سالبه"
+
+#: stock/forms.py:157
+msgid "Must choose valid item"
+msgstr "لابد من إختيار صنف مناسب"
+
+#: stock/forms.py:158
+msgid "Must choose valid type"
+msgstr "لآبد من إختيار نوع مناسب"
+
+#: stock/forms.py:159
+msgid "Must choose valid location"
+msgstr "لآبد من إختيار مكان مناسب"
+
+#: stock/forms.py:164
+msgid "Notes*"
+msgstr "ملاحظات"
+
+#: stock/forms.py:204
+msgid "Add notes for this custom move"
+msgstr "أضف ملاحظات للحركة"
+
+#: stock/forms.py:207 stock/forms.py:230
+msgid "Add desired quantity"
+msgstr "أدخل الكمية المطلوبة"
+
+#: stock/forms.py:209
+msgid "Select movement type"
+msgstr "أدخل نوع الحركة"
+
+#: stock/forms.py:231
+msgid "Select old location"
+msgstr "أدخل المكان القديم"
+
+#: stock/forms.py:232
+msgid "Select new location"
+msgstr "أدخل المكان الجديد"
+
+#: stock/models.py:113 stock/templates/stock/item_details.html:47
+#: stock/templates/stock/moves_list.html:39
+msgid "Barcode"
+msgstr "باركود"
+
+#: stock/models.py:120
+msgid "Stock Limit"
+msgstr "حد الطلب"
+
+#: stock/models.py:126 stock/templates/stock/item_new.html:36
+msgid "Assembled Item"
+msgstr "صنف مجمع"
+
+#: stock/models.py:139 stock/templates/stock/item_details.html:55
+#: stock/templates/stock/moves_list.html:47
+msgid "Default Location"
+msgstr "مكان أساسي"
+
+#: stock/models.py:154
+msgid "Item Picture"
+msgstr "صورة الصنف"
+
+#: stock/models.py:225
+msgid "Can't find items for assemblied item"
+msgstr "لا يوجد أصناف لهذا الصنف المجمع"
+
+#: stock/models.py:260
+msgid "This is not assembly item"
+msgstr "هذا ليس صنف مجمع"
+
+#: stock/models.py:458 stock/models.py:564 stock/templates/stock/index.html:40
+#: stock/templates/stock/moves_list.html:157
+#: stock/templates/stock/sublocations_list.html:54
+msgid "Location"
+msgstr "المكان"
+
+#: stock/models.py:536
+msgid "Add"
+msgstr "أضف"
+
+#: stock/models.py:537
+msgid "Remove"
+msgstr "حذف"
+
+#: stock/models.py:546
+msgid "Purchase"
+msgstr "شراء"
+
+#: stock/models.py:547
+msgid "Sell"
+msgstr "بيع"
+
+#: stock/models.py:548 stock/templates/stock/item_details.html:73
+#: stock/templates/stock/moves_list.html:65
+msgid "Assembly"
+msgstr "مجمع"
+
+#: stock/models.py:549
+msgid "Custom"
+msgstr "خاص"
+
+#: stock/models.py:550 stock/templates/stock/moves_list.html:141
+msgid "Transfer"
+msgstr "نقل"
+
+#: stock/models.py:571
+msgid "Movement type"
+msgstr "نوع الحركة"
+
+#: stock/models.py:585 stock/templates/stock/index.html:54
+#: stock/templates/stock/moves_list.html:177
+msgid "Related to"
+msgstr "الإرتباط"
+
+#: stock/models.py:704
+msgid "Items' moves"
+msgstr "حركات الأصناف"
+
+#: stock/models.py:759
+msgid "Old Location"
+msgstr "المكان القديم"
+
+#: stock/models.py:767 stock/templates/stock/location_new.html:16
+#: stock/templates/stock/locations_list.html:40
+#: stock/templates/stock/locations_list.html:132
+msgid "New Location"
+msgstr "مكان جديد"
+
+#: stock/models.py:775
+msgid "Add Move"
+msgstr "أضف حركة"
+
+#: stock/models.py:787
+msgid "Remove Move"
+msgstr "حذف حركة"
+
+#: stock/templates/stock/_category_delete.html:16
+msgid "Are you sure you want to delete this category"
+msgstr "هل أنت متأكد من حذف هذا التصنيف"
+
+#: stock/templates/stock/_item.html:15
+msgid "Details"
+msgstr "تفاصيل"
+
+#: stock/templates/stock/_item_delete.html:16
+msgid "Are you sure you want to delete this item"
+msgstr "هل أنت متأكد من حذف هذا الصنف"
+
+#: stock/templates/stock/_location_delete.html:16
+msgid "Are you sure you want to delete this location"
+msgstr "هل أنت متأكد من حذف هذا المكان"
+
+#: stock/templates/stock/_sublocation_delete.html:16
+msgid "Are you sure you want to delete this sublocation"
+msgstr "هل أنت متأكد من حذف هذا المكان الفرعي"
+
+#: stock/templates/stock/categories_list.html:10
+#: stock/templates/stock/item_details.html:9
+#: stock/templates/stock/item_edit.html:14
+#: stock/templates/stock/item_new.html:14
+#: stock/templates/stock/items_list.html:9
+#: stock/templates/stock/locations_list.html:10
+#: stock/templates/stock/move_new.html:10
+#: stock/templates/stock/moves_list.html:9
+#: stock/templates/stock/sublocations_list.html:10
+#: stock/templates/stock/transfer_new.html:10
+msgid "Stock Dashboard"
+msgstr "لوحة رئيسية للمخزن"
+
+#: stock/templates/stock/categories_list.html:13
+#: stock/templates/stock/category_edit.html:13
+#: stock/templates/stock/category_new.html:13
+#: stock/templates/stock/index.html:17
+msgid "Categories"
+msgstr "تصنيفات"
+
+#: stock/templates/stock/categories_list.html:40
+#: stock/templates/stock/categories_list.html:132
+#: stock/templates/stock/category_new.html:16
+msgid "New Category"
+msgstr "صنف جديد"
+
+#: stock/templates/stock/index.html:21
+#: stock/templates/stock/location_edit.html:13
+#: stock/templates/stock/location_new.html:13
+#: stock/templates/stock/locations_list.html:13
+#: stock/templates/stock/sublocations_list.html:13
+msgid "Locations"
+msgstr "أماكن"
+
+#: stock/templates/stock/index.html:24
+#: stock/templates/stock/sublocation_edit.html:13
+#: stock/templates/stock/sublocation_new.html:13
+#: stock/templates/stock/sublocations_list.html:16
+msgid "Sub-locations"
+msgstr "أماكن فرعية"
+
+#: stock/templates/stock/index.html:32
+msgid "Latest Moves"
+msgstr "آخر التحركات"
+
+#: stock/templates/stock/index.html:44
+#: stock/templates/stock/moves_list.html:163
+msgid "Type"
+msgstr "النوع"
+
+#: stock/templates/stock/index.html:83
+#: stock/templates/stock/moves_list.html:209
+msgid "No moves Found!"
+msgstr "لا يوجد تحركات"
+
+#: stock/templates/stock/item_details.html:15
+#: stock/templates/stock/move_new.html:16
+#: stock/templates/stock/moves_list.html:15
+#: stock/templates/stock/transfer_new.html:16
+msgid "Item Details"
+msgstr "تفاصيل الصنف"
+
+#: stock/templates/stock/item_details.html:51
+#: stock/templates/stock/moves_list.html:43
+msgid "Stock limit"
+msgstr "حد الطلب"
+
+#: stock/templates/stock/item_details.html:98
+#: stock/templates/stock/moves_list.html:88
+msgid "Total Quantity"
+msgstr "إجمالي الكمية"
+
+#: stock/templates/stock/item_details.html:148
+msgid "Assembly BOM"
+msgstr "مكونات المجمع"
+
+#: stock/templates/stock/item_new.html:20
+#: stock/templates/stock/items_list.html:48
+msgid "New Item"
+msgstr "صنف جديد"
+
+#: stock/templates/stock/items_list.html:28
+msgid "All"
+msgstr "الكل"
+
+#: stock/templates/stock/items_list.html:120
+msgid "Assembled item"
+msgstr "صنف مجمع"
+
+#: stock/templates/stock/locations_list.html:60
+msgid "Sub"
+msgstr "فرعي"
+
+#: stock/templates/stock/locations_list.html:112
+msgid "No locations Found!"
+msgstr "لا يوجد أماكن"
+
+#: stock/templates/stock/move_new.html:116
+#: stock/templates/stock/transfer_new.html:79
+msgid "Available quantity for this location is "
+msgstr "الكميات المتاحة لهذا المكان "
+
+#: stock/templates/stock/moves_list.html:133
+msgid "New Move"
+msgstr "حركة جديدة"
+
+#: stock/templates/stock/sublocation_new.html:16
+#: stock/templates/stock/sublocations_list.html:41
+#: stock/templates/stock/sublocations_list.html:134
+msgid "New Sub-location"
+msgstr "مكان فرعي جديد"
+
+#: stock/templates/stock/sublocations_list.html:60
+msgid "Sub-location"
+msgstr "مكان فرعي"
+
+#: stock/templates/stock/sublocations_list.html:113
+msgid "No sublocations Found!"
+msgstr "لا يوجد أماكن فرعية"
+
+#: stock/views.py:831
+msgid "Couldn't delete the selected category"
+msgstr "لا يمكن حذف هذا التصنيف"
+
+#: stock/views.py:858
+msgid "Couldn't delete the selected location"
+msgstr "لا يمكن حذف هذا المكان"
+
+#: stock/views.py:887
+msgid "Couldn't delete the selected sub-location"
+msgstr "لا يمكن حذف هذا المكان الفرعي"
+
+#: stock/views.py:914
+msgid "Couldn't delete the selected item"
+msgstr "لا يمكن حذف هذا الصنف"
+
+#: templates/base_.html:170
+msgid "my account"
+msgstr "حسابي الشخصي"
+
+#: templates/base_.html:174
+msgid "my profile"
+msgstr "ملفي الشخصي"
+
+#: templates/base_.html:178
+msgid "my settings"
+msgstr "أدواتي"
+
+#: templates/base_.html:182
+msgid "my activities"
+msgstr "نشاطاتي"
+
+#: templates/base_.html:186
+msgid "change my password"
+msgstr "تغيير كلمة المرور"
+
+#: templates/base_.html:190
+msgid "logout"
+msgstr "تسجيل خروج"
+
+#: templates/error/400.html:12 templates/error/403.html:12
+#: templates/error/404.html:12 templates/error/500.html:12
+msgid "Can't find page"
+msgstr "لا يمكن الوصول للصفحة"
+
+#: templates/error/400.html:13 templates/error/403.html:13
+#: templates/error/404.html:13 templates/error/500.html:13
+msgid "To Home"
+msgstr "للصفحة الرئيسية"
+
+#: vendor/forms.py:30
+msgid "Company tax's code"
+msgstr "الرقم الضريبي للشركة"
+
+#: vendor/templates/vendor/_vendor_delete.html:16
+msgid "Are you sure you want to delete this vendor"
+msgstr "هل أنت متأكد من حذف هذا المورد"
+
+#: vendor/templates/vendor/companies_list.html:9
+#: vendor/templates/vendor/company_details.html:9
+#: vendor/templates/vendor/company_edit.html:10
+#: vendor/templates/vendor/company_new.html:10
+#: vendor/templates/vendor/vendor_details.html:9
+#: vendor/templates/vendor/vendor_edit.html:10
+#: vendor/templates/vendor/vendor_new.html:10
+#: vendor/templates/vendor/vendors_list.html:8
+msgid "Vendors companies"
+msgstr "شركات المورديين"
+
+#: vendor/templates/vendor/company_details.html:50
+#: vendor/templates/vendor/vendor_new.html:16
+msgid "New Vendor"
+msgstr "مورد جديد"
+
+#: vendor/templates/vendor/company_details.html:122
+#: vendor/templates/vendor/vendors_list.html:107
+msgid "No vendors Found!"
+msgstr "لا يوجد موردين"
+
+#: vendor/templates/vendor/vendor_details.html:15
+msgid "Vendor Details"
+msgstr "تفاصيل مورد"
+
+#: vendor/views.py:280
+msgid "Couldn't delete the selected vendor"
+msgstr "لا يمكن حذف هذا المورد"

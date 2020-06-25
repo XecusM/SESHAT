@@ -1,0 +1,35 @@
+{% extends 'base_.html' %}
+{% load static %}
+{% load i18n %}
+{% load x_tags %}
+{% load crispy_forms_tags %}
+{% block content %}
+<nav aria-label="breadcrumb">
+  <ol class="breadcrumb">
+    <li class="breadcrumb-item">
+      <a href="{% url 'customer:companies_list' %}">{% trans 'Customers companies' %}</a>
+    </li>
+    <li class="breadcrumb-item">
+      <a href="{% url 'customer:company_details' pk=company.id %}">{{ company.name }}</a>
+    </li>
+    <li class="breadcrumb-item active" aria-current="page">
+      {% trans 'New Customer' %}
+    </li>
+  </ol>
+</nav>
+<div class="login">
+  <form method="POST">
+      {% csrf_token %}
+      {% for field in form %}
+      {% if field == form.company %}
+        <input type="hidden" name="company" id="id_company" value="{{ company.id }}">
+      {% else %}
+        {{ field|as_crispy_field }}
+      {% endif %}
+      {% endfor %}
+      <div class="text-right">
+        <input class="btn btn-secondary" type="submit" value="{% trans 'Create' %}">
+      </div>
+    </form>
+</div>
+{% endblock %}

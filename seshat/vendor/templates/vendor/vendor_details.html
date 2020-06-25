@@ -1,0 +1,70 @@
+{% extends 'base_.html' %}
+{% load static %}
+{% load i18n %}
+{% load x_tags %}
+{% block content %}
+<nav aria-label="breadcrumb">
+  <ol class="breadcrumb">
+    <li class="breadcrumb-item">
+      <a href="{% url 'vendor:companies_list' %}">{% trans 'Vendors companies' %}</a>
+    </li>
+    <li class="breadcrumb-item">
+      <a href="{% url 'vendor:company_details' pk=vendor.company.id %}">{{ vendor.company.name }}</a>
+    </li>
+    <li class="breadcrumb-item active" aria-current="page">
+      {% trans 'Vendor Details' %}
+    </li>
+  </ol>
+</nav>
+<div class="login">
+  <div class="table-responsive-md">
+    <table class="table table-striped table-sm">
+      <tbody>
+        <tr>
+          <th scope="row">{% trans 'Name' %}</th>
+          <td>{{ vendor.full_name }}</td>
+        </tr>
+        <tr>
+          <th scope="row">{% trans 'Email' %}</th>
+          <td>{{ vendor.email|default_if_none:'' }}</td>
+        </tr>
+        <tr>
+          <th scope="row">{% trans 'Phone' %}</th>
+          <td>{{ vendor.phone|default_if_none:'' }}</td>
+        </tr>
+        <tr>
+          <th scope="row">{% trans 'Department' %}</th>
+          <td>{{ vendor.department|default_if_none:'' }}</td>
+        </tr>
+        <tr>
+          <th scope="row">{% trans 'Job' %}</th>
+          <td>{{ vendor.job|default_if_none:'' }}</td>
+        </tr>
+        <tr>
+          <th scope="row">{% trans 'Note' %}</th>
+          <td>{{ vendor.note|default_if_none:''|safe }}</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+  <div class="text-right">
+    {% if perms.vendor.delete_vendor %}
+    <a class="btn btn-secondary" href="#"
+        data-toggle="modal"
+        data-target="#delete_vendor{{ vendor.id }}">
+      {% trans "Delete" %}
+    </a>
+    {% endif %}
+    {% if perms.vendor.change_vendor %}
+    <a
+      class="btn btn-secondary"
+      href="{% url 'vendor:vendor_edit' pk=vendor.id %}?next={% url 'vendor:vendor_details' pk=vendor.id %}">
+      {% trans 'Edit' %}
+    </a>
+    {% endif %}
+  </div>
+</div>
+{% if perms.vendor.delete_vendor %}
+  {% include 'vendor/_vendor_delete.html' %}
+{% endif %}
+{% endblock %}

@@ -1,0 +1,134 @@
+{% extends 'base_.html' %}
+{% load static %}
+{% load i18n %}
+{% load x_tags %}
+{% block content %}
+<nav aria-label="breadcrumb">
+  <ol class="breadcrumb">
+    <li class="breadcrumb-item">
+      <a href="{% url 'vendor:companies_list' %}">{% trans 'Vendors companies' %}</a>
+    </li>
+    <li class="breadcrumb-item active" aria-current="page">
+      {% trans 'Company details' %}
+    </li>
+  </ol>
+</nav>
+<div class="login">
+  <div class="table-responsive-md">
+    <table class="table table-striped table-sm">
+      <tbody>
+        <tr>
+          <th scope="row">{% trans 'Name' %}</th>
+          <td>{{ vendorcompany.name }}</td>
+        </tr>
+        <tr>
+          <th scope="row">{% trans 'Desciption' %}</th>
+          <td>{{ vendorcompany.desciption|default_if_none:'' }}</td>
+        </tr>
+        <tr>
+          <th scope="row">{% trans 'Phone' %}</th>
+          <td>{{ vendorcompany.phone|default_if_none:'' }}</td>
+        </tr>
+        <tr>
+          <th scope="row">{% trans 'Website' %}</th>
+          <td>{{ vendorcompany.website|default_if_none:'' }}</td>
+        </tr>
+        <tr>
+          <th scope="row">{% trans 'Taxs Code' %}</th>
+          <td>{{ vendorcompany.taxs_code|default_if_none:'' }}</td>
+        </tr>
+        <tr>
+          <th scope="row">{% trans 'Note' %}</th>
+          <td>{{ vendorcompany.note|default_if_none:''|safe }}</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+  <div class="text-right">
+    {% if perms.vendor.add_vendor %}
+    <a class="btn btn-secondary dash" href="{% url 'vendor:vendor_new' pk=vendorcompany.id %}">
+      <i class='fas fa-plus-circle'></i> {% trans "New Vendor" %}
+    </a>
+    {% endif %}
+    {% if perms.vendor.change_vendorcompany %}
+    <a
+      class="btn btn-secondary"
+      href="{% url 'vendor:company_edit' pk=vendorcompany.id %}">
+      {% trans 'Edit' %}
+    </a>
+    {% endif %}
+  </div>
+</div>
+<hr>
+<div class="table-responsive-md">
+  <table class="table table-striped table-sm">
+    <tbody>
+      <tr>
+        <th scope="row">{% trans 'Name' %}</th>
+        <td>
+          <strong>{% trans 'Department' %}</strong>
+        </td>
+        <td>
+          <strong>{% trans 'Job' %}</strong>
+        </td>
+        <td>
+          <strong>{% trans 'Created at' %}</strong>
+        </td>
+        <td></td>
+        <td></td>
+      </tr>
+      {% for vendor in vendorcompany.get_vendors %}
+      <tr>
+        <th scope="row">
+          {% if perms.vendor.view_vendor %}
+          <a href="{% url 'vendor:vendor_details' pk=vendor.id %}">
+            {{ vendor.full_name }}
+          </a>
+          {% else %}
+            {{ vendor.full_name }}
+          {% endif %}
+        </th>
+        <td>{{ vendor.department|default_if_none:'' }}</td>
+        <td>{{ vendor.job|default_if_none:'' }}</td>
+        <td>{{ vendor.created_at }}</td>
+        <td>
+          {% if perms.vendor.change_vendor %}
+          <a
+            href="{% url 'vendor:vendor_edit' pk=vendor.id %}?next={% url 'vendor:company_details' pk=vendor.company.id %}"
+            data-toggle="tooltip"
+            data-placement="top"
+            title="{% trans 'Edit' %}">
+            <i class='far fa-edit'></i>
+          </a>
+          {% endif %}
+        </td>
+        <td>
+          {% if perms.vendor.delete_vendor %}
+          <span
+              data-toggle="tooltip"
+              data-placement="top"
+              title="{% trans 'Delete' %}">
+            <a href="#"
+              data-toggle="modal"
+              data-target="#delete_vendor{{ vendor.id }}">
+              <i class='fas fa-trash-alt'></i>
+            </a>
+          </span>
+          {% endif %}
+        </td>
+      </tr>
+      {% empty %}
+      <tr>
+        <th scope="row">{% trans "No vendors Found!" %}</th>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</div>
+{% for vendor in vendorcompany.get_vendors %}
+{% if perms.vendor.delete_vendor %}
+  {% include 'vendor/_vendor_delete.html' %}
+{% endif %}
+{% endfor %}
+{% include 'x_django_app/_pagination.html' %}
+{% endblock %}

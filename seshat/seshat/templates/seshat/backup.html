@@ -1,0 +1,90 @@
+{% extends 'base_.html' %}
+{% load static %}
+{% load i18n %}
+{% load custom_tags %}
+{% block content %}
+<nav aria-label="breadcrumb">
+  <ol class="breadcrumb">
+    <li class="breadcrumb-item">
+      <a href="{% url 'account:index' %}">{% trans 'Admin Dashboard' %}</a>
+    </li>
+    <li class="breadcrumb-item active" aria-current="page">
+      {% trans 'Backup' %}
+    </li>
+  </ol>
+</nav>
+<form method="POST" action="{% url 'backup' %}" id="app">
+  {% csrf_token %}
+  <div class="table-responsive-md login">
+    <div class="row">
+      <div class="col-6 text-center">
+        <button
+            name="backup"
+            class="btn btn-secondary" type="submit">
+            {% trans 'Create Backup File' %}
+        </button>
+      </div>
+      <div class="col-6 text-center">
+        <button
+          name="delete"
+          class="btn btn-secondary" type="submit"
+          id="id_delete" disabled>
+          {% trans 'Delete File(s)' %}
+        </button>
+      </div>
+    </div>
+    <p></p>
+    <table class="table table-striped table-sm">
+      <tbody>
+        <tr>
+          <th scope="row">
+            {% trans 'Name' %}
+          </th>
+          <td></td>
+        </tr>
+        {% for file in files %}
+        <tr class="table-row">
+          <th scope="row">
+            <a href="{% url 'download_backup' pk=file|get_index:files %}">
+              {{ file }}
+            </a>
+          </th>
+          <td>
+            <input
+                  class="form-check-input"
+                  type="checkbox"
+                  name="{{ file|button_name:files }}" value="{{ file }}"
+                  v-model="filesList"
+                  @change="buttonStatus($event)">
+          </td>
+        </tr>
+        {% empty %}
+        <tr>
+          <th scope="row">{% trans "No files Found!" %}</th>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+</form>
+{% endblock %}
+{% block script %}
+<script type="text/javascript">
+  new Vue ({
+    el: '#app',
+    data: {
+      filesList: [],
+    },
+    methods: {
+      buttonStatus(event){
+        var deleteButton = document.getElementById('id_delete')
+        if (0 < this.filesList.length) {
+          deleteButton.removeAttribute('disabled')
+        } else{
+          deleteButton.setAttribute('disabled', 'disabled')
+        }
+      },
+    },
+  })
+</script>
+{% endblock%}

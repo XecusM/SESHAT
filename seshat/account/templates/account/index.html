@@ -1,0 +1,90 @@
+{% extends 'base_.html' %}
+{% load static %}
+{% load i18n %}
+{% load x_tags %}
+{% block content %}
+<div class="row">
+  <div class="col-md-4 col-sm-6 mb-3">
+    <div class="card login">
+      <div class="card-header">
+        <h4>{% trans 'Tools' %}</h4>
+      </div>
+      <div class="card-body text-center">
+        {% if perms.account.view_user %}
+        <p><a href="{% url 'account:list' %}">
+          {% trans 'Accounts' %}
+        </a></p>
+        {% endif %}
+        {% if perms.report.view_activity %}
+        <p><a href="{% url 'account:all_activities_list' %}">
+          {% trans 'Activities' %}
+        </a></p>
+        {% endif %}
+        <hr>
+        {% if perms.account.backup %}
+        <p><a href="{% url 'backup'%}">
+          {% trans 'Backup' %}
+        </a></p>
+        {% endif %}
+        {% if perms.account.restore %}
+        <p><a href="{% url 'restore'%}">
+          {% trans 'Restore' %}
+        </a></p>
+        {% endif %}
+        <hr>
+        {% if perms.account.import %}
+        <p><a href="{% url 'import'%}">
+          {% trans 'Import' %}
+        </a></p>
+        {% endif %}
+        {% if perms.account.export %}
+        <p><a href="{% url 'export'%}">
+          {% trans 'Export' %}
+        </a></p>
+        {% endif %}
+      </div>
+    </div>
+  </div>
+  <div class="col-md-8">
+    <div class="card">
+      <div class="card-header">
+        <h4>{% trans 'Latest Activities' %}</h4>
+      </div>
+      <div class="card-body">
+        <div class="table-responsive-md">
+          <table class="table table-striped table-sm">
+            <tbody>
+              <tr>
+                <th scope="row">
+                  {% trans 'Activity' %}
+                </th>
+                <td>
+                  <strong>
+                    {% trans 'Object' %}
+                  </strong>
+                </td>
+                <td>
+                  <strong>
+                    {% trans 'Created by' %}
+                  </strong>
+                </td>
+              </tr>
+              {% for activity in activity_list %}
+              <tr class="table-row">
+                <th scope="row">{{ activity.get_activity_display }}</th>
+                <td>{{ activity.message }}</td>
+                <td>{{ activity.user.username }}</td>
+              </tr>
+              {% empty %}
+              <tr>
+                <th scope="row">{% trans 'No activity found' %}</th>
+              </tr>
+              {% endfor %}
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}

@@ -1,0 +1,49 @@
+{% extends 'base_.html' %}
+{% load static %}
+{% load i18n %}
+{% load x_tags %}
+{% block content %}
+{% if perms.account.view_user %}
+<nav aria-label="breadcrumb">
+  <ol class="breadcrumb">
+    <li class="breadcrumb-item">
+      <a href="{% url 'account:index' %}">{% trans 'Admin Dashboard' %}</a>
+    </li>
+    <li class="breadcrumb-item">
+      <a href="{% url 'account:list' %}">{% trans 'Accounts' %}</a>
+    </li>
+    <li class="breadcrumb-item active" aria-current="page">
+      {% trans 'User settings' %}
+    </li>
+  </ol>
+</nav>
+{% endif %}
+<div class="login">
+  {% include 'account/_user.html' with user=usersettings.user %}
+  <div class="table-responsive-md">
+    <table class="table table-striped table-sm">
+      <tbody>
+        <tr>
+          <th scope="row">{% trans 'Language' %}</th>
+          <td>{{ usersettings.get_language_display }}</td>
+        </tr>
+        <tr>
+          <th scope="row">{% trans 'Page limit' %}</th>
+          <td>{{ usersettings.paginate }}</td>
+        </tr>
+        <tr>
+          <th scope="row">{% trans 'Default page' %}</th>
+          <td>{{ usersettings.get_default_page_display }}</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+  <div class="text-right">
+    <a
+    class="btn btn-secondary"
+    href="{% url 'account:settings_edit' pk=usersettings.id %}">
+    {% trans 'Change Settings' %}
+  </a>
+  </div>
+</div>
+{% endblock %}

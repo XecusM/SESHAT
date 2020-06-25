@@ -1,0 +1,29 @@
+{% load i18n %}
+{% url 'stock:item_details' pk=item.id as item_details %}
+{% url 'stock:item_edit' pk=item.id as item_edit %}
+{% url 'stock:moves_list' pk=item.id as item_moves %}
+{% url 'stock:move_new' pk=item.id as new_move %}
+{% url 'stock:transfer_new' pk=item.id as new_transfer %}
+<ul class="nav nav-tabs">
+  <li class="nav-item">
+    <a
+      {% if item_details in request.get_full_path or item_edit in request.get_full_path %}
+        class="nav-link active"
+      {% else %}
+        class="nav-link"
+      {% endif %}
+      href="{{ item_details }}">{% trans 'Details' %}</a>
+  </li>
+  {% if perms.srock.view_itemmove %}
+  <li class="nav-item">
+    <a
+      {% if item_moves in request.get_full_path or new_move in request.get_full_path or new_transfer in request.get_full_path %}
+        class="nav-link active"
+      {% else %}
+        class="nav-link"
+      {% endif %}
+      href="{{ item_moves }}">{% trans 'Moves' %}</a>
+  </li>
+  {% endif %}
+</ul>
+<br>

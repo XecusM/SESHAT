@@ -1,0 +1,51 @@
+{% load i18n %}
+{% url 'account:details' pk=user.id as user_details %}
+{% url 'account:edit' pk=user.id as user_edit %}
+{% url 'account:profile_details' pk=user.user_profile.id as profile_details %}
+{% url 'account:profile_edit' pk=user.user_profile.id as profile_edit %}
+{% url 'account:settings_details' pk=user.user_settings.id as settings_details %}
+{% url 'account:settings_edit' pk=user.user_settings.id as settings_edit %}
+{% url 'account:activities_list' pk=user.id as user_activity %}
+<ul class="nav nav-tabs">
+  <li class="nav-item">
+    <a
+      {% if user_details in request.get_full_path or user_edit in request.get_full_path %}
+        class="nav-link active"
+      {% else %}
+        class="nav-link"
+      {% endif %}
+      href="{{ user_details }}">{% trans 'Account' %}</a>
+  </li>
+  <li class="nav-item">
+    <a
+      {% if profile_details in request.get_full_path or profile_edit in request.get_full_path %}
+        class="nav-link active"
+      {% else %}
+        class="nav-link"
+      {% endif %}
+      href="{{ profile_details }}">{% trans 'Profile' %}</a>
+  </li>
+  {% if request.user == user %}
+  <li class="nav-item">
+    <a
+      {% if settings_details in request.get_full_path or settings_edit in request.get_full_path %}
+        class="nav-link active"
+      {% else %}
+        class="nav-link"
+      {% endif %}
+      href="{{ settings_details }}">{% trans 'Settings'%}</a>
+  </li>
+  {% endif %}
+  {% if request.user == user or perms.report.view_activity %}
+  <li class="nav-item">
+    <a
+      {% if user_activity in request.get_full_path %}
+        class="nav-link active"
+      {% else %}
+        class="nav-link"
+      {% endif %}
+      href="{{ user_activity }}">{% trans 'Activities'%}</a>
+  </li>
+  {% endif %}
+</ul>
+<br>

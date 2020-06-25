@@ -1,0 +1,2 @@
+# Treat js files as python to fix language recognition in github
+* .js linguist-language=Python

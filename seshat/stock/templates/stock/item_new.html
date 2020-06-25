@@ -1,0 +1,224 @@
+{% extends 'base_.html' %}
+{% load static %}
+{% load i18n %}
+{% load x_tags %}
+{% load crispy_forms_tags %}
+{% block head %}
+<!--Cropper.js-->
+<link href="{% static 'css/cropper.min.css' %}" rel="stylesheet">
+{% endblock %}
+{% block content %}
+<nav aria-label="breadcrumb">
+  <ol class="breadcrumb">
+    <li class="breadcrumb-item">
+      <a href="{% url 'stock:index' %}">{% trans 'Stock Dashboard' %}</a>
+    </li>
+    <li class="breadcrumb-item">
+      <a href="{% url 'stock:items_list' %}">{% trans 'Items' %}</a>
+    </li>
+    <li class="breadcrumb-item active" aria-current="page">
+      {% trans 'New Item' %}
+    </li>
+  </ol>
+</nav>
+<div class="login">
+  <form method="POST" enctype="multipart/form-data">
+      {% csrf_token %}
+      {{ form|crispy }}
+      <div id="app">
+        <div class="form-group">
+          <div id="id_is_assembly" class="form-check">
+            <input
+                  type="checkbox" name="is_assembly"
+                  class="checkboxinput form-check-input" id="id_is_assembly"
+                  @click="CheckedStatus" :checked="assembly">
+            <label for="id_is_assembly" class="form-check-label">
+                    {% trans 'Assembled Item' %}
+            </label>
+          </div>
+        </div>
+        <div v-if="assembly ==  'checked'">
+          {% if error_message %}
+          <div class="alert alert-danger" role="alert">
+            <strong>{{ error_message }}</strong>
+          </div>
+          {% endif %}
+          <hr>
+          <span id="button" @click="AddItem">{% trans 'Add Item' %}</span>
+          <p></p>
+          <input type="hidden" name="items" :value="items">
+          <div v-for="item in items">
+            <div class="row">
+              <div class="col-md-8">
+                <select
+                        :id="'id_' + item + 'sub_item'"
+                        :name="item + 'sub_item'"
+                        v-model="items_selects[item - 1]"
+                        class="selectpicker form-control"
+                        data-live-search="true"
+                        data-style="btn-outline-primary" required>
+                  <option value="" disabled>
+                    {% trans 'Select item' %}
+                  </option>
+                  <option
+                        v-for="sub_item in sub_items"
+                        :value="sub_item.id"
+                        :data-tokens="sub_item.code + '-' + sub_item.desciption">
+                    {[{ sub_item.code }]}-{[{ sub_item.desciption }]}
+                  </option>
+                </select>
+              </div>
+              <div class="col-md-4">
+                <input
+                      type="number" :name="item + 'quantity'" min="1"
+                      placeholder="{% trans 'Quantity'%}"
+                      class="numberinput form-control"
+                      v-model="quantities[item - 1]"
+                      :id="'id_'+ item + 'quantity'" required>
+                <p></p>
+              </div>
+            </div>
+          </div>
+          <span id="button" @click="RemoveItem" v-show="items > 2">
+            {% trans 'Remove Item'%}
+          </span>
+          <hr>
+        </div>
+      </div>
+      <div class="text-right">
+        <input class="btn btn-secondary" type="submit" value="{% trans 'Create' %}">
+      </div>
+    </form>
+</div>
+
+<!-- MODAL TO CROP THE IMAGE -->
+<div class="modal fade" role="dialog" id="modalCrop">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header text-left">
+        <h4 class="modal-title">{% trans 'Crop the photo' %}</h4>
+      </div>
+      <div class="modal-body">
+        <img src="" id="image" style="max-width: 100%;">
+      </div>
+      <div class="modal-footer">
+        <div class="btn-group pull-left" role="group">
+          <button type="button" class="btn btn-default js-zoom-in">
+            <i class='fas fa-search-plus'></i>
+          </button>
+          <button type="button" class="btn btn-default js-zoom-out">
+            <i class='fas fa-search-minus'></i>
+          </button>
+        </div>
+        <button type="button" class="btn btn-default js-cancel" data-dismiss="modal">{% trans 'Cancel' %}</button>
+        <button type="button" class="btn btn-primary js-crop">{% trans 'Crop' %}</button>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}
+{% block script %}
+<script src="{% static 'js/cropper.min.js' %}"></script>
+<script>
+  $(function () {
+
+    /* SCRIPT TO OPEN THE MODAL WITH THE PREVIEW */
+    $("#id_photo").change(function () {
+      if (this.files && this.files[0]) {
+        var reader = new FileReader();
+        reader.onload = function (e) {
+          $("#image").attr("src", e.target.result);
+          $("#modalCrop").modal("show");
+        }
+        reader.readAsDataURL(this.files[0]);
+      }
+    });
+
+    /* SCRIPTS TO HANDLE THE CROPPER BOX */
+    var $image = $("#image");
+    var cropBoxData;
+    var canvasData;
+    $("#modalCrop").on("shown.bs.modal", function () {
+      $image.cropper({
+        viewMode: 1,
+        aspectRatio: 1/1,
+        minCropBoxWidth: 500,
+        minCropBoxHeight: 500,
+        ready: function () {
+          $image.cropper("setCanvasData", canvasData);
+          $image.cropper("setCropBoxData", cropBoxData);
+        }
+      });
+    }).on("hidden.bs.modal", function () {
+      cropBoxData = $image.cropper("getCropBoxData");
+      canvasData = $image.cropper("getCanvasData");
+      $image.cropper("destroy");
+    });
+
+    $(".js-zoom-in").click(function () {
+      $image.cropper("zoom", 0.1);
+    });
+
+    $(".js-zoom-out").click(function () {
+      $image.cropper("zoom", -0.1);
+    });
+
+    /* SCRIPT TO COLLECT THE DATA AND POST TO THE SERVER */
+    $(".js-crop").click(function () {
+      var cropData = $image.cropper("getData");
+      $("#id_x").val(cropData["x"]);
+      $("#id_y").val(cropData["y"]);
+      $("#id_height").val(cropData["height"]);
+      $("#id_width").val(cropData["width"]);
+      $('#modalCrop').modal('hide')
+    });
+    // on cancel remove selected image
+    $(".js-cancel").click(function () {
+      $('#id_photo').val('');
+    });
+  });
+</script>
+
+<script type="text/javascript">
+  new Vue ({
+      el: '#app',
+      data: {
+        assembly: {% if assembly %} "{{ assembly }}" {% else %} "" {% endif %},
+        items: {% if items %} {{ items }} {% else %} 2 {% endif %},
+        sub_items: {% if sub_items %} {{ sub_items|safe }} {% else %} "" {% endif %},
+        sub_items_data: {% if sub_items_data %} {{ sub_items_data|safe }} {% else %} "" {% endif %},
+        quantities:[],
+        items_selects: [],
+      },
+      methods: {
+        CheckedStatus() {
+          if (this.assembly == 'checked'){
+            this.assembly = ''
+          } else {
+            this.assembly = 'checked'
+          }
+        },
+        AddItem() {
+          this.items++
+        },
+        RemoveItem() {
+          this.items--
+        },
+      },
+      created() {
+        if (this.sub_items_data){
+          for (var i = 0; i < this.sub_items_data.length; i++){
+            this.items_selects[i] = this.sub_items_data[i].value
+            this.quantities[i] = this.sub_items_data[i].quantity
+          }
+        }
+      },
+      updated(){
+        this.$nextTick(function(){
+          $('.selectpicker').selectpicker('refresh')
+        })
+    	},
+      delimiters: ['{[{', '}]}'],
+  })
+</script>
+{% endblock %}

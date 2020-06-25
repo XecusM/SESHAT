@@ -1,0 +1,62 @@
+/* logo style */
+.navbar-brand{
+  height: 80px;
+  width: auto;
+}
+/* control login card width */
+.login{
+  width: 50%;
+  margin-left: auto;
+  margin-right: auto;
+}
+/* 50px top margine */
+.margine-50{
+  margin-top: 50px;
+}
+/* default button */
+.btn-secondary{
+  background-color: #526C71;
+}
+/* default select */
+.btn-outline-primary{
+  border-color: #C1BCBA;
+  color: black;
+}
+.btn-outline-primary:hover{
+  background-color: #C1BCBA;
+}
+/* Language direction */
+.arabic{
+  direction: rtl;
+}
+/* links style */
+a{
+  color: #526C71;
+}
+a:hover{
+  color: #A68569;
+  text-decoration: none;
+}
+/* highlight table's row */
+.table-row:hover{
+  background-color: #C1BCBA !important;
+}
+/* breadcrumb style */
+.breadcrumb{
+  background-color: #EBEBED;
+}
+.breadcrumb a{
+  font-weight: bold;
+}
+.image-200{
+  max-width: 200px;
+  height: auto;
+}
+/* change style as link */
+#button {
+  color: #526C71;
+  cursor: pointer;
+}
+#button:hover {
+  color: #A68569;
+}

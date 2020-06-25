@@ -1,0 +1,38 @@
+{% extends 'base_.html' %}
+{% load static %}
+{% load i18n %}
+{% load x_tags %}
+{% load crispy_forms_tags %}
+{% block content %}
+<nav aria-label="breadcrumb">
+  <ol class="breadcrumb">
+    <li class="breadcrumb-item">
+      <a href="{% url 'stock:items_list' %}">{% trans 'Items' %}</a>
+    </li>
+    <li class="breadcrumb-item">
+      <a href="{% url 'stock:locations_list' %}">{% trans 'Locations' %}</a>
+    </li>
+    <li class="breadcrumb-item active" aria-current="page">
+      {% trans 'Edit Location' %}
+    </li>
+  </ol>
+</nav>
+<div class="login">
+  <form method="POST">
+      {% csrf_token %}
+      {{ form|crispy }}
+      <div class="text-right">
+        {% if next %}
+          <a href="{{ next }}" class="btn btn-secondary">
+            {% trans 'Cancel' %}
+          </a>
+        {% else %}
+          <a href="{% url 'stock:locations_list' %}" class="btn btn-secondary">
+            {% trans 'Cancel' %}
+          </a>
+        {% endif %}
+        <input class="btn btn-secondary" type="submit" value="{% trans 'Save' %}">
+      </div>
+    </form>
+</div>
+{% endblock %}

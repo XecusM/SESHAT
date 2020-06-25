@@ -1,0 +1,38 @@
+{% load i18n %}
+{% load x_tags %}
+<a
+    class="btn btn-secondary dash"
+    data-toggle="collapse"
+    href="#permissions"
+    role="button"
+    aria-expanded="false"
+    aria-controls="permissions">
+  {% trans "Permissions" %}
+</a>
+<div class="collapse" id="permissions">
+  <p></p>
+  {% for permission in permissions %}
+    <fieldset class="card card-body">
+      <legend class="card-title">{{ permission.title }}</legend>
+      <div class="row">
+        {% for item in permission.permissions %}
+        <div class="col-md-6">
+          <div class="form-check">
+            <input
+                  type="checkbox" name="{{ item.0 }}"
+                  class="form-check-input" id="id_{{ item.0 }}"
+                  {% if user|permission_check:item.0 %}checked{% endif %}>
+            <label class="form-check-label" for="id_{{ item.0 }}">
+              <i>
+                {{ item.1 }}
+              </i>
+            </label>
+          </div>
+        </div>
+        {% endfor %}
+      </div>
+    </fieldset>
+    <p></p>
+  {% endfor %}
+</div>
+<hr>

@@ -1,0 +1,15 @@
+{% extends 'base_.html' %}
+{% load static %}
+{% load i18n %}
+{% block content %}
+<div class="text-center">
+  <hr>
+  <h4>{{ message }}</h4>
+  <hr>
+</div>
+{% endblock %}
+{% block script %}
+<script type="text/javascript">
+  setTimeout(function() {window.location.href = "{{ link }}";}, 3000);
+</script>
+{% endblock %}

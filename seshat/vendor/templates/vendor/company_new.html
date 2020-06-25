@@ -1,0 +1,26 @@
+{% extends 'base_.html' %}
+{% load static %}
+{% load i18n %}
+{% load x_tags %}
+{% load crispy_forms_tags %}
+{% block content %}
+<nav aria-label="breadcrumb">
+  <ol class="breadcrumb">
+    <li class="breadcrumb-item">
+      <a href="{% url 'vendor:companies_list' %}">{% trans 'Vendors companies' %}</a>
+    </li>
+    <li class="breadcrumb-item active" aria-current="page">
+      {% trans 'New Company' %}
+    </li>
+  </ol>
+</nav>
+<div class="login">
+  <form method="POST">
+      {% csrf_token %}
+      {{ form|crispy }}
+      <div class="text-right">
+        <input class="btn btn-secondary" type="submit" value="{% trans 'Create' %}">
+      </div>
+    </form>
+</div>
+{% endblock %}

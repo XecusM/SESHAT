@@ -1,0 +1,41 @@
+{% extends 'base_.html' %}
+{% load static %}
+{% load i18n %}
+{% load crispy_forms_tags %}
+{% block content %}
+{% if perms.account.view_user %}
+<nav aria-label="breadcrumb">
+  <ol class="breadcrumb">
+    <li class="breadcrumb-item">
+      <a href="{% url 'account:index' %}">{% trans 'Admin Dashboard' %}</a>
+    </li>
+    <li class="breadcrumb-item">
+      <a href="{% url 'account:list' %}">{% trans 'Accounts' %}</a>
+    </li>
+    <li class="breadcrumb-item active" aria-current="page">
+      {% trans 'Edit user account' %}
+    </li>
+  </ol>
+</nav>
+{% endif %}
+<div class="login">
+{% include 'account/_user.html' %}
+  <form method="POST">
+      {% csrf_token %}
+      {{ form|crispy }}
+      {% include 'account/_permissions.html' %}
+      <div class="text-right">
+        {% if next %}
+          <a href="{{ next }}" class="btn btn-secondary">
+            {% trans 'Cancel' %}
+          </a>
+        {% else %}
+          <a href="{% url 'account:details' pk=user.id %}" class="btn btn-secondary">
+            {% trans 'Cancel' %}
+          </a>
+        {% endif %}
+        <input class="btn btn-secondary" type="submit" value="{% trans 'Save' %}">
+      </div>
+    </form>
+</div>
+{% endblock %}

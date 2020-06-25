@@ -1,0 +1,60 @@
+{% extends 'base_.html' %}
+{% load static %}
+{% load i18n %}
+{% block content %}
+<nav aria-label="breadcrumb">
+  <ol class="breadcrumb">
+    <li class="breadcrumb-item">
+      <a href="{% url 'account:index' %}">{% trans 'Admin Dashboard' %}</a>
+    </li>
+    <li class="breadcrumb-item active" aria-current="page">
+      {% trans 'Export' %}
+    </li>
+  </ol>
+</nav>
+<div class="login">
+  <br>
+  <h4>{% trans 'Select module to export ....' %}</h4>
+  <hr>
+  <form action="{% url 'export' %}" method="POST">
+    {% csrf_token %}
+    <div class="row">
+      <div class="col-md-8">
+        <select class="form-control" name="export" required>
+          <option value="" selected>
+            {% trans 'Select Export' %}
+          </option>
+          <option value="stock.Item">
+            {% trans 'Items' %}
+          </option>
+          <option value="stock.Category">
+            {% trans "Items' categories" %}
+          </option>
+          <option value="stock.SubLocation">
+            {% trans "Items' locations" %}
+          </option>
+          <option value="customer.Customer">
+            {% trans "Customers" %}
+          </option>
+          <option value="customer.CustomerCompany">
+            {% trans "Customers' companies" %}
+          </option>
+          <option value="vendor.Vendor">
+            {% trans "Vendors"%}
+          </option>
+          <option value="vendor.VendorCompany">
+            {% trans "Vendors' companies" %}
+          </option>
+        </select>
+        <p></p>
+      </div>
+      <div class="col-md-4">
+        <input
+              class="btn btn-secondary" type="submit"
+              name="submit" value="{% trans 'Export' %}">
+      </div>
+    </div>
+  </form>
+  <hr>
+</div>
+{% endblock %}

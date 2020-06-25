@@ -1,0 +1,61 @@
+{% extends 'base_.html' %}
+{% load static %}
+{% load i18n %}
+{% load x_tags %}
+{% block content %}
+{% if perms.account.view_user %}
+<nav aria-label="breadcrumb">
+  <ol class="breadcrumb">
+    <li class="breadcrumb-item">
+      <a href="{% url 'account:index' %}">{% trans 'Admin Dashboard' %}</a>
+    </li>
+    <li class="breadcrumb-item">
+      <a href="{% url 'account:list' %}">{% trans 'Accounts' %}</a>
+    </li>
+    <li class="breadcrumb-item active" aria-current="page">
+      {% trans 'User profile' %}
+    </li>
+  </ol>
+</nav>
+{% endif %}
+<div class="login">
+  {% include 'account/_user.html' with user=userprofile.user %}
+  <div class="text-center">
+    {% if userprofile.photo %}
+      <img style="max-width: 100px;" class="rounded" src="{{ userprofile.photo.url }}" alt="profile">
+    {% else %}
+      <img style="max-width: 100px;" class="rounded" src="{% static 'images/generic-person.jpg'%}" alt="profile">
+    {% endif %}
+    <p></p>
+  </div>
+  <div class="table-responsive-md">
+    <table class="table table-striped table-sm">
+      <tr>
+        <th scope="row">{% trans 'Email' %}</th>
+        <td>{{ userprofile.email|default_if_none:'' }}</td>
+      </tr>
+      <tr>
+        <th scope="row">{% trans 'Phone' %}</th>
+        <td>{{ userprofile.phone|default_if_none:'' }}</td>
+      </tr>
+      <tr>
+        <th scope="row">{% trans 'Birthdate' %}</th>
+        <td>{{ userprofile.birthdate|default_if_none:'' }}</td>
+      </tr>
+      <tr>
+        <th scope="row">{% trans 'Gender' %}</th>
+        <td>{{ userprofile.get_gender_display|default_if_none:'' }}</td>
+      </tr>
+    </table>
+  </div>
+  <div class="text-right">
+    {% if request.user == userprofile.user %}
+    <a
+      class="btn btn-secondary"
+      href="{% url 'account:profile_edit' pk=userprofile.id %}">
+      {% trans 'Edit' %}
+    </a>
+    {% endif %}
+  </div>
+</div>
+{% endblock %}

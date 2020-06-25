@@ -1,0 +1,70 @@
+{% extends 'base_.html' %}
+{% load static %}
+{% load i18n %}
+{% load x_tags %}
+{% block content %}
+<nav aria-label="breadcrumb">
+  <ol class="breadcrumb">
+    <li class="breadcrumb-item">
+      <a href="{% url 'customer:companies_list' %}">{% trans 'Customers companies' %}</a>
+    </li>
+    <li class="breadcrumb-item">
+      <a href="{% url 'customer:company_details' pk=customer.company.id %}">{{ customer.company.name }}</a>
+    </li>
+    <li class="breadcrumb-item active" aria-current="page">
+      {% trans 'Customer Details' %}
+    </li>
+  </ol>
+</nav>
+<div class="login">
+  <div class="table-responsive-md">
+    <table class="table table-striped table-sm">
+      <tbody>
+        <tr>
+          <th scope="row">{% trans 'Name' %}</th>
+          <td>{{ customer.full_name }}</td>
+        </tr>
+        <tr>
+          <th scope="row">{% trans 'Email' %}</th>
+          <td>{{ customer.email|default_if_none:'' }}</td>
+        </tr>
+        <tr>
+          <th scope="row">{% trans 'Phone' %}</th>
+          <td>{{ customer.phone|default_if_none:'' }}</td>
+        </tr>
+        <tr>
+          <th scope="row">{% trans 'Department' %}</th>
+          <td>{{ customer.department|default_if_none:'' }}</td>
+        </tr>
+        <tr>
+          <th scope="row">{% trans 'Job' %}</th>
+          <td>{{ customer.job|default_if_none:'' }}</td>
+        </tr>
+        <tr>
+          <th scope="row">{% trans 'Note' %}</th>
+          <td>{{ customer.note|default_if_none:''|safe }}</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+  <div class="text-right">
+    {% if perms.customer.delete_customer %}
+    <a class="btn btn-secondary" href="#"
+        data-toggle="modal"
+        data-target="#delete_customer{{ customer.id }}">
+      {% trans "Delete" %}
+    </a>
+    {% endif %}
+    {% if perms.customer.change_customer %}
+    <a
+      class="btn btn-secondary"
+      href="{% url 'customer:customer_edit' pk=customer.id %}?next={% url 'customer:customer_details' pk=customer.id %}">
+      {% trans 'Edit' %}
+    </a>
+    {% endif %}
+  </div>
+</div>
+{% if perms.customer.delete_customer %}
+  {% include 'customer/_customer_delete.html' %}
+{% endif %}
+{% endblock %}
