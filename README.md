@@ -17,14 +17,14 @@
 
 **Install:**
 
-* Install dependents;
+* Install dependents\
 pip install -r requirments.txt
 
-* Migrate the project;
-python manage.py makemigrations;
+* Migrate the project\
+python manage.py makemigrations\
 python manage.py migrate
 
-* Create superuser;
+* Create superuser\
 python manage.py createsuperuser
 
 
