@@ -17,6 +17,9 @@
 
 **Install:**
 
+* Install python > 3.7.3\
+recommended python==3.8.2
+
 * Install dependents\
 pip install -r requirments.txt
 
