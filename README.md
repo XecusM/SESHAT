@@ -1,6 +1,6 @@
 ![Repository Logo](./seshat/static/images/logo.png)
 
-SESHAT is an inventory management open source we-application based on django. it's suitable for small business.
+**SESHAT** is an inventory management open source we-application based on Django. it's suitable for small business.
 
 **Features:**
 
@@ -17,14 +17,14 @@ SESHAT is an inventory management open source we-application based on django. it
 
 **Install:**
 
-* Install dependents
+* Install dependents;
 pip install -r requirments.txt
 
-* Migrate the project
-python manage.py makemigrations
-python manage.py Migrate
+* Migrate the project;
+python manage.py makemigrations;
+python manage.py migrate
 
-* Create superuser
+* Create superuser;
 python manage.py createsuperuser
 
 
