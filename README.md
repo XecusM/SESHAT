@@ -1,5 +1,4 @@
-# SEHSAT
-Inventory managment web-application
+![Repository Logo](./seshat/static/images/logo.png)
 
 SESHAT is an inventory management open source we-application based on django. it's suitable for small business.
 
