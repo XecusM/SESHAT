@@ -13,8 +13,7 @@
     </li>
   </ol>
 </nav>
-<form class="login" method="POST" action="{% url 'account:all_activities_list' %}">
-  {% csrf_token %}
+<form class="login" method="GET" action="{% url 'account:all_activities_list' %}">
   <div class="row">
     <div class="col-lg-10">
       <input

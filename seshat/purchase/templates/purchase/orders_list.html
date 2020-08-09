@@ -8,8 +8,7 @@
     {% trans 'Purchase orders' %}
   </li>
 </ol>
-<form method="POST" action="{% url 'purchase:orders_list' %}">
-  {% csrf_token %}
+<form method="GET" action="{% url 'purchase:orders_list' %}">
   <div class="row">
     <div class="col-lg-6">
       <input

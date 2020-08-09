@@ -16,8 +16,7 @@
   </ol>
 </nav>
   {% if perms.account.add_user %}
-  <form method="POST" action="{% url 'account:list' %}">
-    {% csrf_token %}
+  <form method="GET" action="{% url 'account:list' %}">
     <div class="row">
       <div class="col-md-7">
         <input

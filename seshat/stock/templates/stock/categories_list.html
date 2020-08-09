@@ -14,8 +14,7 @@
     </li>
   </ol>
 </nav>
-<form method="POST" action="{% url 'stock:categories_list' %}">
-  {% csrf_token %}
+<form method="GET" action="{% url 'stock:categories_list' %}">
   <div class="row">
     <div class="col-lg-6">
       <input

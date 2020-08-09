@@ -11,8 +11,7 @@
     {% trans 'Customers list' %}
   </li>
 </ol>
-<form method="POST" action="{% url 'vendor:vendors_list' %}">
-  {% csrf_token %}
+<form method="GET" action="{% url 'vendor:vendors_list' %}">
   <div class="row">
     <div class="col-lg-7">
       <input
