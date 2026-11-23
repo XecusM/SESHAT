@@ -1,0 +1,36 @@
+{% extends 'account/dashboard_base_.html' %}
+{% load i18n %}
+{% block title %}{% trans 'Activities' %} | {% endblock %}
+{% block dashboard_content %}
+<div class="page-header">
+  <div>
+    <nav aria-label="breadcrumb"><ol class="breadcrumb">
+      <li class="breadcrumb-item"><a href="{% url 'account:Index' %}">{% trans 'Administration' %}</a></li>
+      <li class="breadcrumb-item active" aria-current="page">{% trans 'Activities' %}</li>
+    </ol></nav>
+    <h1 class="page-title">{% trans 'All activities' %}</h1>
+  </div>
+</div>
+<form method="get" class="row g-2 mb-3 align-items-end">
+  <div class="col-lg-5">{% include 'components/_search.html' %}</div>
+  <div class="col-sm-4 col-lg-3">
+    <label class="form-label small mb-1" for="activity">{% trans 'Activity' %}</label>
+    <select class="form-select" name="activity" id="activity" data-autosubmit>
+      <option value="">{% trans 'All' %}</option>
+      {% for code, label in activity_choices %}<option value="{{ code }}"{% if activity == code %} selected{% endif %}>{{ label }}</option>{% endfor %}
+    </select>
+  </div>
+  <div class="col-6 col-sm-4 col-lg-2">
+    <label class="form-label small mb-1" for="from_date">{% trans 'From' %}</label>
+    <input class="form-control" type="date" name="from_date" id="from_date" value="{{ from_date }}" data-autosubmit>
+  </div>
+  <div class="col-6 col-sm-4 col-lg-2">
+    <label class="form-label small mb-1" for="to_date">{% trans 'To' %}</label>
+    <input class="form-control" type="date" name="to_date" id="to_date" value="{{ to_date }}" data-autosubmit>
+  </div>
+</form>
+<div class="card table-card">
+  {% include 'account/components/_activities_table.html' with activities=object_list %}
+</div>
+{% include 'x_django_app/_pagination.html' %}
+{% endblock %}

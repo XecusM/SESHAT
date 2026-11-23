@@ -1,145 +1,77 @@
+from decimal import Decimal
+
+from django.core.exceptions import ValidationError
 from django.test import TestCase
 
-from django.contrib.auth import get_user_model
-
-from stock import models as stock_models
-from vendor import models as vendors_models
-from purchase import models as purchase_models
+from purchase.models import PurchaseOrder, PurchaseItem
+from seshat.testing import create_stock, create_vendor_company
+from stock.models import ItemMove
 
 
-class PurchaseModelsTests(TestCase):
+class PurchaseOrderModelTest(TestCase):
     '''
-    Test all models in purchase application
+    Test the purchase order model
     '''
+
     def setUp(self):
-        '''
-        Initiate all tests
-        '''
-        self.user = get_user_model().objects.create_user(
-                                    username='xecus',
-                                    first_name='Mohamed',
-                                    last_name='Aboel-fotouh',
-                                    password='Testpass123')
+        self.company = create_vendor_company('Parts Ltd')
+        self.bolt = create_stock(code='BOLT')
+        self.nut = create_stock(code='NUT')
+        self.order = PurchaseOrder.objects.create(company=self.company)
 
-        self.category = stock_models.Category.objects.create(
-                                    name='New category')
+    def test_str_and_url(self):
+        self.assertEqual(str(self.order), f'{self.order.id}-Parts Ltd')
+        self.assertTrue(self.order.get_absolute_url().endswith(f'/order/{self.order.pk}/'))
 
-        self.location = stock_models.Location.objects.create(
-                                    name='new location')
-        self.sub_location = stock_models.SubLocation.objects.create(
-                                    location=self.location,
-                                    name='new sub_location')
+    def test_invoice_details_together(self):
+        self.order.invoice = 'INV-1'
+        with self.assertRaises(ValidationError):
+            self.order.clean()
+        self.order.invoice_date = '2026-01-01'
+        self.order.clean()
 
-        self.item1 = stock_models.Item.objects.create(
-                                    code='code',
-                                    category=self.category,
-                                    location=self.sub_location,
-                                    price=50)
+    def test_set_items_adds_stock(self):
+        self.order.set_items([
+            {'item': self.bolt, 'quantity': 10, 'price': Decimal('1.50'), 'note': 'box'},
+            {'item': self.nut, 'quantity': 4, 'price': Decimal('0.25')},
+        ])
+        self.assertEqual(self.bolt.quantity, 10)
+        self.assertEqual(self.nut.quantity, 4)
+        self.assertEqual(self.order.total_price, Decimal('16.00'))
+        line = self.order.get_items().first()
+        self.assertEqual(line.quantity, 10)
+        self.assertEqual(line.total_price, Decimal('15.00'))
+        self.assertEqual(line.item.related_to, ItemMove.PURCHASE)
+        self.assertEqual(str(line), f'{self.order.id}-BOLT')
 
-        self.item2 = stock_models.Item.objects.create(
-                                    code='second code',
-                                    category=self.category,
-                                    location=self.sub_location,
-                                    price=50)
+    def test_set_items_updates_in_place(self):
+        self.order.set_items([{'item': self.bolt, 'quantity': 10, 'price': 1},
+                              {'item': self.nut, 'quantity': 5, 'price': 1}])
+        self.order.set_items([{'item': self.nut, 'quantity': 2, 'price': 3}])
+        self.assertEqual(self.bolt.quantity, 0)
+        self.assertEqual(self.nut.quantity, 2)
+        self.assertEqual(PurchaseItem.objects.count(), 1)
+        self.assertEqual(ItemMove.objects.count(), 1)
 
-        self.item1_move = stock_models.ItemMove.objects.create(
-                                    item=self.item1,
-                                    location=self.sub_location,
-                                    type=stock_models.ItemMove.ADD,
-                                    related_to=stock_models.ItemMove.PURCHASE,
-                                    quantity=20)
+    def test_reduce_refused_when_stock_used(self):
+        self.order.set_items([{'item': self.bolt, 'quantity': 10, 'price': 1}])
+        ItemMove.objects.create(item=self.bolt, location=self.bolt.location,
+                                type=ItemMove.REMOVE, quantity=8)
+        with self.assertRaises(ValidationError):
+            self.order.set_items([{'item': self.bolt, 'quantity': 5, 'price': 1}])
+        self.assertEqual(self.bolt.quantity, 2)
 
-        self.item2_move = stock_models.ItemMove.objects.create(
-                                    item=self.item2,
-                                    location=self.sub_location,
-                                    type=stock_models.ItemMove.ADD,
-                                    related_to=stock_models.ItemMove.PURCHASE,
-                                    quantity=5)
+    def test_delete_removes_lines_and_stock(self):
+        self.order.set_items([{'item': self.bolt, 'quantity': 3, 'price': 1}])
+        self.order.delete()
+        self.assertEqual(self.bolt.quantity, 0)
+        self.assertFalse(PurchaseItem.objects.exists())
+        self.assertFalse(ItemMove.objects.exists())
 
-        self.company = vendors_models.VendorCompany.objects.create(
-                                                    name='New Company')
-
-    def test_order_create(self):
-        '''
-        Test creating a new order with minimum values
-        '''
-        purchase_models.PurchaseOrder.objects.create(company=self.company)
-
-        self.assertEqual(purchase_models.PurchaseOrder.objects.all().count(), 1)
-
-    def test_order_edited(self):
-        '''
-        Test edited method in Order model
-        '''
-        order = purchase_models.PurchaseOrder.objects.create(company=self.company)
-
-        order.edited(self.user)
-
-        self.assertEqual(order.edited_by, self.user)
-
-    def test_purchase_items_create(self):
-        '''
-        Test creating a new ourchase items with minimum values
-        '''
-        order = purchase_models.PurchaseOrder.objects.create(company=self.company)
-
-        purchase_models.PurchaseItems.objects.create(
-                                        order=order,
-                                        item=self.item1_move,
-                                        price=50)
-
-        self.assertEqual(
-                    purchase_models.PurchaseItems.objects.all().count(), 1)
-
-    def test_purchase_items_edited(self):
-        '''
-        Test edited method in PurchaseItems model
-        '''
-        order = purchase_models.PurchaseOrder.objects.create(company=self.company)
-
-        purchase = purchase_models.PurchaseItems.objects.create(
-                                        order=order,
-                                        item=self.item1_move,
-                                        price=50)
-
-        purchase.edited(self.user)
-
-        self.assertEqual(purchase.edited_by, self.user)
-
-    def test_purchase_items_total_price(self):
-        '''
-        Test total_price property in PurchaseItems model
-        '''
-        order = purchase_models.PurchaseOrder.objects.create(company=self.company)
-
-        purchase = purchase_models.PurchaseItems.objects.create(
-                                        order=order,
-                                        item=self.item1_move,
-                                        price=50)
-
-        self.assertEqual(
-                        purchase.total_price,
-                        purchase.price * self.item1_move.quantity)
-
-    def test_order_total_price(self):
-        '''
-        Test total_price property in Order model
-        '''
-        order = purchase_models.PurchaseOrder.objects.create(company=self.company)
-
-        purchase1 = purchase_models.PurchaseItems.objects.create(
-                                        order=order,
-                                        item=self.item1_move,
-                                        price=50)
-
-        purchase2 = purchase_models.PurchaseItems.objects.create(
-                                        order=order,
-                                        item=self.item2_move,
-                                        price=20)
-
-        order.refresh_from_db()
-
-        self.assertEqual(
-                        order.total_price,
-                        purchase1.price * self.item1_move.quantity \
-                        + purchase2.price * self.item2_move.quantity)
+    def test_delete_refused_when_stock_used(self):
+        self.order.set_items([{'item': self.bolt, 'quantity': 3, 'price': 1}])
+        ItemMove.objects.create(item=self.bolt, location=self.bolt.location,
+                                type=ItemMove.REMOVE, quantity=1)
+        with self.assertRaises(ValidationError):
+            self.order.delete()
+        self.assertTrue(PurchaseOrder.objects.filter(pk=self.order.pk).exists())

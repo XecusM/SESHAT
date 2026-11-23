@@ -1,0 +1,8 @@
+{% load i18n %}
+{% if perms.account.view_user or perms.account.view_activity or perms.account.backup or perms.account.restore or perms.account.export or perms.account.import or perms.django_db_logger.view_statuslog %}
+<li class="nav-item">
+  <a class="nav-link{% if request.resolver_match.namespace == 'account' and request.resolver_match.url_name in 'Index UsersList NewUser EditUser ActivitiesList ActivitiesReport LogEntryList DetailedLogEntry EditPermission DetailedPermission' or request.resolver_match.url_name in 'Backup Restore Export Import' %} active{% endif %}" href="{% url 'account:Index' %}">
+    <i class="fa-solid fa-shield-halved me-1"></i>{% trans 'Administration' %}
+  </a>
+</li>
+{% endif %}

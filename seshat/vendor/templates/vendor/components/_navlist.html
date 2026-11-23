@@ -1,0 +1,8 @@
+{% load i18n %}
+{% if perms.vendor.view_vendorcompany %}
+<li class="nav-item">
+  <a class="nav-link{% if request.resolver_match.namespace == 'vendor' %} active{% endif %}" href="{% url 'vendor:CompaniesList' %}">
+    <i class="fa-solid fa-truck-field me-1"></i>{% trans 'Vendors' %}
+  </a>
+</li>
+{% endif %}

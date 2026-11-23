@@ -1,0 +1,5 @@
+{% load i18n %}
+<div class="d-flex flex-wrap justify-content-end gap-2 mt-4">
+  <a href="{% if next %}{{ next }}{% else %}{{ cancel_url }}{% endif %}" class="btn btn-light">{% trans 'Cancel' %}</a>
+  <button type="submit" class="btn btn-primary"><i class="fa-solid fa-floppy-disk me-1"></i>{{ save_label|default:_('Save') }}</button>
+</div>

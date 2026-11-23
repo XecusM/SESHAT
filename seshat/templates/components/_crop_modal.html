@@ -1,0 +1,20 @@
+{% load i18n %}
+<div class="modal fade" id="cropModal" tabindex="-1" aria-labelledby="cropModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered modal-lg">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h2 class="modal-title fs-5" id="cropModalLabel">{% trans 'Crop the photo' %}</h2>
+      </div>
+      <div class="modal-body">
+        <div style="max-height: 65vh;"><img src="" alt="" style="display:block; max-width:100%;"></div>
+      </div>
+      <div class="modal-footer justify-content-between">
+        <div class="btn-group" role="group">
+          <button type="button" class="btn btn-light" data-zoom="0.1" aria-label="{% trans 'Zoom in' %}"><i class="fa-solid fa-magnifying-glass-plus"></i></button>
+          <button type="button" class="btn btn-light" data-zoom="-0.1" aria-label="{% trans 'Zoom out' %}"><i class="fa-solid fa-magnifying-glass-minus"></i></button>
+        </div>
+        <button type="button" class="btn btn-primary" data-crop-apply><i class="fa-solid fa-crop-simple me-1"></i>{% trans 'Crop' %}</button>
+      </div>
+    </div>
+  </div>
+</div>

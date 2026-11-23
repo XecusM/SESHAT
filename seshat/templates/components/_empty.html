@@ -1,0 +1,5 @@
+{% load i18n %}
+<div class="empty-state">
+  <i class="fa-solid {{ icon|default:'fa-box-open' }} d-block"></i>
+  <p class="mb-0">{{ message|default:_('Nothing here yet.') }}</p>
+</div>

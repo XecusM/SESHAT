@@ -1,0 +1,73 @@
+{% extends 'stock/stock_base_.html' %}
+{% load static i18n x_tags humanize %}
+{% block title %}{% trans 'Items' %} | {% endblock %}
+{% block stock_content %}
+<div class="page-header">
+  <div>
+    <nav aria-label="breadcrumb"><ol class="breadcrumb">
+      <li class="breadcrumb-item"><a href="{% url 'stock:Index' %}">{% trans 'Stock' %}</a></li>
+      <li class="breadcrumb-item active" aria-current="page">{% trans 'Items' %}</li>
+    </ol></nav>
+    <h1 class="page-title">{% trans 'Items' %}</h1>
+  </div>
+  <div class="page-actions">
+    {% if perms.stock.add_item %}<a class="btn btn-primary" href="{% url 'stock:NewItem' %}"><i class="fa-solid fa-plus me-1"></i>{% trans 'New item' %}</a>{% endif %}
+  </div>
+</div>
+<form method="get" class="row g-2 mb-3">
+  <div class="col-lg-6">{% include 'components/_search.html' %}</div>
+  <div class="col-sm-6 col-lg-3">
+    <select class="form-select" name="category" data-autosubmit aria-label="{% trans 'Category' %}">
+      <option value="">{% trans 'All categories' %}</option>
+      {% for item in categories %}<option value="{{ item.id }}"{% if category == item.id|stringformat:'s' %} selected{% endif %}>{{ item.name }}</option>{% endfor %}
+    </select>
+  </div>
+  <div class="col-sm-6 col-lg-3">
+    <select class="form-select" name="status" data-autosubmit aria-label="{% trans 'Status' %}">
+      <option value="">{% trans 'All items' %}</option>
+      <option value="active"{% if status == 'active' %} selected{% endif %}>{% trans 'Enabled' %}</option>
+      <option value="disabled"{% if status == 'disabled' %} selected{% endif %}>{% trans 'Disabled' %}</option>
+      <option value="assembly"{% if status == 'assembly' %} selected{% endif %}>{% trans 'Assembled items' %}</option>
+      <option value="low"{% if status == 'low' %} selected{% endif %}>{% trans 'Low stock' %}</option>
+    </select>
+  </div>
+</form>
+<div class="card table-card">
+  <div class="table-responsive">
+    <table class="table table-hover">
+      <thead><tr>
+        <th><a href="{% x_sort sort 'code' %}">{% trans 'Item' %}</a></th>
+        <th><a href="{% x_sort sort 'category__name' %}">{% trans 'Category' %}</a></th>
+        <th>{% trans 'Default Location' %}</th>
+        <th class="num">{% trans 'Quantity' %}</th>
+        <th class="num"><a href="{% x_sort sort 'price' %}">{% trans 'Unit Price' %}</a></th>
+        <th></th>
+      </tr></thead>
+      <tbody>
+        {% for item in object_list %}
+        <tr{% if not item.is_active %} class="opacity-50"{% endif %}>
+          <td>
+            <a class="d-flex align-items-center gap-2" href="{% url 'stock:ItemDetails' pk=item.id %}">
+              <img class="item-thumb" src="{% if item.photo %}{{ item.photo.url }}{% else %}{% static 'images/item.png' %}{% endif %}" alt="">
+              <span><span class="fw-semibold">{{ item.code }}</span>{% if item.is_assembly %} <span class="badge badge-accent">{% trans 'Assembly' %}</span>{% endif %}<br><small>{{ item.description|default:'' }}</small></span>
+            </a>
+          </td>
+          <td>{{ item.category.name }}</td>
+          <td><small>{{ item.location }}</small></td>
+          <td class="num">{% if item.is_low_stock %}<span class="badge badge-danger-soft" title="{% trans 'Low stock' %}">{{ item.quantity }}</span>{% else %}{{ item.quantity }}{% endif %}</td>
+          <td class="num">{{ item.price|floatformat:2|intcomma }}</td>
+          <td class="text-end text-nowrap">
+            {% if perms.stock.add_itemmove and not item.is_assembly %}<a class="btn-icon" href="{% url 'stock:NewItemMove' pk=item.id %}?next={{ request.get_full_path|urlencode }}" title="{% trans 'Move' %}" aria-label="{% trans 'Move' %}"><i class="fa-solid fa-right-left"></i></a>{% endif %}
+            {% if perms.stock.change_item %}<a class="btn-icon" href="{% url 'stock:EditItem' pk=item.id %}?next={{ request.get_full_path|urlencode }}" title="{% trans 'Edit' %}" aria-label="{% trans 'Edit' %}"><i class="fa-solid fa-pen-to-square"></i></a>{% endif %}
+            {% if perms.stock.delete_item %}{% url 'stock:DeleteItem' pk=item.id as delete_url %}{% include 'components/_delete_button.html' with url=delete_url name=item.code %}{% endif %}
+          </td>
+        </tr>
+        {% empty %}
+        <tr><td colspan="6">{% trans 'No items found.' as empty_message %}{% include 'components/_empty.html' with icon='fa-box-open' message=empty_message %}</td></tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+</div>
+{% include 'x_django_app/_pagination.html' %}
+{% endblock %}

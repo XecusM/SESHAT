@@ -1,0 +1,4 @@
+{% load i18n %}
+<button type="button" class="{{ css|default:'btn-icon text-danger' }}" data-bs-toggle="modal" data-bs-target="#deleteModal" data-url="{{ url }}" data-name="{{ name }}" title="{% trans 'Delete' %}" aria-label="{% trans 'Delete' %}">
+  <i class="fa-solid fa-trash-can"></i>{% if label %} {{ label }}{% endif %}
+</button>

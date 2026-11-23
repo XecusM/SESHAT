@@ -1,90 +1,44 @@
 from django.test import TestCase
-from django.contrib.auth import get_user_model
 
-from customer import forms, models
+from customer.forms import CompanyForm, CustomerForm
+from seshat.testing import create_customer_company
 
 
-class CustomerFormsTests(TestCase):
+class CompanyFormTest(TestCase):
     '''
-    Test all forms in customer application
+    Test the company form
     '''
-    def test_company_form_fields(self):
-        '''
-        Test company form fields
-        '''
-        expected = [
-                    'name', 'desciption', 'phone',
-                    'website', 'taxs_code']
 
-        actual = list(forms.CompanyForm().fields)
-        self.assertSequenceEqual(expected, actual)
+    def test_valid(self):
+        form = CompanyForm(data={'name': 'Acme', 'phone': '+201234567890',
+                                 'website': 'https://acme.example.com'})
+        self.assertTrue(form.is_valid(), form.errors)
 
-    def test_company_form_valid_data(self):
-        '''
-        Test valid form for company form
-        '''
-        form = forms.CompanyForm(data={'name': 'another_user', })
-
-        self.assertTrue(form.is_valid())
-
-    def test_company_form_invalid_data(self):
-        '''
-        Test invalid form for company form
-        '''
-        form = forms.CompanyForm(data={'name': '', })
-
+    def test_invalid(self):
+        form = CompanyForm(data={'name': '', 'phone': '12'})
         self.assertFalse(form.is_valid())
+        self.assertIn('name', form.errors)
+        self.assertIn('phone', form.errors)
 
-    def test_customer_form_fields(self):
-        '''
-        Test customer form fields
-        '''
-        expected = [
-                    'company', 'first_name', 'last_name', 'email',
-                    'phone', 'department', 'job'
-            ]
 
-        actual = list(forms.CustomerForm().fields)
-        self.assertSequenceEqual(expected, actual)
+class ContactFormTest(TestCase):
+    '''
+    Test the contact form
+    '''
 
-    def test_customer_form_valid_data(self):
-        '''
-        Test valid form for customer form
-        '''
-        company = models.CustomerCompany.objects.create(name='New Company')
+    def test_valid(self):
+        company = create_customer_company()
+        form = CustomerForm(data={'company': company.pk, 'first_name': 'Ann',
+                                  'last_name': 'Lee', 'email': 'ann@example.com'})
+        self.assertTrue(form.is_valid(), form.errors)
 
-        form = forms.CustomerForm(data={
-                                    'company': company.id,
-                                    'first_name': 'Mohamed',
-                                    'last_name': 'Aboel-fotouh'
-                                })
+    def test_company_required(self):
+        form = CustomerForm(data={'first_name': 'Ann', 'last_name': 'Lee'})
+        self.assertFalse(form.is_valid())
+        self.assertIn('company', form.errors)
 
-        self.assertTrue(form.is_valid())
-
-    def test_customer_form_invalid_data(self):
-        '''
-        Test invalid form for customer form
-        '''
-        company = models.CustomerCompany.objects.create(name='New Company')
-
-        form_company = forms.CustomerForm(data={
-                                    'company': '',
-                                    'first_name': 'Mohamed',
-                                    'last_name': 'Aboel-fotouh'
-                                })
-
-        form_first_name = forms.CustomerForm(data={
-                                    'company': company.id,
-                                    'first_name': '',
-                                    'last_name': 'Aboel-fotouh'
-                                })
-
-        form_last_name = forms.CustomerForm(data={
-                                    'company': company.id,
-                                    'first_name': 'Mohamed',
-                                    'last_name': ''
-                                })
-
-        self.assertFalse(form_company.is_valid())
-        self.assertFalse(form_first_name.is_valid())
-        self.assertFalse(form_last_name.is_valid())
+    def test_invalid_email(self):
+        company = create_customer_company()
+        form = CustomerForm(data={'company': company.pk, 'first_name': 'A',
+                                  'last_name': 'B', 'email': 'nope'})
+        self.assertFalse(form.is_valid())

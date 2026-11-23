@@ -1,0 +1,40 @@
+{% extends 'stock/stock_base_.html' %}
+{% load i18n crispy_forms_tags %}
+{% block title %}{{ item.code }} - {% trans 'Transfer' %} | {% endblock %}
+{% block stock_content %}
+<div class="page-header">
+  <div>
+    <nav aria-label="breadcrumb"><ol class="breadcrumb">
+      <li class="breadcrumb-item"><a href="{% url 'stock:ItemsList' %}">{% trans 'Items' %}</a></li>
+      <li class="breadcrumb-item"><a href="{% url 'stock:ItemDetails' pk=item.id %}">{{ item.code }}</a></li>
+      <li class="breadcrumb-item active" aria-current="page">{% trans 'Transfer' %}</li>
+    </ol></nav>
+    <h1 class="page-title">{% trans 'Transfer' %} &middot; {{ item.code }}</h1>
+    <p class="page-subtitle">{% blocktrans with quantity=item.quantity %}{{ quantity }} in stock{% endblocktrans %}</p>
+  </div>
+</div>
+<div class="row g-3">
+  <div class="col-lg-7">
+    <div class="card"><div class="card-body">
+      <form method="post" novalidate>
+        {% csrf_token %}
+        {{ form|crispy }}
+        {% url 'stock:ItemDetails' pk=item.id as cancel_url %}
+        {% include 'components/_form_actions.html' with cancel_url=cancel_url %}
+      </form>
+    </div></div>
+  </div>
+  <div class="col-lg-5">
+    <div class="card">
+      <div class="card-header">{% trans 'Quantity by location' %}</div>
+      <div class="list-group list-group-flush">
+        {% for location in item.get_locations %}
+        <div class="list-group-item d-flex justify-content-between">{{ location.name }}<span class="fw-semibold">{{ location.quantity }}</span></div>
+        {% empty %}
+        <div class="card-body">{% include 'components/_empty.html' with icon='fa-location-dot' %}</div>
+        {% endfor %}
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}

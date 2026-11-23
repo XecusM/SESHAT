@@ -1,0 +1,29 @@
+{% extends 'stock/stock_base_.html' %}
+{% load static i18n %}
+{% block title %}{% trans 'New item' %} | {% endblock %}
+{% block head %}<link rel="stylesheet" href="{% static 'css/cropper.min.css' %}">{% endblock %}
+{% block stock_content %}
+<div class="page-header">
+  <div>
+    <nav aria-label="breadcrumb"><ol class="breadcrumb">
+      <li class="breadcrumb-item"><a href="{% url 'stock:ItemsList' %}">{% trans 'Items' %}</a></li>
+      {% if item %}<li class="breadcrumb-item"><a href="{% url 'stock:ItemDetails' pk=item.id %}">{{ item.code }}</a></li>{% endif %}
+      <li class="breadcrumb-item active" aria-current="page">{% trans 'New item' %}</li>
+    </ol></nav>
+    <h1 class="page-title">{% trans 'New item' %}</h1>
+  </div>
+</div>
+{% include 'stock/items/components/_item_form.html' %}
+{% endblock %}
+{% block before_main_script %}<script src="{% static 'js/cropper.min.js' %}"></script>{% endblock %}
+{% block script %}
+<script>
+  (function () {
+    var checkbox = document.getElementById('id_is_assembly');
+    var card = document.getElementById('componentsCard');
+    if (checkbox && card) {
+      checkbox.addEventListener('change', function () { card.hidden = !checkbox.checked; });
+    }
+  })();
+</script>
+{% endblock %}

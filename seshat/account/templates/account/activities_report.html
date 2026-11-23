@@ -1,0 +1,20 @@
+{% extends 'account/dashboard_base_.html' %}
+{% load static i18n %}
+{% block title %}{% trans 'Activity report' %} | {% endblock %}
+{% block dashboard_content %}
+<div class="page-header">
+  <div>
+    <nav aria-label="breadcrumb"><ol class="breadcrumb">
+      <li class="breadcrumb-item"><a href="{% url 'account:Index' %}">{% trans 'Administration' %}</a></li>
+      <li class="breadcrumb-item active" aria-current="page">{% trans 'Reports' %}</li>
+    </ol></nav>
+    <h1 class="page-title">{% trans 'Activity report' %}</h1>
+    <p class="page-subtitle">{% trans "Scoped to active users only - disabled accounts aren't counted here." %}</p>
+  </div>
+</div>
+{% include 'account/components/_report.html' with show_users=True %}
+{% endblock %}
+{% block script %}
+<script src="{% static 'js/chart.umd.min.js' %}"></script>
+<script src="{% static 'js/activity-report.js' %}" data-url="{% url 'account:APIReportActivities' %}"></script>
+{% endblock %}

@@ -1,0 +1,22 @@
+{% extends 'account/dashboard_base_.html' %}
+{% load i18n %}
+{% block title %}{{ account.username }} - {% trans 'Edit permissions' %} | {% endblock %}
+{% block dashboard_content %}
+<div class="page-header">
+  <div>
+    <nav aria-label="breadcrumb"><ol class="breadcrumb">
+      <li class="breadcrumb-item"><a href="{% url 'account:UsersList' %}">{% trans 'Accounts' %}</a></li>
+      <li class="breadcrumb-item"><a href="{% url 'account:UserDetails' pk=account.id %}">{{ account.username }}</a></li>
+      <li class="breadcrumb-item active" aria-current="page">{% trans 'Edit permissions' %}</li>
+    </ol></nav>
+    <h1 class="page-title">{% blocktrans with name=account.full_name %}Permissions of {{ name }}{% endblocktrans %}</h1>
+    <p class="page-subtitle">{% trans 'Add, edit and delete permissions automatically include the matching view permission.' %}</p>
+  </div>
+</div>
+<form method="post">
+  {% csrf_token %}
+  {% include 'account/components/_permissions.html' with editable=True %}
+  {% url 'account:DetailedPermission' pk=account.id as cancel_url %}
+  {% include 'components/_form_actions.html' with cancel_url=cancel_url %}
+</form>
+{% endblock %}

@@ -1,0 +1,43 @@
+{% extends 'stock/stock_base_.html' %}
+{% load i18n %}
+{% block title %}{{ sublocation }} | {% endblock %}
+{% block stock_content %}
+<div class="page-header">
+  <div>
+    <nav aria-label="breadcrumb"><ol class="breadcrumb">
+      <li class="breadcrumb-item"><a href="{% url 'stock:LocationsList' %}">{% trans 'Locations' %}</a></li>
+      <li class="breadcrumb-item"><a href="{% url 'stock:LocationDetails' pk=sublocation.location_id %}">{{ sublocation.location.name }}</a></li>
+      <li class="breadcrumb-item active" aria-current="page">{{ sublocation.name }}</li>
+    </ol></nav>
+    <h1 class="page-title"><i class="fa-solid fa-table-cells me-2 text-muted"></i>{{ sublocation }}</h1>
+  </div>
+  <div class="page-actions">
+    {% if perms.stock.change_sublocation %}<a class="btn btn-light" href="{% url 'stock:EditSubLocation' pk=sublocation.id %}"><i class="fa-solid fa-pen-to-square me-1"></i>{% trans 'Edit' %}</a>{% endif %}
+    {% if perms.stock.delete_sublocation %}{% url 'stock:DeleteSubLocation' pk=sublocation.id as delete_url %}{% trans 'Delete' as delete_label %}{% include 'components/_delete_button.html' with url=delete_url name=sublocation css='btn btn-outline-danger' label=delete_label %}{% endif %}
+  </div>
+</div>
+<div class="row g-3">
+  <div class="col-lg-8">
+    <div class="card">
+      <div class="card-header">{% trans 'Items stored here' %}</div>
+      <div class="table-responsive">
+        <table class="table table-hover">
+          <thead><tr><th>{% trans 'Item' %}</th><th>{% trans 'Description' %}</th><th class="num">{% trans 'Quantity' %}</th></tr></thead>
+          <tbody>
+            {% for item, quantity in items_list %}
+            <tr>
+              <td><a class="fw-semibold" href="{% url 'stock:ItemDetails' pk=item.id %}">{{ item.code }}</a></td>
+              <td>{{ item.description|default:'' }}</td>
+              <td class="num">{{ quantity }}</td>
+            </tr>
+            {% empty %}
+            <tr><td colspan="3">{% include 'components/_empty.html' with icon='fa-box-open' %}</td></tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+  <div class="col-lg-4">{% include 'components/_activities.html' with activities=sublocation.get_activities %}</div>
+</div>
+{% endblock %}

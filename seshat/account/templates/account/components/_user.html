@@ -1,0 +1,16 @@
+{% load i18n custom_tags %}
+<div class="d-flex align-items-center gap-3 mb-4">
+  {% if account.user_photo.photo %}
+  <img class="sh-avatar sh-avatar-lg" src="{{ account.user_photo.photo.url }}" alt="{{ account.full_name }}">
+  {% else %}
+  <span class="sh-avatar sh-avatar-lg">{{ account|initials }}</span>
+  {% endif %}
+  <div>
+    <h1 class="page-title">{{ account.full_name }}</h1>
+    <div class="text-muted">@{{ account.username }}{% if account.job %} &middot; {{ account.job }}{% endif %}</div>
+    <div class="mt-1">
+      {% if account.is_active %}<span class="badge badge-success-soft">{% trans 'Enabled' %}</span>{% else %}<span class="badge badge-danger-soft">{% trans 'Disabled' %}</span>{% endif %}
+      {% if account.is_superuser %}<span class="badge badge-accent">{% trans 'Administrator' %}</span>{% endif %}
+    </div>
+  </div>
+</div>

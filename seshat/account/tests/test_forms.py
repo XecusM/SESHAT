@@ -1,251 +1,192 @@
-from django.test import TestCase
-from django.contrib.auth import get_user_model
+from django.test import TestCase, RequestFactory
 
-from account import forms, models
+from account import forms
+from seshat.testing import (
+                        TempDirsTestCase, PASSWORD, create_user,
+                        create_superuser, image_file, )
 
 
-class AccountFormsTests(TestCase):
+class AuthenticationFormTest(TestCase):
     '''
-    Test all forms for account appliction
+    Test the login form
     '''
+
     def setUp(self):
-        '''
-        Initial setup for ever test
-        '''
-        self.first_name = 'Mohamed'
-        self.last_name = 'Aboel-fotouh'
-        self.password = 'Testpassword'
+        self.user = create_user('john')
+        self.request = RequestFactory().post('/admin/login/')
 
-        self.superuser = get_user_model().objects.create_user(
-                                username='xecus',
-                                first_name=self.first_name,
-                                last_name=self.last_name,
-                                password=self.password,
-                                is_active=True,
-                                is_superuser=True
-        )
-
-        self.user = get_user_model().objects.create_user(
-                                username='usename',
-                                first_name=self.first_name,
-                                last_name=self.last_name,
-                                password=self.password,
-                                is_active=True,
-        )
-
-    def test_new_account_form_fields(self):
-        '''
-        Test user new account form fields
-        '''
-        expected = [
-                    'first_name', 'last_name', 'username',
-                    'password1', 'password2', 'job',
-                    'is_superuser', 'is_active'
-            ]
-
-        actual = list(forms.NewForm(user=self.superuser).fields)
-        self.assertSequenceEqual(expected, actual)
-
-    def test_new_account_form_valid_data(self):
-        '''
-        Test valid form for creating new account user
-        '''
-        form = forms.NewForm(data={
-                                'username': 'another_user',
-                                'first_name': 'Mohamed',
-                                'last_name': 'Aboel-fotouh',
-                                'password1': self.password,
-                                'password2': self.password,
-                            }, user=self.superuser)
-
+    def test_case_insensitive_username(self):
+        form = forms.MyAuthenticationForm(
+                    self.request, data={'username': 'JOHN', 'password': PASSWORD})
         self.assertTrue(form.is_valid())
+        self.assertEqual(form.get_user(), self.user)
 
-    def test_new_account_form_invalid_data(self):
-        '''
-        Test invalid form senarios for creating new account user
-        '''
-        form_username = forms.NewForm(data={
-                                'username': '',
-                                'first_name': 'Mohamed',
-                                'last_name': 'Aboel-fotouh',
-                                'password1': self.password,
-                                'password2': self.password,
-                            }, user=self.superuser)
+    def test_wrong_password(self):
+        form = forms.MyAuthenticationForm(
+                    self.request, data={'username': 'john', 'password': 'wrong'})
+        self.assertFalse(form.is_valid())
+        self.assertEqual(form.errors['__all__'][0].count('case-sensitive'), 1)
 
-        form_first_name = forms.NewForm(data={
-                                'username': 'xecus',
-                                'first_name': '',
-                                'last_name': 'Aboel-fotouh',
-                                'password1': self.password,
-                                'password2': self.password,
-                            }, user=self.superuser)
+    def test_inactive_account(self):
+        self.user.is_active = False
+        self.user.save()
+        form = forms.MyAuthenticationForm(
+                    self.request, data={'username': 'john', 'password': PASSWORD})
+        self.assertFalse(form.is_valid())
+        self.assertIn('not active', form.errors['__all__'][0])
 
-        form_last_name = forms.NewForm(data={
-                                'username': 'another_user',
-                                'first_name': 'Mohamed',
-                                'last_name': '',
-                                'password1': self.password,
-                                'password2': self.password,
-                            }, user=self.superuser)
 
-        self.assertFalse(form_username.is_valid())
-        self.assertFalse(form_first_name.is_valid())
-        self.assertFalse(form_last_name.is_valid())
+class NewFormTest(TestCase):
+    '''
+    Test the new user form
+    '''
 
-    def test_edit_account_form_fields(self):
-        '''
-        Test edit account user form fields
-        '''
-        expected = [
-                    'first_name', 'last_name','username',
-                    'job', 'is_superuser', 'is_active'
-            ]
+    def data(self, **extra):
+        data = {
+            'first_name': 'Ann', 'last_name': 'Lee', 'username': 'AnnLee',
+            'password1': PASSWORD, 'password2': PASSWORD,
+            'job': 'Clerk', 'is_active': True,
+        }
+        data.update(extra)
+        return data
 
-        actual = list(forms.EditForm(
-                                    instance=self.user, user=self.superuser
-                                    ).fields)
+    def test_valid_form_lowercases_username(self):
+        form = forms.NewForm(data=self.data(), user=create_superuser())
+        self.assertTrue(form.is_valid(), form.errors)
+        self.assertEqual(form.save().username, 'annlee')
 
-        self.assertSequenceEqual(expected, actual)
+    def test_superuser_field_only_for_superusers(self):
+        self.assertIn('is_superuser', forms.NewForm(user=create_superuser()).fields)
+        self.assertNotIn('is_superuser', forms.NewForm(user=create_user()).fields)
 
-    def test_edit_account_form_valid_data(self):
-        '''
-        Test valid form for edit account user details
-        '''
-        form = forms.EditForm(data={
-                                'username': 'another_user',
-                                'first_name': 'Mohamed',
-                                'last_name': 'Aboel-fotouh',
-                            },
-                            instance=self.user, user=self.superuser)
-        self.assertTrue(form.is_valid())
+    def test_duplicate_username(self):
+        create_user('annlee')
+        form = forms.NewForm(data=self.data(), user=create_superuser())
+        self.assertFalse(form.is_valid())
+        self.assertIn('username', form.errors)
 
-    def test_edit_account_form_invalid_data(self):
-        '''
-        Test invalid form senarios for edit account user details
-        '''
-        form_username = forms.EditForm(data={
-                                'username': '',
-                                'first_name': 'Mohamed',
-                                'last_name': 'Aboel-fotouh',
-                            },
-                            instance=self.user, user=self.superuser)
+    def test_password_mismatch(self):
+        form = forms.NewForm(
+                    data=self.data(password2='other-password'),
+                    user=create_superuser())
+        self.assertFalse(form.is_valid())
+        self.assertIn('password2', form.errors)
 
-        form_first_name = forms.EditForm(data={
-                                'username': 'another_user',
-                                'first_name': '',
-                                'last_name': 'Aboel-fotouh',
-                            },
-                            instance=self.user, user=self.superuser)
 
-        form_last_name = forms.EditForm(data={
-                                'username': 'another_user',
-                                'first_name': 'Mohamed',
-                                'last_name': '',
-                            },
-                            instance=self.user, user=self.superuser)
+class EditFormTest(TestCase):
+    '''
+    Test the edit user form
+    '''
 
-        self.assertFalse(form_username.is_valid())
-        self.assertFalse(form_first_name.is_valid())
-        self.assertFalse(form_last_name.is_valid())
+    def test_fields_for_superuser_editing_other(self):
+        form = forms.EditForm(instance=create_user('bob'), user=create_superuser())
+        self.assertIn('is_superuser', form.fields)
+        self.assertIn('is_active', form.fields)
+        self.assertNotIn('password', form.fields)
 
-    def test_user_profile_form_fields(self):
-        '''
-        Test user profile form fields
-        '''
-        expected = [
-                    'photo', 'email', 'phone', 'birthdate', 'gender',
-                    'x', 'y', 'width', 'height',
-                ]
+    def test_user_cannot_disable_self(self):
+        user = create_user('bob')
+        form = forms.EditForm(instance=user, user=user)
+        self.assertNotIn('is_active', form.fields)
+        self.assertNotIn('is_superuser', form.fields)
 
-        actual = list(forms.ProfileForm().fields)
+    def test_duplicate_username(self):
+        create_user('taken')
+        user = create_user('bob')
+        form = forms.EditForm(
+                    instance=user, user=create_superuser(),
+                    data={'first_name': 'Bob', 'last_name': 'B',
+                          'username': 'TAKEN', 'is_active': True})
+        self.assertFalse(form.is_valid())
+        self.assertIn('username', form.errors)
 
-        self.assertSequenceEqual(expected, actual)
+    def test_same_username_allowed(self):
+        user = create_user('bob')
+        form = forms.EditForm(
+                    instance=user, user=create_superuser(),
+                    data={'first_name': 'Bob', 'last_name': 'B',
+                          'username': 'Bob', 'is_active': True})
+        self.assertTrue(form.is_valid(), form.errors)
 
-    def test_user_profile_form_valid_data(self):
-        '''
-        Test valid form for user profile
-        '''
-        form = forms.ProfileForm(data={
-                                'email': 'user@email.com',
-                                'phone': '+999988888',
-                                'birthdate': '1982-5-24',
-                                'gender': models.UserProfile.MALE,
-                            })
 
-        self.assertTrue(form.is_valid())
+class ProfileFormTest(TestCase):
+    '''
+    Test the profile form
+    '''
 
-    def test_user_profile_form_invalid_data(self):
-        '''
-        Test invalid form senarios for user profile
-        '''
-        form_email = forms.ProfileForm(data={
-                                'email': 'user-email.com',
-                                'phone': '+999988888',
-                                'birthdate': '1982-5-24',
-                                'gender': models.UserProfile.MALE,
-                            })
+    def test_valid(self):
+        form = forms.ProfileForm(
+                    instance=create_user().user_profile,
+                    data={'email': 'a@b.com', 'phone': '+201234567890',
+                          'birthdate': '1990-01-01', 'gender': 'M'})
+        self.assertTrue(form.is_valid(), form.errors)
 
-        form_phone = forms.ProfileForm(data={
-                                'email': 'user@email.com',
-                                'phone': 'error',
-                                'birthdate': '1982-5-24',
-                                'gender': models.UserProfile.MALE,
-                            })
+    def test_invalid_phone(self):
+        form = forms.ProfileForm(
+                    instance=create_user().user_profile,
+                    data={'phone': '123'})
+        self.assertFalse(form.is_valid())
+        self.assertIn('phone', form.errors)
 
-        form_birthdate = forms.ProfileForm(data={
-                                'email': 'user@email.com',
-                                'phone': '+999988888',
-                                'birthdate': '15/10/12',
-                                'gender': models.UserProfile.MALE,
-                            })
 
-        self.assertFalse(form_email.is_valid())
-        self.assertFalse(form_phone.is_valid())
-        self.assertFalse(form_birthdate.is_valid())
+class ProfilePhotoFormTest(TempDirsTestCase):
+    '''
+    Test the profile photo form
+    '''
 
-    def test_user_settings_form_fields(self):
-        '''
-        Test user settings form fields
-        '''
-        expected = ['language', 'paginate', 'default_page', ]
+    def test_photo_cropped_to_200(self):
+        from PIL import Image
+        photo = create_user().user_photo
+        form = forms.ProfilePhotoForm(
+                    instance=photo,
+                    data={'x': 10, 'y': 10, 'width': 300, 'height': 300},
+                    files={'photo': image_file()})
+        self.assertTrue(form.is_valid(), form.errors)
+        saved = form.save()
+        with Image.open(saved.photo.path) as image:
+            self.assertEqual(image.size, (200, 200))
 
-        actual = list(forms.SettingsForm().fields)
+    def test_photo_required(self):
+        form = forms.ProfilePhotoForm(instance=create_user().user_photo, data={})
+        self.assertFalse(form.is_valid())
 
-        self.assertSequenceEqual(expected, actual)
 
-    def test_user_settings_form_valid_data(self):
-        '''
-        Test valid form for user settings
-        '''
-        form = forms.SettingsForm(data={
-                                'language': models.UserSettings.ENGLISH,
-                                'paginate': 30,
-                                'default_page': models.UserSettings.ADMIN,
-                            })
-        self.assertTrue(form.is_valid())
+class SettingsFormTest(TestCase):
+    '''
+    Test the settings form
+    '''
 
-    def test_user_settings_form_invalid_data(self):
-        '''
-        Test invalid form senarios for user settings
-        '''
-        form_language = forms.SettingsForm(data={
-                                'language': '',
-                                'paginate': 30,
-                                'default_page': models.UserSettings.ADMIN,
-                            })
+    def test_valid(self):
+        form = forms.SettingsForm(
+                    instance=create_user().user_settings,
+                    data={'language': 'ar', 'theme': 'DA',
+                          'paginate': 20, 'default_page': 'ST'})
+        self.assertTrue(form.is_valid(), form.errors)
 
-        form_paginate = forms.SettingsForm(data={
-                                'language': models.UserSettings.ENGLISH,
-                                'paginate': '',
-                                'default_page': models.UserSettings.ADMIN,
-                            })
+    def test_invalid_theme(self):
+        form = forms.SettingsForm(
+                    instance=create_user().user_settings,
+                    data={'language': 'en', 'theme': 'XX',
+                          'paginate': 20, 'default_page': 'IN'})
+        self.assertFalse(form.is_valid())
 
-        form_page = forms.SettingsForm(data={
-                                'language': models.UserSettings.ENGLISH,
-                                'paginate': 30,
-                                'default_page': '',
-                            })
 
-        self.assertFalse(form_language.is_valid())
-        self.assertFalse(form_paginate.is_valid())
-        self.assertFalse(form_page.is_valid())
+class PasswordFormsTest(TestCase):
+    '''
+    Test the change and reset password forms
+    '''
+
+    def test_change_password(self):
+        user = create_user()
+        form = forms.ChangePasswordForm(user, data={
+                    'old_password': PASSWORD,
+                    'new_password1': 'Another-Password-2',
+                    'new_password2': 'Another-Password-2'})
+        self.assertTrue(form.is_valid(), form.errors)
+        self.assertEqual(str(form.fields['old_password'].label), 'Current Password')
+
+    def test_reset_password_mismatch(self):
+        form = forms.ResetPasswordForm(create_user(), data={
+                    'new_password1': 'Another-Password-2',
+                    'new_password2': 'Different-Password-3'})
+        self.assertFalse(form.is_valid())

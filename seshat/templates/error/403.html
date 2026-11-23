@@ -1,20 +1,8 @@
-{% extends "base_.html" %}
-{% load static %}
+{% extends 'error/error_base_.html' %}
 {% load i18n %}
-{% get_current_language as LANGUAGE_CODE %}
-{% block content %}
-  <h2 style="display: none;">error number 403</h2>
-  <div class="card text-center">
-    <div class="card-header">
-      403
-    </div>
-    <div class="card-body">
-    <p class="card-text">{% trans "Can't find page" %}</p>
-    <a href="{% url 'index' %}" class="btn btn-primary">{% trans 'To Home' %}</a>
-  </div>
-  </div>
-{% endblock %}
-
-{% block script %}
-
-{% endblock %}
+{% block code %}403{% endblock %}
+{% block code_display %}403{% endblock %}
+{% block icon %}fa-lock{% endblock %}
+{% block heading %}{% trans "Access denied" %}{% endblock %}
+{% block heading_display %}{% trans "Access denied" %}{% endblock %}
+{% block message %}{% trans "You don't have permission to open this page. Ask your administrator if you need access." %}{% endblock %}

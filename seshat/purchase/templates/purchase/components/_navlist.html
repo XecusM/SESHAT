@@ -1,0 +1,8 @@
+{% load i18n %}
+{% if perms.purchase.view_purchaseorder %}
+<li class="nav-item">
+  <a class="nav-link{% if request.resolver_match.namespace == 'purchase' %} active{% endif %}" href="{% url 'purchase:OrdersList' %}">
+    <i class="fa-solid fa-cart-arrow-down me-1"></i>{% trans 'Purchases' %}
+  </a>
+</li>
+{% endif %}

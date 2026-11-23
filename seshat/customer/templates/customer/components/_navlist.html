@@ -1,0 +1,8 @@
+{% load i18n %}
+{% if perms.customer.view_customercompany %}
+<li class="nav-item">
+  <a class="nav-link{% if request.resolver_match.namespace == 'customer' %} active{% endif %}" href="{% url 'customer:CompaniesList' %}">
+    <i class="fa-solid fa-handshake me-1"></i>{% trans 'Customers' %}
+  </a>
+</li>
+{% endif %}

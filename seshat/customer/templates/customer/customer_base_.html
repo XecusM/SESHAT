@@ -1,0 +1,13 @@
+{% extends 'base_.html' %}
+{% load i18n %}
+{% block content %}
+{% with url_name=request.resolver_match.url_name %}
+<ul class="nav sub-nav">
+  <li class="nav-item"><a class="nav-link{% if 'Compan' in url_name %} active{% endif %}" href="{% url 'customer:CompaniesList' %}"><i class="fa-solid fa-building me-1"></i>{% trans 'Companies' %}</a></li>
+  {% if perms.customer.view_customer %}
+  <li class="nav-item"><a class="nav-link{% if 'Customer' in url_name %} active{% endif %}" href="{% url 'customer:CustomersList' %}"><i class="fa-solid fa-address-book me-1"></i>{% trans 'Customers' %}</a></li>
+  {% endif %}
+</ul>
+{% endwith %}
+{% block app_content %}{% endblock %}
+{% endblock %}

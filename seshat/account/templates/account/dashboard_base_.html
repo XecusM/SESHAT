@@ -1,0 +1,40 @@
+{% extends 'base_.html' %}
+{% load i18n %}
+{% block content %}
+{% with url_name=request.resolver_match.url_name %}
+<div class="row g-4">
+  <div class="col-md-3 col-xl-2">
+    <nav class="nav flex-column side-nav" aria-label="{% trans 'Administration' %}">
+      <a class="nav-link{% if url_name == 'Index' %} active{% endif %}" href="{% url 'account:Index' %}"><i class="fa-solid fa-gauge"></i>{% trans 'Overview' %}</a>
+      {% if perms.account.view_user %}
+      <a class="nav-link{% if url_name in 'UsersList NewUser EditUser EditPermission DetailedPermission' %} active{% endif %}" href="{% url 'account:UsersList' %}"><i class="fa-solid fa-users"></i>{% trans 'Accounts' %}</a>
+      {% endif %}
+      {% if perms.account.view_activity %}
+      <a class="nav-link{% if url_name == 'ActivitiesList' %} active{% endif %}" href="{% url 'account:ActivitiesList' %}"><i class="fa-solid fa-list-check"></i>{% trans 'Activities' %}</a>
+      {% endif %}
+      {% if perms.account.report_activity and perms.account.view_user %}
+      <a class="nav-link{% if url_name == 'ActivitiesReport' %} active{% endif %}" href="{% url 'account:ActivitiesReport' %}"><i class="fa-solid fa-chart-line"></i>{% trans 'Reports' %}</a>
+      {% endif %}
+      {% if perms.django_db_logger.view_statuslog %}
+      <a class="nav-link{% if url_name in 'LogEntryList DetailedLogEntry' %} active{% endif %}" href="{% url 'account:LogEntryList' %}"><i class="fa-solid fa-bug"></i>{% trans 'Log entries' %}</a>
+      {% endif %}
+      {% if perms.account.backup %}
+      <a class="nav-link{% if url_name == 'Backup' %} active{% endif %}" href="{% url 'Backup' %}"><i class="fa-solid fa-database"></i>{% trans 'Backup' %}</a>
+      {% endif %}
+      {% if perms.account.restore %}
+      <a class="nav-link{% if url_name == 'Restore' %} active{% endif %}" href="{% url 'Restore' %}"><i class="fa-solid fa-clock-rotate-left"></i>{% trans 'Restore' %}</a>
+      {% endif %}
+      {% if perms.account.export %}
+      <a class="nav-link{% if url_name == 'Export' %} active{% endif %}" href="{% url 'Export' %}"><i class="fa-solid fa-file-export"></i>{% trans 'Export' %}</a>
+      {% endif %}
+      {% if perms.account.import %}
+      <a class="nav-link{% if url_name == 'Import' %} active{% endif %}" href="{% url 'Import' %}"><i class="fa-solid fa-file-import"></i>{% trans 'Import' %}</a>
+      {% endif %}
+    </nav>
+  </div>
+  <div class="col-md-9 col-xl-10">
+    {% block dashboard_content %}{% endblock %}
+  </div>
+</div>
+{% endwith %}
+{% endblock %}

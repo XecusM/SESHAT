@@ -1,0 +1,25 @@
+{% extends 'account/dashboard_base_.html' %}
+{% load i18n crispy_forms_tags %}
+{% block title %}{{ account.username }} - {% trans 'Edit' %} | {% endblock %}
+{% block dashboard_content %}
+<div class="page-header">
+  <div>
+    <nav aria-label="breadcrumb"><ol class="breadcrumb">
+      <li class="breadcrumb-item"><a href="{% url 'account:Index' %}">{% trans 'Administration' %}</a></li>
+      <li class="breadcrumb-item"><a href="{% url 'account:UsersList' %}">{% trans 'Accounts' %}</a></li>
+      <li class="breadcrumb-item active" aria-current="page">{{ account.username }}</li>
+    </ol></nav>
+    <h1 class="page-title">{% trans 'Edit account' %}</h1>
+  </div>
+</div>
+<div class="card" style="max-width: 48rem;">
+  <div class="card-body">
+    <form method="post" novalidate>
+      {% csrf_token %}
+      {{ form|crispy }}
+      {% url 'account:UserDetails' pk=account.id as cancel_url %}
+      {% include 'components/_form_actions.html' with cancel_url=cancel_url %}
+    </form>
+  </div>
+</div>
+{% endblock %}

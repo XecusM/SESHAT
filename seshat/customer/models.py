@@ -1,21 +1,18 @@
 from django.db import models
-from django.contrib.auth import get_user_model
-from django.utils import timezone
-from django.core.validators import RegexValidator
-from django.utils.translation import ugettext_lazy as _
+from django.urls import reverse
+from django.utils.translation import gettext_lazy as _
+
+from x_django_app.models import XModel
+
+from account.models import phone_regex
 
 # Create your models here.
 
 
-class CustomerCompany(models.Model):
+class CustomerCompany(models.Model, XModel):
     '''
-    Model for customer's companies
+    Model for customers' companies
     '''
-    phone_regex = RegexValidator(
-            regex=r'^\+?1?\d{9,15}$',
-            message=_("Phone number must be entered in the \
-                        format: '+999999999'. Up to 15 digits allowed."))
-
     name = models.CharField(
                             verbose_name=_('Name'),
                             max_length=128,
@@ -23,8 +20,8 @@ class CustomerCompany(models.Model):
                             blank=False,
                             null=False
     )
-    desciption = models.CharField(
-                            verbose_name=_('Desciption'),
+    description = models.CharField(
+                            verbose_name=_('Description'),
                             max_length=255,
                             unique=False,
                             blank=True,
@@ -45,8 +42,8 @@ class CustomerCompany(models.Model):
                             blank=True,
                             null=True
     )
-    taxs_code = models.CharField(
-                            verbose_name=_('Taxs code'),
+    tax_code = models.CharField(
+                            verbose_name=_('Tax code'),
                             max_length=128,
                             unique=True,
                             blank=True,
@@ -59,53 +56,45 @@ class CustomerCompany(models.Model):
                             blank=True,
                             null=True
     )
-    edited_at = models.DateTimeField(
-                        verbose_name=_('Edited at'),
-                        null=True,
-                        blank=True
-    )
-    edited_by = models.ForeignKey(
-                        get_user_model(),
-                        verbose_name=_('Edited by'),
-                        related_name='company_customer_user_edit',
-                        on_delete=models.PROTECT,
-                        blank=True,
-                        null=True
-    )
     created_at = models.DateTimeField(
                         verbose_name=_('Created at'),
                         auto_now_add=True,
                         blank=False
     )
-    created_by = models.ForeignKey(
-                        get_user_model(),
-                        verbose_name=_('Created by'),
-                        related_name='company_customer_user_create',
-                        on_delete=models.PROTECT,
-                        blank=True,
-                        null=True
-    )
 
-    def edited(self, user):
+    class Meta:
+        verbose_name = _("Customer's company")
+        verbose_name_plural = _("Customers' companies")
+        ordering = ('name', )
+
+    def clean(self):
         '''
-        Edit Company
+        Empty unique values are stored as NULL
         '''
-        self.edited_at = timezone.now()
-        self.edited_by = user
-        self.save()
+        self.phone = self.phone or None
+        self.tax_code = self.tax_code or None
+
+    def get_absolute_url(self):
+        return reverse('customer:CompanyDetails', kwargs={'pk': self.pk})
 
     def get_customers(self):
         '''
         Get all company's customers
         '''
-        return self.customer_company.filter(company=self.id).order_by(
-                                                    'first_name', 'last_name')
+        return self.customer_company.all().order_by('first_name', 'last_name')
 
     def get_sale_orders(self):
         '''
         Get all sale orders
         '''
-        return self.order_company.filter(company=self).order_by('-created_at')
+        return self.order_company.all().order_by('-created_at')
+
+    def can_be_deleted(self):
+        '''
+        A company with customers or orders can't be deleted
+        '''
+        return not (self.customer_company.exists()
+                    or self.order_company.exists())
 
     def __str__(self):
         '''
@@ -114,15 +103,10 @@ class CustomerCompany(models.Model):
         return self.name
 
 
-class Customer(models.Model):
+class Customer(models.Model, XModel):
     '''
-    Model to store all customer data
+    Model to store all customer contacts
     '''
-    phone_regex = RegexValidator(
-            regex=r'^\+?1?\d{9,15}$',
-            message=_("Phone number must be entered in the \
-                        format: '+999999999'. Up to 15 digits allowed."))
-
     company = models.ForeignKey(
                         'CustomerCompany',
                         verbose_name=_('Company'),
@@ -181,40 +165,26 @@ class Customer(models.Model):
                             blank=True,
                             null=True
     )
-    edited_at = models.DateTimeField(
-                        verbose_name=_('Edited at'),
-                        null=True,
-                        blank=True
-    )
-    edited_by = models.ForeignKey(
-                        get_user_model(),
-                        verbose_name=_('Edited by'),
-                        related_name='customer_user_edit',
-                        on_delete=models.PROTECT,
-                        blank=True,
-                        null=True
-    )
     created_at = models.DateTimeField(
                         verbose_name=_('Created at'),
                         auto_now_add=True,
                         blank=False
     )
-    created_by = models.ForeignKey(
-                        get_user_model(),
-                        verbose_name=_('Created by'),
-                        related_name='customer_user_create',
-                        on_delete=models.PROTECT,
-                        blank=True,
-                        null=True
-    )
 
-    def edited(self, user):
+    class Meta:
+        verbose_name = _('Customer')
+        verbose_name_plural = _('Customers')
+        ordering = ('first_name', 'last_name')
+
+    def clean(self):
         '''
-        Edit Company
+        Empty unique values are stored as NULL
         '''
-        self.edited_at = timezone.now()
-        self.edited_by = user
-        self.save()
+        self.email = self.email or None
+        self.phone = self.phone or None
+
+    def get_absolute_url(self):
+        return reverse('customer:CustomerDetails', kwargs={'pk': self.pk})
 
     @property
     def full_name(self):
@@ -227,4 +197,4 @@ class Customer(models.Model):
         '''
         String representation for the record
         '''
-        return f"{self.first_name} {self.last_name}"
+        return self.full_name

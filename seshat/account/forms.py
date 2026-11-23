@@ -1,62 +1,97 @@
 from django import forms
-from PIL import Image
+from django.contrib.auth import authenticate, get_user_model
 from django.contrib.auth.forms import (
+                                        AuthenticationForm,
                                         UserCreationForm,
                                         UserChangeForm,
                                         PasswordChangeForm,
-                                        PasswordResetForm, )
-from django.contrib.auth import get_user_model
-from django.contrib.auth.models import BaseUserManager
-from django.utils.translation import ugettext_lazy as _
+                                        SetPasswordForm, )
+from django.utils.translation import gettext_lazy as _
+
+from seshat.images import crop_and_resize
 
 from . import models
+
+
+class MyAuthenticationForm(AuthenticationForm):
+    '''
+    Case-insensitive username login with a clear message for
+    disabled accounts
+    '''
+    error_messages = {
+        'invalid_login': _(
+            "Please enter a correct %(username)s and password. "
+            "Note password field is case-sensitive."
+        ),
+        'inactive': _('Your account is not active, please contact '
+                      'the administrator for more details.'),
+    }
+
+    def clean(self):
+        '''
+        Authenticate the posted data
+        '''
+        username = (self.cleaned_data.get('username') or '').lower()
+        password = self.cleaned_data.get('password')
+
+        if username and password:
+            self.user_cache = authenticate(
+                self.request, username=username, password=password
+            )
+            if self.user_cache is None:
+                user = get_user_model().objects.filter(
+                                                username=username).first()
+                if user is not None and user.check_password(password):
+                    self.confirm_login_allowed(user)
+                raise self.get_invalid_login_error()
+            self.confirm_login_allowed(self.user_cache)
+
+        return self.cleaned_data
 
 
 class NewForm(UserCreationForm):
     '''
     Create New user
     '''
-    # error messages for email and password matches
-    error_messages = {
-        'password_mismatch': _("The two password fields didn't match."),
-        'email_used': _("This email already exists."),
-        'username_used': _("This username already exists."),
-    }
     class Meta:
         model = get_user_model()
         fields = [
                     'first_name', 'last_name', 'username',
-                    'password1', 'password2',
                     'job', 'is_superuser', 'is_active'
             ]
 
     def __init__(self, *args, **kwargs):
         '''
-        Method for initial values and functions for the SignUp form class
+        Method for initial values and functions for the new user form
         '''
         self.user = kwargs.pop('user')
-        # get the initial form class values
         super().__init__(*args, **kwargs)
         self.fields['first_name'].help_text = _("Enter user first name")
         self.fields['last_name'].help_text = _("Enter user last name")
         self.fields['username'].help_text = _("Enter a unique username")
         self.fields['job'].help_text = _("Enter user job title")
-        # initate is_active
         self.fields['is_active'].initial = True
         if not self.user.is_superuser:
             del self.fields['is_superuser']
+
+    def clean_username(self):
+        '''
+        Usernames are stored in lower case
+        '''
+        username = self.cleaned_data.get('username', '').lower()
+        if get_user_model().objects.filter(username=username).exists():
+            raise forms.ValidationError(
+                                _("This username already exists."),
+                                code='username_used')
+        return username
 
 
 class EditForm(UserChangeForm):
     '''
     Edit User details
     '''
-    # error messages for email and password matches
-    error_messages = {
-        'email_used': _("This email already exists."),
-        'username_used': _("This username already exists."),
-    }
     password = None
+
     class Meta:
         model = get_user_model()
         fields = [
@@ -66,25 +101,61 @@ class EditForm(UserChangeForm):
 
     def __init__(self, *args, **kwargs):
         '''
-        Method for initial values and functions for the Edit user form class
+        Method for initial values and functions for the Edit user form
         '''
         self.user = kwargs.pop('user')
-        # get the initial form class values
         super().__init__(*args, **kwargs)
         self.fields['first_name'].help_text = _("Enter user first name")
         self.fields['last_name'].help_text = _("Enter user last name")
         self.fields['username'].help_text = _("Enter a unique username")
         self.fields['job'].help_text = _("Enter user job title")
-        if not self.user.has_perm('account.change_user'):
-            self.fields['username'].widget.attrs['disabled'] = True
-            del self.fields['is_active']
         if not self.user.is_superuser:
             del self.fields['is_superuser']
+        if self.instance == self.user:
+            # nobody can disable their own account
+            del self.fields['is_active']
+
+    def clean_username(self):
+        '''
+        Usernames are stored in lower case
+        '''
+        username = self.cleaned_data.get('username', '').lower()
+        if get_user_model().objects.filter(username=username).exclude(
+                                        pk=self.instance.pk).exists():
+            raise forms.ValidationError(
+                                _("This username already exists."),
+                                code='username_used')
+        return username
 
 
 class ProfileForm(forms.ModelForm):
     '''
     Form for user's profile
+    '''
+    class Meta:
+        model = models.Profile
+        fields = ['email', 'phone', 'birthdate', 'gender', ]
+
+        widgets = {
+            'birthdate': forms.DateInput(
+                                    attrs={'type': 'date'},
+                                    format='%Y-%m-%d'),
+        }
+
+    def __init__(self, *args, **kwargs):
+        '''
+        Method for initial values and functions
+        '''
+        super().__init__(*args, **kwargs)
+        self.fields['email'].widget.attrs['placeholder'] = _('Add your email')
+        self.fields['phone'].widget.attrs['placeholder'] = _('+999999999')
+        self.fields['phone'].help_text = _(
+                            "format: '+999999999'. Up to 15 digits allowed")
+
+
+class ProfilePhotoForm(forms.ModelForm):
+    '''
+    Form for the user profile photo with cropping
     '''
     #############################################################
     # Fields for image cropping
@@ -95,62 +166,35 @@ class ProfileForm(forms.ModelForm):
     #############################################################
 
     class Meta:
-        model = models.UserProfile
-        fields = ['photo', 'email', 'phone', 'birthdate', 'gender', ]
-
+        model = models.ProfilePhoto
+        fields = ['photo', 'x', 'y', 'width', 'height', ]
         widgets = {
-            'birthdate': forms.TextInput(attrs={'type': 'date'}),
+            'photo': forms.FileInput(attrs={'accept': 'image/*'}),
         }
 
     def __init__(self, *args, **kwargs):
         '''
         Method for initial values and functions
         '''
-        # get the initial form class values
         super().__init__(*args, **kwargs)
-        # initate is_active
+        self.fields['photo'].required = True
         self.fields['photo'].help_text = _(
-                                    "Profile photo must be at least 200x200")
-        self.fields['email'].widget.attrs['placeholder'] = _('Add your email')
-        self.fields['phone'].widget.attrs['placeholder'] = _('+999999999')
-        self.fields['phone'].help_text = _(
-                            "format: '+999999999'. Up to 15 digits allowed")
+                                    "Photo Recommended to be at least 200x200")
 
     def save(self, commit=True):
         '''
-        save for with cropped image
+        Save the photo, cropped and resized to 200x200
         '''
-        form = super().save(commit=True)
-        # check if image sent
-        if form.photo:
-            try:
-                # get cropping data
-                x = self.cleaned_data.get('x')
-                y = self.cleaned_data.get('y')
-                w = self.cleaned_data.get('width')
-                h = self.cleaned_data.get('height')
-
-                # get the save image path
-                image = Image.open(form.photo.path)
-                cropped_image = image.crop((x, y, w + x, h + y))
-                # check if image size more than 200kb
-                if cropped_image.size[0] * cropped_image.size[1] < \
-                        0.2 * 1024 * 1024:
-                    raise forms.ValidationError(
-                                    _('Image file too small ( < 200kb )'))
-                else:
-                    # resize the image after cropping
-                    resized_image = cropped_image.resize(
-                                                    (200, 200),
-                                                    Image.ANTIALIAS)
-                    resized_image.save(form.photo.path)
-                    return form
-            except Exception as error_type:
-                print(error_type)
-                return form
-        else:
-            form.save()
-            return form
+        instance = super().save(commit=True)
+        if instance.photo:
+            crop_and_resize(
+                        instance.photo.path,
+                        self.cleaned_data.get('x'),
+                        self.cleaned_data.get('y'),
+                        self.cleaned_data.get('width'),
+                        self.cleaned_data.get('height'),
+                        size=200)
+        return instance
 
 
 class SettingsForm(forms.ModelForm):
@@ -158,20 +202,20 @@ class SettingsForm(forms.ModelForm):
     Form for user's settings
     '''
     class Meta:
-        model = models.UserSettings
-        fields = ['language', 'paginate', 'default_page', ]
+        model = models.Settings
+        fields = ['language', 'theme', 'paginate', 'default_page', ]
 
     def __init__(self, *args, **kwargs):
         '''
         Method for initial values and functions
         '''
-        # get the initial form class values
         super().__init__(*args, **kwargs)
-        # initate is_active
-        self.fields['language'].help_text = _("Select you interface language")
+        self.fields['language'].help_text = _("Select your interface language")
+        self.fields['theme'].help_text = _(
+                    "Select your interface theme (light, dark or automatic)")
         self.fields['paginate'].help_text = _("Number of items per page")
         self.fields['default_page'].help_text = _(
-                                    "Select you favorite page after login")
+                                    "Select your favorite page after login")
 
 
 class ChangePasswordForm(PasswordChangeForm):
@@ -180,7 +224,22 @@ class ChangePasswordForm(PasswordChangeForm):
     '''
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        self.fields['old_password'].label =( _('Current Password'))
-        self.fields['old_password'].help_text = _("Enter your old password")
-        self.fields['new_password2'].help_text = _(
-                                                "Enter the same new password")
+        self.fields['old_password'].label = _('Current Password')
+        self.fields['old_password'].widget.attrs['placeholder'] = _(
+                                                        'Current password')
+        self.fields['new_password1'].widget.attrs['placeholder'] = _(
+                                                        'Enter new password')
+        self.fields['new_password2'].widget.attrs['placeholder'] = _(
+                                                        'Re-enter new password')
+
+
+class ResetPasswordForm(SetPasswordForm):
+    '''
+    Administrator sets a new password for another user
+    '''
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.fields['new_password1'].widget.attrs['placeholder'] = _(
+                                                        'Enter new password')
+        self.fields['new_password2'].widget.attrs['placeholder'] = _(
+                                                        'Re-enter new password')

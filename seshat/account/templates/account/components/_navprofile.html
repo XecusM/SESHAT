@@ -1,0 +1,31 @@
+{% load static i18n custom_tags %}
+<div class="dropdown">
+  <button class="btn p-0 border-0 d-flex align-items-center gap-2 text-start" type="button" data-bs-toggle="dropdown" aria-expanded="false" style="color: var(--sh-nav-text);">
+    {% if request.user.user_photo.photo %}
+      <img class="sh-avatar" src="{{ request.user.user_photo.photo.url }}" alt="">
+    {% else %}
+      <span class="sh-avatar">{{ request.user|initials }}</span>
+    {% endif %}
+    <span class="d-lg-none d-xl-inline small fw-semibold">{{ request.user.first_name }}</span>
+    <i class="fa-solid fa-chevron-down small opacity-50"></i>
+  </button>
+  <ul class="dropdown-menu dropdown-menu-end">
+    <li class="px-3 py-2">
+      <div class="fw-bold">{{ request.user.full_name }}</div>
+      <small>@{{ request.user.username }}</small>
+    </li>
+    <li><hr class="dropdown-divider"></li>
+    <li><a class="dropdown-item" href="{% url 'account:UserDetails' pk=request.user.id %}"><i class="fa-solid fa-user"></i>{% trans 'My account' %}</a></li>
+    <li><a class="dropdown-item" href="{% url 'account:UserActivities' pk=request.user.id %}"><i class="fa-solid fa-list-check"></i>{% trans 'My activities' %}</a></li>
+    <li><a class="dropdown-item" href="{% url 'account:UserReport' pk=request.user.id %}"><i class="fa-solid fa-chart-line"></i>{% trans 'My report' %}</a></li>
+    <li><a class="dropdown-item" href="{% url 'account:EditSettings' pk=request.user.user_settings.id %}"><i class="fa-solid fa-sliders"></i>{% trans 'Settings' %}</a></li>
+    <li><a class="dropdown-item" href="{% url 'account:PasswordChange' pk=request.user.id %}"><i class="fa-solid fa-key"></i>{% trans 'Change my password' %}</a></li>
+    <li><hr class="dropdown-divider"></li>
+    <li>
+      <form method="post" action="{% url 'account:Logout' %}" class="m-0">
+        {% csrf_token %}
+        <button type="submit" class="dropdown-item text-danger"><i class="fa-solid fa-right-from-bracket text-danger"></i>{% trans 'Logout' %}</button>
+      </form>
+    </li>
+  </ul>
+</div>

@@ -1,70 +1,34 @@
-{% extends 'base_.html' %}
-{% load static %}
+{% extends 'vendor/vendor_base_.html' %}
 {% load i18n %}
-{% load x_tags %}
-{% block content %}
-<nav aria-label="breadcrumb">
-  <ol class="breadcrumb">
-    <li class="breadcrumb-item">
-      <a href="{% url 'vendor:companies_list' %}">{% trans 'Vendors companies' %}</a>
-    </li>
-    <li class="breadcrumb-item">
-      <a href="{% url 'vendor:company_details' pk=vendor.company.id %}">{{ vendor.company.name }}</a>
-    </li>
-    <li class="breadcrumb-item active" aria-current="page">
-      {% trans 'Vendor Details' %}
-    </li>
-  </ol>
-</nav>
-<div class="login">
-  <div class="table-responsive-md">
-    <table class="table table-striped table-sm">
-      <tbody>
-        <tr>
-          <th scope="row">{% trans 'Name' %}</th>
-          <td>{{ vendor.full_name }}</td>
-        </tr>
-        <tr>
-          <th scope="row">{% trans 'Email' %}</th>
-          <td>{{ vendor.email|default_if_none:'' }}</td>
-        </tr>
-        <tr>
-          <th scope="row">{% trans 'Phone' %}</th>
-          <td>{{ vendor.phone|default_if_none:'' }}</td>
-        </tr>
-        <tr>
-          <th scope="row">{% trans 'Department' %}</th>
-          <td>{{ vendor.department|default_if_none:'' }}</td>
-        </tr>
-        <tr>
-          <th scope="row">{% trans 'Job' %}</th>
-          <td>{{ vendor.job|default_if_none:'' }}</td>
-        </tr>
-        <tr>
-          <th scope="row">{% trans 'Note' %}</th>
-          <td>{{ vendor.note|default_if_none:''|safe }}</td>
-        </tr>
-      </tbody>
-    </table>
+{% block title %}{{ vendor.full_name }} | {% endblock %}
+{% block app_content %}
+<div class="page-header">
+  <div>
+    <nav aria-label="breadcrumb"><ol class="breadcrumb">
+      <li class="breadcrumb-item"><a href="{% url 'vendor:VendorsList' %}">{% trans 'Vendors' %}</a></li>
+      <li class="breadcrumb-item active" aria-current="page">{{ vendor.full_name }}</li>
+    </ol></nav>
+    <h1 class="page-title"><i class="fa-solid fa-user me-2 text-muted"></i>{{ vendor.full_name }}</h1>
+    <p class="page-subtitle">{{ vendor.job|default:'' }}{% if vendor.job and vendor.department %} &middot; {% endif %}{{ vendor.department|default:'' }}</p>
   </div>
-  <div class="text-right">
-    {% if perms.vendor.delete_vendor %}
-    <a class="btn btn-secondary" href="#"
-        data-toggle="modal"
-        data-target="#delete_vendor{{ vendor.id }}">
-      {% trans "Delete" %}
-    </a>
-    {% endif %}
-    {% if perms.vendor.change_vendor %}
-    <a
-      class="btn btn-secondary"
-      href="{% url 'vendor:vendor_edit' pk=vendor.id %}?next={% url 'vendor:vendor_details' pk=vendor.id %}">
-      {% trans 'Edit' %}
-    </a>
-    {% endif %}
+  <div class="page-actions">
+    {% if perms.vendor.change_vendor %}<a class="btn btn-light" href="{% url 'vendor:EditVendor' pk=vendor.id %}"><i class="fa-solid fa-pen-to-square me-1"></i>{% trans 'Edit' %}</a>{% endif %}
+    {% if perms.vendor.delete_vendor %}{% url 'vendor:DeleteVendor' pk=vendor.id as delete_url %}{% trans 'Delete' as delete_label %}{% include 'components/_delete_button.html' with url=delete_url name=vendor.full_name css='btn btn-outline-danger' label=delete_label %}{% endif %}
   </div>
 </div>
-{% if perms.vendor.delete_vendor %}
-  {% include 'vendor/_vendor_delete.html' %}
-{% endif %}
+<div class="row g-3">
+  <div class="col-lg-8">
+    <div class="card">
+      <table class="table table-details">
+        <tr><th scope="row">{% trans 'Company' %}</th><td><a href="{% url 'vendor:CompanyDetails' pk=vendor.company_id %}">{{ vendor.company.name }}</a></td></tr>
+        <tr><th scope="row">{% trans 'Email' %}</th><td>{% if vendor.email %}<a href="mailto:{{ vendor.email }}">{{ vendor.email }}</a>{% else %}—{% endif %}</td></tr>
+        <tr><th scope="row">{% trans 'Phone' %}</th><td>{{ vendor.phone|default:'—' }}</td></tr>
+        <tr><th scope="row">{% trans 'Department' %}</th><td>{{ vendor.department|default:'—' }}</td></tr>
+        <tr><th scope="row">{% trans 'Job' %}</th><td>{{ vendor.job|default:'—' }}</td></tr>
+        <tr><th scope="row">{% trans 'Notes' %}</th><td>{{ vendor.note|default:'—'|linebreaksbr }}</td></tr>
+      </table>
+    </div>
+  </div>
+  <div class="col-lg-4">{% include 'components/_activities.html' with activities=vendor.get_activities %}</div>
+</div>
 {% endblock %}

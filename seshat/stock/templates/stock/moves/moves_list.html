@@ -1,0 +1,27 @@
+{% extends 'stock/stock_base_.html' %}
+{% load i18n %}
+{% block title %}{{ item.code }} - {% trans 'Moves' %} | {% endblock %}
+{% block stock_content %}
+<div class="page-header">
+  <div>
+    <nav aria-label="breadcrumb"><ol class="breadcrumb">
+      <li class="breadcrumb-item"><a href="{% url 'stock:ItemsList' %}">{% trans 'Items' %}</a></li>
+      <li class="breadcrumb-item"><a href="{% url 'stock:ItemDetails' pk=item.id %}">{{ item.code }}</a></li>
+      <li class="breadcrumb-item active" aria-current="page">{% trans 'Moves' %}</li>
+    </ol></nav>
+    <h1 class="page-title">{% trans 'Moves' %} &middot; {{ item.code }}</h1>
+    <p class="page-subtitle">{% blocktrans with quantity=item.quantity %}{{ quantity }} in stock{% endblocktrans %}</p>
+  </div>
+  <div class="page-actions">
+    {% if not item.is_assembly %}
+    {% if perms.stock.add_itemmove %}<a class="btn btn-primary" href="{% url 'stock:NewItemMove' pk=item.id %}"><i class="fa-solid fa-right-left me-1"></i>{% trans 'Add / remove' %}</a>{% endif %}
+    {% if perms.stock.add_itemtransfer %}<a class="btn btn-light" href="{% url 'stock:NewItemTransfer' pk=item.id %}"><i class="fa-solid fa-truck-ramp-box me-1"></i>{% trans 'Transfer' %}</a>{% endif %}
+    {% endif %}
+  </div>
+</div>
+<form method="get" class="mb-3">{% include 'components/_search.html' %}</form>
+<div class="card table-card">
+  {% include 'stock/moves/components/_moves_table.html' with moves=object_list %}
+</div>
+{% include 'x_django_app/_pagination.html' %}
+{% endblock %}

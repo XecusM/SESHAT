@@ -1,0 +1,49 @@
+{% extends 'stock/stock_base_.html' %}
+{% load i18n x_tags %}
+{% block title %}{% trans 'Sub-locations' %} | {% endblock %}
+{% block stock_content %}
+<div class="page-header">
+  <div>
+    <nav aria-label="breadcrumb"><ol class="breadcrumb">
+      <li class="breadcrumb-item"><a href="{% url 'stock:Index' %}">{% trans 'Stock' %}</a></li>
+      <li class="breadcrumb-item active" aria-current="page">{% trans 'Sub-locations' %}</li>
+    </ol></nav>
+    <h1 class="page-title">{% trans 'Sub-locations' %}</h1>
+  </div>
+  <div class="page-actions">
+    {% if perms.stock.add_sublocation %}<a class="btn btn-primary" href="{% url 'stock:NewSubLocation' %}"><i class="fa-solid fa-plus me-1"></i>{% trans 'New sub-location' %}</a>{% endif %}
+  </div>
+</div>
+<form method="get" class="row g-2 mb-3">
+  <div class="col-md-8">{% include 'components/_search.html' %}</div>
+  <div class="col-md-4">
+    <select class="form-select" name="location" data-autosubmit aria-label="{% trans 'Location' %}">
+      <option value="">{% trans 'All locations' %}</option>
+      {% for item in locations %}<option value="{{ item.id }}"{% if location == item.id|stringformat:'s' %} selected{% endif %}>{{ item.name }}</option>{% endfor %}
+    </select>
+  </div>
+</form>
+<div class="card table-card">
+  <div class="table-responsive">
+    <table class="table table-hover">
+      <thead><tr><th><a href="{% x_sort sort 'location__name' %}">{% trans 'Location' %}</a></th><th><a href="{% x_sort sort 'name' %}">{% trans 'Sub-location' %}</a></th><th><a href="{% x_sort sort 'created_at' %}">{% trans 'Created at' %}</a></th><th></th></tr></thead>
+      <tbody>
+        {% for sub_location in object_list %}
+        <tr>
+          <td><a href="{% url 'stock:LocationDetails' pk=sub_location.location_id %}">{{ sub_location.location.name }}</a></td>
+          <td><a class="fw-semibold" href="{% url 'stock:SubLocationDetails' pk=sub_location.id %}">{{ sub_location.name }}</a></td>
+          <td><small>{{ sub_location.created_at|date:'DATE_FORMAT' }}</small></td>
+          <td class="text-end text-nowrap">
+            {% if perms.stock.change_sublocation %}<a class="btn-icon" href="{% url 'stock:EditSubLocation' pk=sub_location.id %}?next={{ request.get_full_path|urlencode }}" title="{% trans 'Edit' %}" aria-label="{% trans 'Edit' %}"><i class="fa-solid fa-pen-to-square"></i></a>{% endif %}
+            {% if perms.stock.delete_sublocation %}{% url 'stock:DeleteSubLocation' pk=sub_location.id as delete_url %}{% include 'components/_delete_button.html' with url=delete_url name=sub_location %}{% endif %}
+          </td>
+        </tr>
+        {% empty %}
+        <tr><td colspan="4">{% include 'components/_empty.html' with icon='fa-table-cells' %}</td></tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+</div>
+{% include 'x_django_app/_pagination.html' %}
+{% endblock %}

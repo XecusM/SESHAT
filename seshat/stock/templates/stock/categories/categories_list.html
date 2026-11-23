@@ -1,0 +1,41 @@
+{% extends 'stock/stock_base_.html' %}
+{% load i18n x_tags %}
+{% block title %}{% trans 'Categories' %} | {% endblock %}
+{% block stock_content %}
+<div class="page-header">
+  <div>
+    <nav aria-label="breadcrumb"><ol class="breadcrumb">
+      <li class="breadcrumb-item"><a href="{% url 'stock:Index' %}">{% trans 'Stock' %}</a></li>
+      <li class="breadcrumb-item active" aria-current="page">{% trans 'Categories' %}</li>
+    </ol></nav>
+    <h1 class="page-title">{% trans 'Categories' %}</h1>
+  </div>
+  <div class="page-actions">
+    {% if perms.stock.add_category %}<a class="btn btn-primary" href="{% url 'stock:NewCategory' %}"><i class="fa-solid fa-plus me-1"></i>{% trans 'New category' %}</a>{% endif %}
+  </div>
+</div>
+<form method="get" class="mb-3">{% include 'components/_search.html' %}</form>
+<div class="card table-card">
+  <div class="table-responsive">
+    <table class="table table-hover">
+      <thead><tr><th><a href="{% x_sort sort 'name' %}">{% trans 'Name' %}</a></th><th class="num">{% trans 'Items' %}</th><th><a href="{% x_sort sort 'created_at' %}">{% trans 'Created at' %}</a></th><th></th></tr></thead>
+      <tbody>
+        {% for category in object_list %}
+        <tr>
+          <td><a class="fw-semibold" href="{% url 'stock:CategoryDetails' pk=category.id %}">{{ category.name }}</a></td>
+          <td class="num">{{ category.item_category.count }}</td>
+          <td><small>{{ category.created_at|date:'DATE_FORMAT' }}</small></td>
+          <td class="text-end text-nowrap">
+            {% if perms.stock.change_category %}<a class="btn-icon" href="{% url 'stock:EditCategory' pk=category.id %}?next={{ request.get_full_path|urlencode }}" title="{% trans 'Edit' %}" aria-label="{% trans 'Edit' %}"><i class="fa-solid fa-pen-to-square"></i></a>{% endif %}
+            {% if perms.stock.delete_category %}{% url 'stock:DeleteCategory' pk=category.id as delete_url %}{% include 'components/_delete_button.html' with url=delete_url name=category.name %}{% endif %}
+          </td>
+        </tr>
+        {% empty %}
+        <tr><td colspan="4">{% include 'components/_empty.html' with icon='fa-tags' %}</td></tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+</div>
+{% include 'x_django_app/_pagination.html' %}
+{% endblock %}

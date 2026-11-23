@@ -2,34 +2,19 @@ from django.urls import path
 
 from . import views
 
-# applicaton name
+# application name
 app_name = 'sale'
 
- # patterns
+# patterns
 urlpatterns = [
     # Orders list
-    path(
-        'orders/',
-        views.OrdersList.as_view(),
-        name='orders_list'),
+    path('orders/', views.OrdersList.as_view(), name='OrdersList'),
     # Create new order
-    path(
-        'order/new/',
-        views.CreateOrder.as_view(),
-        name='order_new'),
+    path('order/new/', views.NewOrder.as_view(), name='NewOrder'),
     # Edit existing order
-    path(
-        'order/edit/<int:pk>/',
-        views.EditOrder.as_view(),
-        name='order_edit'),
+    path('order/edit/<int:pk>/', views.EditOrder.as_view(), name='EditOrder'),
     # View existing order details
-    path(
-        'order/<int:pk>/',
-        views.OrderDetails.as_view(),
-        name='order_details'),
+    path('order/<int:pk>/', views.OrderDetails.as_view(), name='OrderDetails'),
     # Delete order
-    path(
-        'order/delete/<int:pk>/',
-        views.order_delete,
-        name='order_delete'),
+    path('order/delete/<int:pk>/', views.delete_order, name='DeleteOrder'),
 ]

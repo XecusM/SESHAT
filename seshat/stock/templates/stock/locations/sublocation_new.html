@@ -1,0 +1,25 @@
+{% extends 'stock/stock_base_.html' %}
+{% load i18n crispy_forms_tags %}
+{% block title %}{% trans 'New sub-location' %} | {% endblock %}
+{% block stock_content %}
+<div class="page-header">
+  <div>
+    <nav aria-label="breadcrumb"><ol class="breadcrumb">
+      <li class="breadcrumb-item"><a href="{% url 'stock:Index' %}">{% trans 'Stock' %}</a></li>
+      <li class="breadcrumb-item"><a href="{% url 'stock:SubLocationsList' %}">{% trans 'Sub-locations' %}</a></li>
+      <li class="breadcrumb-item active" aria-current="page">{% trans 'New sub-location' %}</li>
+    </ol></nav>
+    <h1 class="page-title">{% trans 'New sub-location' %}</h1>
+  </div>
+</div>
+<div class="card" style="max-width: 40rem;">
+  <div class="card-body">
+    <form method="post" novalidate>
+      {% csrf_token %}
+      {{ form|crispy }}
+      {% url 'stock:SubLocationsList' as cancel_url %}
+      {% include 'components/_form_actions.html' with cancel_url=cancel_url %}
+    </form>
+  </div>
+</div>
+{% endblock %}

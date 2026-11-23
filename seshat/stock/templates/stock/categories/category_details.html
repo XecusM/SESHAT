@@ -1,0 +1,27 @@
+{% extends 'stock/stock_base_.html' %}
+{% load i18n %}
+{% block title %}{{ category.name }} | {% endblock %}
+{% block stock_content %}
+<div class="page-header">
+  <div>
+    <nav aria-label="breadcrumb"><ol class="breadcrumb">
+      <li class="breadcrumb-item"><a href="{% url 'stock:CategoriesList' %}">{% trans 'Categories' %}</a></li>
+      <li class="breadcrumb-item active" aria-current="page">{{ category.name }}</li>
+    </ol></nav>
+    <h1 class="page-title"><i class="fa-solid fa-tag me-2 text-muted"></i>{{ category.name }}</h1>
+  </div>
+  <div class="page-actions">
+    {% if perms.stock.change_category %}<a class="btn btn-light" href="{% url 'stock:EditCategory' pk=category.id %}"><i class="fa-solid fa-pen-to-square me-1"></i>{% trans 'Edit' %}</a>{% endif %}
+    {% if perms.stock.delete_category %}{% url 'stock:DeleteCategory' pk=category.id as delete_url %}{% trans 'Delete' as delete_label %}{% include 'components/_delete_button.html' with url=delete_url name=category.name css='btn btn-outline-danger' label=delete_label %}{% endif %}
+  </div>
+</div>
+<div class="row g-3">
+  <div class="col-lg-8">
+    <div class="card">
+      <div class="card-header">{% trans 'Items' %}</div>
+      {% include 'stock/items/components/_items_table.html' with items=category.get_items %}
+    </div>
+  </div>
+  <div class="col-lg-4">{% include 'components/_activities.html' with activities=category.get_activities %}</div>
+</div>
+{% endblock %}

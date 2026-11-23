@@ -1,0 +1,37 @@
+{% extends 'account/dashboard_base_.html' %}
+{% load i18n crispy_forms_tags %}
+{% block title %}{% trans 'New account' %} | {% endblock %}
+{% block dashboard_content %}
+<div class="page-header">
+  <div>
+    <nav aria-label="breadcrumb"><ol class="breadcrumb">
+      <li class="breadcrumb-item"><a href="{% url 'account:Index' %}">{% trans 'Administration' %}</a></li>
+      <li class="breadcrumb-item"><a href="{% url 'account:UsersList' %}">{% trans 'Accounts' %}</a></li>
+      <li class="breadcrumb-item active" aria-current="page">{% trans 'New account' %}</li>
+    </ol></nav>
+    <h1 class="page-title">{% trans 'New account' %}</h1>
+  </div>
+</div>
+<form method="post" novalidate>
+  {% csrf_token %}
+  <div class="card mb-4">
+    <div class="card-body">
+      <div class="row">
+        <div class="col-md-6">{{ form.first_name|as_crispy_field }}</div>
+        <div class="col-md-6">{{ form.last_name|as_crispy_field }}</div>
+        <div class="col-md-6">{{ form.username|as_crispy_field }}</div>
+        <div class="col-md-6">{{ form.job|as_crispy_field }}</div>
+        <div class="col-md-6">{{ form.password1|as_crispy_field }}</div>
+        <div class="col-md-6">{{ form.password2|as_crispy_field }}</div>
+        <div class="col-md-6">{{ form.is_active|as_crispy_field }}</div>
+        {% if form.is_superuser %}<div class="col-md-6">{{ form.is_superuser|as_crispy_field }}</div>{% endif %}
+      </div>
+      {% if form.non_field_errors %}<div class="alert alert-danger">{{ form.non_field_errors }}</div>{% endif %}
+    </div>
+  </div>
+  <h2 class="form-section-title">{% trans 'Permissions' %}</h2>
+  {% include 'account/components/_permissions.html' with editable=True %}
+  {% url 'account:UsersList' as cancel_url %}
+  {% include 'components/_form_actions.html' with cancel_url=cancel_url %}
+</form>
+{% endblock %}

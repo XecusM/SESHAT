@@ -1,0 +1,6 @@
+{% load i18n %}
+<li class="nav-item">
+  <a class="nav-link{% if request.resolver_match.url_name == 'Index' and not request.resolver_match.namespace %} active{% endif %}" href="{% url 'Index' %}">
+    <i class="fa-solid fa-gauge-high me-1"></i>{% trans 'Dashboard' %}
+  </a>
+</li>

@@ -1,0 +1,36 @@
+{% extends 'account/dashboard_base_.html' %}
+{% load i18n %}
+{% block title %}{% trans 'Log entries' %} | {% endblock %}
+{% block dashboard_content %}
+<div class="page-header">
+  <div>
+    <nav aria-label="breadcrumb"><ol class="breadcrumb">
+      <li class="breadcrumb-item"><a href="{% url 'account:Index' %}">{% trans 'Administration' %}</a></li>
+      <li class="breadcrumb-item active" aria-current="page">{% trans 'Log entries' %}</li>
+    </ol></nav>
+    <h1 class="page-title">{% trans 'Log entries' %}</h1>
+    <p class="page-subtitle">{% trans 'Server errors are recorded here automatically.' %}</p>
+  </div>
+</div>
+<form method="get" class="mb-3">{% include 'components/_search.html' %}</form>
+<div class="card table-card">
+  <div class="table-responsive">
+    <table class="table table-hover">
+      <thead><tr><th>{% trans 'Level' %}</th><th>{% trans 'Logger' %}</th><th>{% trans 'Message' %}</th><th>{% trans 'Date' %}</th></tr></thead>
+      <tbody>
+        {% for log in object_list %}
+        <tr>
+          <td><span class="badge {% if log.level >= 40 %}badge-danger-soft{% else %}badge-soft{% endif %}">{{ log.get_level_display }}</span></td>
+          <td class="font-mono small">{{ log.logger_name }}</td>
+          <td><a href="{% url 'account:DetailedLogEntry' pk=log.id %}">{{ log.msg|truncatechars:90 }}</a></td>
+          <td class="text-nowrap"><small>{{ log.create_datetime|date:'DATETIME_FORMAT' }}</small></td>
+        </tr>
+        {% empty %}
+        <tr><td colspan="4">{% trans 'No log entries. Everything is running smoothly.' as empty_message %}{% include 'components/_empty.html' with icon='fa-circle-check' message=empty_message %}</td></tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+</div>
+{% include 'x_django_app/_pagination.html' %}
+{% endblock %}

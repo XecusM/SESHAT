@@ -1,21 +1,21 @@
-from django.db import models
-from django.contrib.auth import get_user_model
-from django.utils import timezone
-from django.utils.translation import ugettext_lazy as _
 from django.core.exceptions import ValidationError
+from django.db import models, transaction
+from django.urls import reverse
+from django.utils.translation import gettext_lazy as _
 
-from customer import models as customers_models
-from stock import models as stock_models
+from x_django_app.models import XModel
+
+from stock.models import ItemMove
 
 # Create your models here.
 
 
-class SaleOrder(models.Model):
+class SaleOrder(models.Model, XModel):
     '''
     Store all sale orders
     '''
     company = models.ForeignKey(
-                        customers_models.CustomerCompany,
+                        'customer.CustomerCompany',
                         verbose_name=_('Company'),
                         related_name='order_company',
                         on_delete=models.PROTECT,
@@ -23,11 +23,11 @@ class SaleOrder(models.Model):
                         null=False
     )
     invoice = models.CharField(
-                            verbose_name=_('Invoice number'),
-                            max_length=128,
-                            unique=False,
-                            blank=True,
-                            null=True
+                        verbose_name=_('Invoice number'),
+                        max_length=128,
+                        unique=False,
+                        blank=True,
+                        null=True
     )
     invoice_date = models.DateField(
                         verbose_name=_('Invoice date'),
@@ -35,22 +35,9 @@ class SaleOrder(models.Model):
                         blank=True
     )
     note = models.TextField(
-                            verbose_name=_('Notes'),
-                            max_length=255,
-                            unique=False,
-                            blank=True,
-                            null=True
-    )
-    edited_at = models.DateTimeField(
-                        verbose_name=_('Edited at'),
-                        null=True,
-                        blank=True
-    )
-    edited_by = models.ForeignKey(
-                        get_user_model(),
-                        verbose_name=_('Edited by'),
-                        related_name='customer_order_user_edit',
-                        on_delete=models.PROTECT,
+                        verbose_name=_('Notes'),
+                        max_length=255,
+                        unique=False,
                         blank=True,
                         null=True
     )
@@ -59,61 +46,80 @@ class SaleOrder(models.Model):
                         auto_now_add=True,
                         blank=False
     )
-    created_by = models.ForeignKey(
-                        get_user_model(),
-                        verbose_name=_('Created by'),
-                        related_name='customer_order_user_create',
-                        on_delete=models.PROTECT,
-                        blank=True,
-                        null=True
-    )
+
+    class Meta:
+        verbose_name = _('Sale order')
+        verbose_name_plural = _('Sale orders')
+        ordering = ('-created_at', '-id')
+
+    def clean(self):
+        '''
+        The invoice number and date go together
+        '''
+        if bool(self.invoice) != bool(self.invoice_date):
+            raise ValidationError(
+                _("Must complete invoice details (number and date)"),
+                code='invoice_details')
+
+    def get_absolute_url(self):
+        return reverse('sale:OrderDetails', kwargs={'pk': self.pk})
 
     @property
     def total_price(self):
         '''
         Calculate the total price of the order
         '''
-        items = self.sale_order.filter(order=self.id)
-        total_price = 0
-        for item in items:
-            total_price += item.total_price
-
-        return total_price
+        return sum((line.total_price for line in self.get_items()), 0)
 
     def get_items(self):
         '''
-        Get all items for the selected order
+        Get all lines of the order
         '''
-        return self.sale_order.filter(order=self.id).order_by('id')
+        return self.sale_order.select_related(
+                                    'item', 'item__item').order_by('id')
 
-    def edited(self, user):
+    def set_items(self, lines):
         '''
-        Edit Company
+        Save the order lines. lines is a list of dicts with item, quantity,
+        price and note. Existing lines are updated in place, extra lines
+        deleted and new lines created, each with its stock move.
+        Raises ValidationError when the stock can't allow it.
         '''
-        self.edited_at = timezone.now()
-        self.edited_by = user
-        self.save()
+        with transaction.atomic():
+            existing = list(self.get_items())
+            for index, line in enumerate(lines):
+                item = line['item']
+                if index < len(existing):
+                    order_line = existing[index]
+                    move = order_line.item
+                    move.item = item
+                    move.location = item.location
+                    move.quantity = line['quantity']
+                    move.note = line.get('note') or None
+                    move.save()
+                else:
+                    move = ItemMove.objects.create(
+                                item=item,
+                                location=item.location,
+                                type=ItemMove.REMOVE,
+                                related_to=ItemMove.SELL,
+                                quantity=line['quantity'],
+                                note=line.get('note') or None)
+                    order_line = SaleItem(order=self, item=move)
+                order_line.price = line['price']
+                order_line.note = line.get('note') or None
+                order_line.save()
+            for order_line in existing[len(lines):]:
+                order_line.delete()
 
-    def delete(self):
+    def delete(self, *args, **kwargs):
         '''
-        Delete Item
+        Delete the order with its lines and their stock moves
         '''
-        item_moves = (move.item for move in self.get_items())
-        super().delete()
-        for item_move in item_moves:
-            item_move.delete()
-
-    def save(self, *args, **kwargs):
-        '''
-        Save record method
-        '''
-        if self.invoice and self.invoice_date:
-            super().save(*args, **kwargs)
-        elif not self.invoice and not self.invoice_date:
-            super().save(*args, **kwargs)
-        else:
-            raise ValidationError(
-                _("Must complete invoice details"))
+        with transaction.atomic():
+            for line in self.get_items():
+                line.delete()
+            return super().delete(*args, **kwargs)
 
     def __str__(self):
         '''
@@ -122,9 +128,9 @@ class SaleOrder(models.Model):
         return f"{self.id}-{self.company.name}"
 
 
-class SaleItems(models.Model):
+class SaleItem(models.Model):
     '''
-    Store all ordes' items
+    Store all orders' lines
     '''
     order = models.ForeignKey(
                         'SaleOrder',
@@ -135,9 +141,8 @@ class SaleItems(models.Model):
                         null=False
     )
     item = models.OneToOneField(
-                        stock_models.ItemMove,
-                        limit_choices_to={
-                                    'type': stock_models.ItemMove.REMOVE},
+                        ItemMove,
+                        limit_choices_to={"type": ItemMove.REMOVE},
                         verbose_name=_('Item'),
                         related_name='sale_item',
                         on_delete=models.PROTECT,
@@ -146,29 +151,16 @@ class SaleItems(models.Model):
     )
     price = models.DecimalField(
                         verbose_name=_('Unit Price'),
-                        max_digits=8,
+                        max_digits=12,
                         decimal_places=2,
                         unique=False,
                         blank=False,
                         null=False
     )
-    note = models.TextField(
+    note = models.CharField(
                         verbose_name=_('Notes'),
                         max_length=255,
                         unique=False,
-                        blank=True,
-                        null=True
-    )
-    edited_at = models.DateTimeField(
-                        verbose_name=_('Edited at'),
-                        null=True,
-                        blank=True
-    )
-    edited_by = models.ForeignKey(
-                        get_user_model(),
-                        verbose_name=_('Edited by'),
-                        related_name='customer_sale_user_edit',
-                        on_delete=models.PROTECT,
                         blank=True,
                         null=True
     )
@@ -177,40 +169,38 @@ class SaleItems(models.Model):
                         auto_now_add=True,
                         blank=False
     )
-    created_by = models.ForeignKey(
-                        get_user_model(),
-                        verbose_name=_('Created by'),
-                        related_name='customer_sale_user_create',
-                        on_delete=models.PROTECT,
-                        blank=True,
-                        null=True
-    )
+
+    class Meta:
+        verbose_name = _('Sale order line')
+        verbose_name_plural = _('Sale order lines')
+
+    @property
+    def quantity(self):
+        '''
+        The line quantity (from its stock move)
+        '''
+        return self.item.quantity
 
     @property
     def total_price(self):
         '''
-        Calculate the total price for the item
+        Calculate the total price for the line
         '''
         return self.price * self.item.quantity
 
-    def edited(self, user):
+    def delete(self, *args, **kwargs):
         '''
-        Edit Company
+        Delete the line with its stock move
         '''
-        self.edited_at = timezone.now()
-        self.edited_by = user
-        self.save()
-
-    def delete(self):
-        '''
-        Delete Item
-        '''
-        item_move = self.item
-        super().delete()
-        item_move.delete()
+        with transaction.atomic():
+            item_move = self.item
+            result = super().delete(*args, **kwargs)
+            item_move.delete()
+            return result
 
     def __str__(self):
         '''
         String representation for the record
         '''
-        return f"{self.id}-{self.company.name}"
+        return f"{self.order_id}-{self.item.item.code}"
+

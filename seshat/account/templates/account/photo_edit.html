@@ -1,0 +1,36 @@
+{% extends 'base_.html' %}
+{% load static i18n custom_tags %}
+{% block title %}{% trans 'Profile photo' %} | {% endblock %}
+{% block head %}<link rel="stylesheet" href="{% static 'css/cropper.min.css' %}">{% endblock %}
+{% block content %}
+<nav aria-label="breadcrumb"><ol class="breadcrumb">
+  <li class="breadcrumb-item"><a href="{% url 'account:UserDetails' pk=request.user.id %}">{% trans 'My account' %}</a></li>
+  <li class="breadcrumb-item active" aria-current="page">{% trans 'Profile photo' %}</li>
+</ol></nav>
+<div class="row justify-content-center">
+  <div class="col-lg-6">
+    <div class="card">
+      <div class="card-body p-4 text-center">
+        <h1 class="h4 mb-4">{% trans 'Profile photo' %}</h1>
+        {% if profilephoto.photo %}
+        <img id="photoPreview" class="item-photo rounded-circle mb-3" style="max-width: 12rem;" src="{{ profilephoto.photo.url }}" alt="">
+        {% else %}
+        <img id="photoPreview" class="item-photo rounded-circle mb-3" style="max-width: 12rem;" src="{% static 'images/person.png' %}" alt="">
+        {% endif %}
+        <form method="post" enctype="multipart/form-data" class="text-start">
+          {% csrf_token %}
+          {% if form.errors %}<div class="alert alert-danger">{{ form.errors }}</div>{% endif %}
+          <label class="form-label" for="id_photo">{{ form.photo.label }}</label>
+          <input type="file" name="photo" id="id_photo" class="form-control" accept="image/*" data-crop="200" data-preview="#photoPreview" required>
+          <div class="form-text">{{ form.photo.help_text }}</div>
+          {{ form.x }}{{ form.y }}{{ form.width }}{{ form.height }}
+          {% url 'account:UserDetails' pk=request.user.id as cancel_url %}
+          {% include 'components/_form_actions.html' with cancel_url=cancel_url %}
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+{% include 'components/_crop_modal.html' %}
+{% endblock %}
+{% block before_main_script %}<script src="{% static 'js/cropper.min.js' %}"></script>{% endblock %}

@@ -1,0 +1,8 @@
+{% load i18n %}
+{% if perms.sale.view_saleorder %}
+<li class="nav-item">
+  <a class="nav-link{% if request.resolver_match.namespace == 'sale' %} active{% endif %}" href="{% url 'sale:OrdersList' %}">
+    <i class="fa-solid fa-cash-register me-1"></i>{% trans 'Sales' %}
+  </a>
+</li>
+{% endif %}

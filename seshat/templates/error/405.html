@@ -1,0 +1,8 @@
+{% extends 'error/error_base_.html' %}
+{% load i18n %}
+{% block code %}405{% endblock %}
+{% block code_display %}405{% endblock %}
+{% block icon %}fa-ban{% endblock %}
+{% block heading %}{% trans "Method not allowed" %}{% endblock %}
+{% block heading_display %}{% trans "Method not allowed" %}{% endblock %}
+{% block message %}{% trans "This page can't handle that kind of request." %}{% endblock %}

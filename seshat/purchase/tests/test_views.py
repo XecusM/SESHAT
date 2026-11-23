@@ -1,270 +1,100 @@
 from django.test import TestCase
 from django.urls import reverse
-from django.contrib.auth import get_user_model
-from django.conf import settings
-from django.contrib.auth.models import Permission
-from django.contrib.contenttypes.models import ContentType
 
-from purchase import models, views
-from vendor import models as vendors_models
-from stock import models as stock_models
+from x_django_app.models import XActivity
+
+from purchase.models import PurchaseOrder
+from purchase.tests.test_forms import lines_data
+from seshat.testing import (
+                        create_user, create_superuser, create_stock,
+                        create_vendor_company, add_quantity, )
+from stock.models import ItemMove
+
+ORDER_MODEL = PurchaseOrder
+COMPANY = create_vendor_company
+APP = 'purchase'
+# stock change of one ordered unit: purchases add, sales remove
+SIGN = 1
 
 
-class PurchaseViewsTests(TestCase):
+class OrderViewsTest(TestCase):
     '''
-    Test all views for purchase application
+    Test the order views
     '''
+
     def setUp(self):
-        '''
-        Intiate tests
-        '''
-        self.user = get_user_model().objects.create_user(
-                                                username='user',
-                                                password='testpassword')
+        self.client.force_login(create_superuser())
+        self.company = COMPANY()
+        self.item = create_stock(code='BOLT', price='2.00')
+        add_quantity(self.item, 10)
 
-        self.company = vendors_models.VendorCompany.objects.create(
-                                                name='New Company')
+    def post_data(self, rows, **extra):
+        data = {'company': self.company.pk}
+        data.update(extra)
+        data.update(lines_data(rows))
+        return data
 
-        self.category = stock_models.Category.objects.create(
-                                                name='new category')
-        self.location = stock_models.Location.objects.create(
-                                                name='new location')
-        self.sub_location = stock_models.SubLocation.objects.create(
-                                                location=self.location,
-                                                name='new sub_location')
-        self.item = stock_models.Item.objects.create(
-                                                code='code',
-                                                category=self.category,
-                                                location=self.sub_location,
-                                                price=50)
-        self.move = stock_models.ItemMove.objects.create(
-                                    item=self.item,
-                                    type=stock_models.ItemMove.ADD,
-                                    related_to=stock_models.ItemMove.PURCHASE,
-                                    location=self.sub_location,
-                                    quantity=5)
+    def create_order(self, quantity=3):
+        response = self.client.post(
+                    reverse(f'{APP}:NewOrder'),
+                    self.post_data([{'item': self.item.pk, 'quantity': quantity, 'price': '2.00'}]))
+        return response, ORDER_MODEL.objects.order_by('-id').first()
 
-        self.order = models.PurchaseOrder.objects.create(company=self.company)
-
-        self.purchase_item = models.PurchaseItems.objects.create(
-                                    order=self.order,
-                                    item=self.move,
-                                    price=50)
-
-        self.order_new_url = reverse('purchase:order_new')
-        self.order_edit_url = reverse(
-                                    'purchase:order_edit',
-                                    kwargs={'pk': self.order.id})
-        self.order_details_url = reverse(
-                                    'purchase:order_details',
-                                    kwargs={'pk': self.order.id})
-        self.orders_list_url = reverse('purchase:orders_list')
-        self.order_delete_url = reverse(
-                                    'purchase:order_delete',
-                                    kwargs={'pk': self.order.id})
-
-    def test_new_order_get(self):
-        '''
-        Test get url for creating new order
-        '''
-        content_type = ContentType.objects.get_for_model(models.PurchaseOrder)
-        permission = Permission.objects.get(
-                                    codename='add_purchaseorder',
-                                    content_type=content_type)
-
-        self.user.user_permissions.add(permission)
-
-        self.user.refresh_from_db()
-
-        self.client.force_login(self.user)
-
-        response = self.client.get(self.order_new_url)
-
+    def test_new_order_page(self):
+        response = self.client.get(reverse(f'{APP}:NewOrder'))
         self.assertEqual(response.status_code, 200)
-        self.assertTemplateUsed(
-                                response,
-                                'purchase/order_new.html')
+        self.assertIn('"price": "2.00"', response.context['items_data'])
 
-    def test_new_order_permission(self):
-        '''
-        Test permissions for creating new order
-        '''
-        self.client.force_login(self.user)
+    def test_new_order(self):
+        response, order = self.create_order()
+        self.assertRedirects(response, order.get_absolute_url())
+        self.assertEqual(self.item.quantity, 10 + SIGN * 3)
+        self.assertEqual(order.get_activities().first().activity, XActivity.CREATE)
 
-        response = self.client.get(self.order_new_url)
-
-        self.assertEqual(response.status_code, 403)
-
-    def test_new_order_post(self):
-        '''
-        Test post url for creating new order
-        '''
-        content_type = ContentType.objects.get_for_model(models.PurchaseOrder)
-        permission = Permission.objects.get(
-                                    codename='add_purchaseorder',
-                                    content_type=content_type)
-        self.user.user_permissions.add(permission)
-
-        self.user.refresh_from_db()
-
-        self.client.force_login(self.user)
-
-        payload = {
-                    'company': self.company.id,
-                    'items_count': 1,
-                    '1item': self.item.id,
-                    '1quantity': 5,
-                    '1price': 50,
-                    '1note': 'test'
-                }
-
-        response = self.client.post(self.order_new_url, data=payload)
-
-        self.assertEqual(response.status_code, 302)
-        self.assertEquals(models.PurchaseOrder.objects.all().count(), 2)
-
-    def test_edit_order_get(self):
-        '''
-        Test get url for creating edit order
-        '''
-        content_type = ContentType.objects.get_for_model(
-                                                    models.PurchaseOrder)
-        permission = Permission.objects.get(
-                                    codename='change_purchaseorder',
-                                    content_type=content_type)
-
-        self.user.user_permissions.add(permission)
-
-        self.user.refresh_from_db()
-
-        self.client.force_login(self.user)
-
-        response = self.client.get(self.order_edit_url)
-
+    def test_new_order_invalid_lines(self):
+        response = self.client.post(reverse(f'{APP}:NewOrder'), self.post_data([]))
         self.assertEqual(response.status_code, 200)
-        self.assertTemplateUsed(
-                                response,
-                                'purchase/order_edit.html')
+        self.assertFalse(ORDER_MODEL.objects.exists())
 
-    def test_edit_order_permission(self):
-        '''
-        Test permissions for creating edit order
-        '''
-        self.client.force_login(self.user)
+    def test_edit_order(self):
+        _, order = self.create_order()
+        response = self.client.get(reverse(f'{APP}:EditOrder', kwargs={'pk': order.pk}))
+        self.assertEqual(response.context['formset'].initial[0]['quantity'], 3)
+        data = self.post_data([{'item': self.item.pk, 'quantity': 5, 'price': '2.00'}],
+                              invoice='INV-9', invoice_date='2026-03-01')
+        data['lines-INITIAL_FORMS'] = 0
+        response = self.client.post(reverse(f'{APP}:EditOrder', kwargs={'pk': order.pk}), data)
+        self.assertRedirects(response, order.get_absolute_url())
+        order.refresh_from_db()
+        self.assertEqual(order.invoice, 'INV-9')
+        self.assertEqual(self.item.quantity, 10 + SIGN * 5)
+        self.assertEqual(ItemMove.objects.filter(item=self.item).count(), 2)
 
-        response = self.client.get(self.order_edit_url)
+    def test_list_details(self):
+        _, order = self.create_order()
+        response = self.client.get(reverse(f'{APP}:OrdersList'), {'search': self.company.name})
+        self.assertEqual(list(response.context['object_list']), [order])
+        response = self.client.get(reverse(f'{APP}:OrdersList'), {'from_date': '2000-01-01',
+                                                                  'to_date': '2000-01-02'})
+        self.assertEqual(list(response.context['object_list']), [])
+        self.assertContains(self.client.get(order.get_absolute_url()), 'BOLT')
 
-        self.assertEqual(response.status_code, 403)
+    def test_delete(self):
+        _, order = self.create_order()
+        response = self.client.post(reverse(f'{APP}:DeleteOrder', kwargs={'pk': order.pk}))
+        self.assertRedirects(response, reverse(f'{APP}:OrdersList'))
+        self.assertFalse(ORDER_MODEL.objects.exists())
+        self.assertEqual(self.item.quantity, 10)
 
-    def test_edit_order_post(self):
-        '''
-        Test post url for creating edit order
-        '''
-        content_type = ContentType.objects.get_for_model(
-                                                    models.PurchaseOrder)
-        permission = Permission.objects.get(
-                                    codename='change_purchaseorder',
-                                    content_type=content_type)
-        self.user.user_permissions.add(permission)
-
-        self.user.refresh_from_db()
-
-        self.client.force_login(self.user)
-
-        payload = {
-                    'company': self.company.id,
-                    'items_count': 1,
-                    '1item': self.item.id,
-                    '1quantity': 10,
-                    '1price': 50,
-                    '1note': 'test'
-                }
-
-
-        response = self.client.post(self.order_edit_url, data=payload)
-
-        self.order.refresh_from_db()
-        self.purchase_item.refresh_from_db()
-        self.move.refresh_from_db()
-
-        self.assertEqual(response.status_code, 302)
-        self.assertEquals(
-                        self.purchase_item.item.quantity,
-                        payload['1quantity'])
-
-    def test_order_details_get(self):
-        '''
-        Test get url for order details
-        '''
-        self.client.force_login(self.user)
-
-        response = self.client.get(self.order_details_url)
-
-        self.assertEqual(response.status_code, 200)
-        self.assertTemplateUsed(
-                                response,
-                                'purchase/order_details.html')
-
-    def test_orders_list_get(self):
-        '''
-        Test get url for orders list
-        '''
-        self.client.force_login(self.user)
-
-        response = self.client.get(self.orders_list_url)
-
-        self.assertEqual(response.status_code, 200)
-        self.assertTemplateUsed(
-                                response,
-                                'purchase/orders_list.html')
-
-    def test_order_delete_get(self):
-        '''
-        Test get url for order delete
-        '''
-        content_type = ContentType.objects.get_for_model(models.PurchaseOrder)
-        permission = Permission.objects.get(
-                                    codename='delete_purchaseorder',
-                                    content_type=content_type)
-
-        self.user.user_permissions.add(permission)
-
-        self.user.refresh_from_db()
-
-        self.client.force_login(self.user)
-
-        response = self.client.get(self.order_delete_url)
-
-        self.assertEqual(response.status_code, 404)
-
-    def test_order_delete_permission(self):
-        '''
-        Test permissions for order delete
-        '''
-        self.client.force_login(self.user)
-
-        response = self.client.get(self.order_delete_url)
-
-        self.assertEqual(response.status_code, 403)
-
-    def test_delete_order_post(self):
-        '''
-        Test post url for order delete
-        '''
-        content_type = ContentType.objects.get_for_model(
-                                                    models.PurchaseOrder)
-        permission = Permission.objects.get(
-                                    codename='delete_purchaseorder',
-                                    content_type=content_type)
-        self.user.user_permissions.add(permission)
-
-        self.user.refresh_from_db()
-
-        self.client.force_login(self.user)
-
-        self.assertEqual(models.PurchaseOrder.objects.all().count(), 1)
-
-        response = self.client.post(self.order_delete_url)
-
-        self.assertEqual(response.status_code, 302)
-        self.assertEqual(models.PurchaseOrder.objects.all().count(), 0)
+    def test_permissions(self):
+        _, order = self.create_order()
+        self.client.force_login(create_user(permissions=[f'{APP}.view_{APP}order']))
+        self.assertEqual(self.client.get(reverse(f'{APP}:OrdersList')).status_code, 200)
+        self.assertEqual(self.client.get(order.get_absolute_url()).status_code, 200)
+        self.assertEqual(self.client.get(reverse(f'{APP}:NewOrder')).status_code, 403)
+        self.assertEqual(self.client.get(
+                reverse(f'{APP}:EditOrder', kwargs={'pk': order.pk})).status_code, 403)
+        self.assertEqual(self.client.post(
+                reverse(f'{APP}:DeleteOrder', kwargs={'pk': order.pk})).status_code, 403)
+        self.client.force_login(create_user('none'))
+        self.assertEqual(self.client.get(reverse(f'{APP}:OrdersList')).status_code, 403)

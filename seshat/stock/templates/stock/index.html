@@ -1,91 +1,46 @@
-{% extends 'base_.html' %}
-{% load static %}
-{% load i18n %}
-{% load x_tags %}
-{% block content %}
-<div class="row">
-  <div class="col-md-4 col-sm-6  mb-3">
-    <div class="card login">
-      <div class="card-header">
-        <h4>{% trans 'Tools' %}</h4>
-      </div>
-      <div class="card-body text-center">
-        <p><a href="{% url 'stock:items_list' %}">
-          {% trans 'Items' %}
-        </a></p>
-        <p><a href="{% url 'stock:categories_list' %}">
-          {% trans 'Categories' %}
-        </a></p>
-        <hr>
-        <p><a href="{% url 'stock:locations_list' %}">
-          {% trans 'Locations' %}
-        </a></p>
-        <p><a href="{% url 'stock:sublocations_list' %}">
-          {% trans 'Sub-locations' %}
-        </a></p>
-      </div>
+{% extends 'stock/stock_base_.html' %}
+{% load i18n humanize %}
+{% block title %}{% trans 'Stock' %} | {% endblock %}
+{% block stock_content %}
+<div class="page-header">
+  <div>
+    <h1 class="page-title">{% trans 'Stock overview' %}</h1>
+    <p class="page-subtitle">{% trans 'Every item, every shelf, every move.' %}</p>
+  </div>
+  <div class="page-actions">
+    {% if perms.stock.add_item %}<a class="btn btn-primary" href="{% url 'stock:NewItem' %}"><i class="fa-solid fa-plus me-1"></i>{% trans 'New item' %}</a>{% endif %}
+  </div>
+</div>
+<div class="row g-3 mb-4">
+  <div class="col-6 col-xl-3"><div class="card stat-card"><div class="card-body d-flex gap-3 align-items-center">
+    <span class="stat-icon"><i class="fa-solid fa-box"></i></span>
+    <div><div class="stat-label">{% trans 'Active items' %}</div><div class="stat-value">{{ items_count|intcomma }}</div></div></div></div></div>
+  <div class="col-6 col-xl-3"><div class="card stat-card stat-accent"><div class="card-body d-flex gap-3 align-items-center">
+    <span class="stat-icon"><i class="fa-solid fa-coins"></i></span>
+    <div><div class="stat-label">{% trans 'Stock value' %}</div><div class="stat-value">{{ stock_value|floatformat:0|intcomma }}</div></div></div></div></div>
+  <div class="col-6 col-xl-3"><a class="card stat-card card-hover text-reset text-decoration-none{% if low_stock_list %} stat-danger{% endif %}" href="{% url 'stock:ItemsList' %}?status=low"><div class="card-body d-flex gap-3 align-items-center">
+    <span class="stat-icon"><i class="fa-solid fa-triangle-exclamation"></i></span>
+    <div><div class="stat-label">{% trans 'Low stock' %}</div><div class="stat-value">{{ low_stock_list|length }}</div></div></div></a></div>
+  <div class="col-6 col-xl-3"><div class="card stat-card"><div class="card-body d-flex gap-3 align-items-center">
+    <span class="stat-icon"><i class="fa-solid fa-table-cells"></i></span>
+    <div><div class="stat-label">{% trans 'Sub-locations' %}</div><div class="stat-value">{{ locations_count|intcomma }}</div></div></div></div></div>
+</div>
+<div class="row g-3">
+  <div class="col-lg-8">
+    <div class="card h-100">
+      <div class="card-header"><i class="fa-solid fa-right-left me-2 text-muted"></i>{% trans 'Latest moves' %}</div>
+      {% include 'stock/moves/components/_moves_table.html' with moves=itemmove_list show_item=True %}
     </div>
   </div>
-  <div class="col-md-8">
-    <div class="card">
-      <div class="card-header">
-        <h4>{% trans 'Latest Moves' %}</h4>
-      </div>
-      <div class="card-body">
-        <div class="table-responsive-md">
-          <table class="table table-striped table-sm">
-            <tbody>
-              <tr>
-                <th scope="row">
-                  {% trans 'Location' %}
-                </th>
-                <td>
-                  <strong>
-                    {% trans 'Type' %}
-                  </strong>
-                </td>
-                <td>
-                  <strong>
-                    {% trans 'Quantity' %}
-                  </strong>
-                </td>
-                <td>
-                  <strong>
-                    {% trans 'Related to' %}
-                  </strong>
-                </td>
-                <td>
-                  <strong>
-                    {% trans 'Created by'%}
-                  </strong>
-                </td>
-              </tr>
-              {% for move in itemmove_list %}
-              <tr class="table-row">
-                <th scope="row">
-                  {{ move.location}}
-                </th>
-                <td>
-                  {{ move.get_type_display }}
-                </td>
-                <td>
-                  {{ move.quantity }}
-                </td>
-                <td>
-                  {{ move.get_related_to_display }}
-                </td>
-                <td>
-                  {{ move.created_by.username }}
-                </td>
-              </tr>
-              {% empty %}
-              <tr>
-                <th scope="row">{% trans "No moves Found!" %}</th>
-              </tr>
-              {% endfor%}
-            </tbody>
-          </table>
-        </div>
+  <div class="col-lg-4">
+    <div class="card h-100">
+      <div class="card-header"><i class="fa-solid fa-tags me-2 text-muted"></i>{% trans 'Categories' %}</div>
+      <div class="list-group list-group-flush">
+        {% for category in categories_list %}
+        <a class="list-group-item list-group-item-action d-flex justify-content-between" href="{% url 'stock:CategoryDetails' pk=category.id %}">{{ category.name }}<span class="badge badge-soft">{{ category.items_count }}</span></a>
+        {% empty %}
+        <div class="card-body">{% include 'components/_empty.html' with icon='fa-tags' %}</div>
+        {% endfor %}
       </div>
     </div>
   </div>

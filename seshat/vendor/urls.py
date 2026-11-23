@@ -2,59 +2,38 @@ from django.urls import path
 
 from . import views
 
-# applicaton name
+# application name
 app_name = 'vendor'
 
 # patterns
 urlpatterns = [
     # Create new company
-    path(
-        'company/new/',
-        views.CreateCompany.as_view(),
-        name='company_new'),
+    path('company/new/', views.NewCompany.as_view(), name='NewCompany'),
     # Edit existing company
     path(
         'company/edit/<int:pk>/',
         views.EditCompany.as_view(),
-        name='company_edit'),
+        name='EditCompany'),
     # View existing company details
     path(
         'company/<int:pk>/',
         views.CompanyDetails.as_view(),
-        name='company_details'),
+        name='CompanyDetails'),
     # Companies list
-    path(
-        'companies/',
-        views.CompaniesList.as_view(),
-        name='companies_list'),
+    path('companies/', views.CompaniesList.as_view(), name='CompaniesList'),
     # Delete company
     path(
         'company/delete/<int:pk>/',
-        views.company_delete,
-        name='company_delete'),
+        views.delete_company,
+        name='DeleteCompany'),
     # Create new vendor
-    path(
-        'new/<int:pk>/',
-        views.CreateVendor.as_view(),
-        name='vendor_new'),
+    path('new/', views.NewVendor.as_view(), name='NewVendor'),
     # Edit existing vendor
-    path(
-        'edit/<int:pk>/',
-        views.EditVendor.as_view(),
-        name='vendor_edit'),
+    path('edit/<int:pk>/', views.EditVendor.as_view(), name='EditVendor'),
     # View existing vendor details
-    path(
-        '<int:pk>/',
-        views.VendorDetails.as_view(),
-        name='vendor_details'),
+    path('<int:pk>/', views.VendorDetails.as_view(), name='VendorDetails'),
     # Vendors list
-    path(
-        'list/',
-        views.VendorsList.as_view(),
-        name='vendors_list'),
+    path('list/', views.VendorsList.as_view(), name='VendorsList'),
     # Delete vendor
-    path(
-        'delete/<int:pk>/',
-        views.vendor_delete,
-        name='vendor_delete'),
+    path('delete/<int:pk>/', views.delete_vendor, name='DeleteVendor'),
 ]

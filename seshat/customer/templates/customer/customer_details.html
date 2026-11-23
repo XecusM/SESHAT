@@ -1,70 +1,34 @@
-{% extends 'base_.html' %}
-{% load static %}
+{% extends 'customer/customer_base_.html' %}
 {% load i18n %}
-{% load x_tags %}
-{% block content %}
-<nav aria-label="breadcrumb">
-  <ol class="breadcrumb">
-    <li class="breadcrumb-item">
-      <a href="{% url 'customer:companies_list' %}">{% trans 'Customers companies' %}</a>
-    </li>
-    <li class="breadcrumb-item">
-      <a href="{% url 'customer:company_details' pk=customer.company.id %}">{{ customer.company.name }}</a>
-    </li>
-    <li class="breadcrumb-item active" aria-current="page">
-      {% trans 'Customer Details' %}
-    </li>
-  </ol>
-</nav>
-<div class="login">
-  <div class="table-responsive-md">
-    <table class="table table-striped table-sm">
-      <tbody>
-        <tr>
-          <th scope="row">{% trans 'Name' %}</th>
-          <td>{{ customer.full_name }}</td>
-        </tr>
-        <tr>
-          <th scope="row">{% trans 'Email' %}</th>
-          <td>{{ customer.email|default_if_none:'' }}</td>
-        </tr>
-        <tr>
-          <th scope="row">{% trans 'Phone' %}</th>
-          <td>{{ customer.phone|default_if_none:'' }}</td>
-        </tr>
-        <tr>
-          <th scope="row">{% trans 'Department' %}</th>
-          <td>{{ customer.department|default_if_none:'' }}</td>
-        </tr>
-        <tr>
-          <th scope="row">{% trans 'Job' %}</th>
-          <td>{{ customer.job|default_if_none:'' }}</td>
-        </tr>
-        <tr>
-          <th scope="row">{% trans 'Note' %}</th>
-          <td>{{ customer.note|default_if_none:''|safe }}</td>
-        </tr>
-      </tbody>
-    </table>
+{% block title %}{{ customer.full_name }} | {% endblock %}
+{% block app_content %}
+<div class="page-header">
+  <div>
+    <nav aria-label="breadcrumb"><ol class="breadcrumb">
+      <li class="breadcrumb-item"><a href="{% url 'customer:CustomersList' %}">{% trans 'Customers' %}</a></li>
+      <li class="breadcrumb-item active" aria-current="page">{{ customer.full_name }}</li>
+    </ol></nav>
+    <h1 class="page-title"><i class="fa-solid fa-user me-2 text-muted"></i>{{ customer.full_name }}</h1>
+    <p class="page-subtitle">{{ customer.job|default:'' }}{% if customer.job and customer.department %} &middot; {% endif %}{{ customer.department|default:'' }}</p>
   </div>
-  <div class="text-right">
-    {% if perms.customer.delete_customer %}
-    <a class="btn btn-secondary" href="#"
-        data-toggle="modal"
-        data-target="#delete_customer{{ customer.id }}">
-      {% trans "Delete" %}
-    </a>
-    {% endif %}
-    {% if perms.customer.change_customer %}
-    <a
-      class="btn btn-secondary"
-      href="{% url 'customer:customer_edit' pk=customer.id %}?next={% url 'customer:customer_details' pk=customer.id %}">
-      {% trans 'Edit' %}
-    </a>
-    {% endif %}
+  <div class="page-actions">
+    {% if perms.customer.change_customer %}<a class="btn btn-light" href="{% url 'customer:EditCustomer' pk=customer.id %}"><i class="fa-solid fa-pen-to-square me-1"></i>{% trans 'Edit' %}</a>{% endif %}
+    {% if perms.customer.delete_customer %}{% url 'customer:DeleteCustomer' pk=customer.id as delete_url %}{% trans 'Delete' as delete_label %}{% include 'components/_delete_button.html' with url=delete_url name=customer.full_name css='btn btn-outline-danger' label=delete_label %}{% endif %}
   </div>
 </div>
-{% if perms.customer.delete_customer %}
-  {% include 'customer/_customer_delete.html' %}
-{% endif %}
+<div class="row g-3">
+  <div class="col-lg-8">
+    <div class="card">
+      <table class="table table-details">
+        <tr><th scope="row">{% trans 'Company' %}</th><td><a href="{% url 'customer:CompanyDetails' pk=customer.company_id %}">{{ customer.company.name }}</a></td></tr>
+        <tr><th scope="row">{% trans 'Email' %}</th><td>{% if customer.email %}<a href="mailto:{{ customer.email }}">{{ customer.email }}</a>{% else %}—{% endif %}</td></tr>
+        <tr><th scope="row">{% trans 'Phone' %}</th><td>{{ customer.phone|default:'—' }}</td></tr>
+        <tr><th scope="row">{% trans 'Department' %}</th><td>{{ customer.department|default:'—' }}</td></tr>
+        <tr><th scope="row">{% trans 'Job' %}</th><td>{{ customer.job|default:'—' }}</td></tr>
+        <tr><th scope="row">{% trans 'Notes' %}</th><td>{{ customer.note|default:'—'|linebreaksbr }}</td></tr>
+      </table>
+    </div>
+  </div>
+  <div class="col-lg-4">{% include 'components/_activities.html' with activities=customer.get_activities %}</div>
+</div>
 {% endblock %}

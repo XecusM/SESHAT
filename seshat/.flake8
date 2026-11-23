@@ -1,3 +1,0 @@
-[flake8]
-ignore = E126
-exclude = seshat/settings.py, */__pycache__/*, */migrations/*

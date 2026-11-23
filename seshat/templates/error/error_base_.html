@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+{% load static i18n %}
+{% get_current_language as LANGUAGE_CODE %}{% get_current_language_bidi as LANGUAGE_BIDI %}
+<html lang="{{ LANGUAGE_CODE }}" dir="{% if LANGUAGE_BIDI %}rtl{% else %}ltr{% endif %}" data-theme="{{ THEME|default:'auto' }}" data-bs-theme="{% if THEME == 'dark' %}dark{% else %}light{% endif %}">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="robots" content="noindex">
+    <title>{% block code %}{% endblock %} &middot; {% block heading %}{% endblock %} | SESHAT</title>
+    <script>
+      if ((document.documentElement.dataset.theme || 'auto') === 'auto' && window.matchMedia
+          && window.matchMedia('(prefers-color-scheme: dark)').matches) {
+        document.documentElement.setAttribute('data-bs-theme', 'dark');
+      }
+    </script>
+    <link rel="icon" type="image/x-icon" href="{% static 'images/logo.ico' %}">
+    {% if LANGUAGE_BIDI %}
+    <link rel="stylesheet" href="{% static 'bootstrap/css/bootstrap.rtl.min.css' %}">
+    {% else %}
+    <link rel="stylesheet" href="{% static 'bootstrap/css/bootstrap.min.css' %}">
+    {% endif %}
+    <link rel="stylesheet" href="{% static 'fontawesome/css/all.min.css' %}">
+    <link rel="stylesheet" href="{% static 'css/seshat-theme.css' %}">
+    <style>
+      .error-page { min-height: 100vh; display: flex; align-items: center; justify-content: center; padding: 2rem 1rem; }
+      .error-code { font-size: clamp(5rem, 3rem + 10vw, 9rem); font-weight: 900; line-height: 1; letter-spacing: -.04em;
+                    background: linear-gradient(135deg, var(--sh-primary), var(--sh-accent)); -webkit-background-clip: text;
+                    background-clip: text; color: transparent; }
+      .error-icon { font-size: 2.25rem; color: var(--sh-accent); }
+      .error-logo { height: 42px; }
+    </style>
+  </head>
+  <body>
+    <main class="error-page">
+      <div class="text-center" style="max-width: 34rem;">
+        <a href="{% url 'Index' %}"><img class="error-logo mb-4" src="{% static 'images/logo.png' %}" alt="SESHAT" data-light-logo></a>
+        <div class="error-icon mb-2"><i class="fa-solid {% block icon %}fa-feather-pointed{% endblock %}"></i></div>
+        <div class="error-code">{% block code_display %}{% endblock %}</div>
+        <h1 class="h3 mt-3">{% block heading_display %}{% endblock %}</h1>
+        <p class="text-muted fs-5">{% block message %}{% endblock %}</p>
+        <div class="d-flex flex-wrap justify-content-center gap-2 mt-4">
+          <a href="javascript:history.back()" class="btn btn-light"><i class="fa-solid fa-arrow-left sh-flip-rtl me-1"></i>{% trans 'Go back' %}</a>
+          <a href="{% url 'Index' %}" class="btn btn-primary"><i class="fa-solid fa-house me-1"></i>{% trans 'To the dashboard' %}</a>
+        </div>
+      </div>
+    </main>
+    <script>
+      if (document.documentElement.getAttribute('data-bs-theme') === 'dark') {
+        document.querySelector('[data-light-logo]').src = "{% static 'images/logo-dark.png' %}";
+      }
+    </script>
+  </body>
+</html>

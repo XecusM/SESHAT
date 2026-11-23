@@ -1,0 +1,15 @@
+{% extends 'base_.html' %}
+{% load static i18n %}
+{% block title %}{{ account.username }} - {% trans 'Activity report' %} | {% endblock %}
+{% block content %}
+<nav aria-label="breadcrumb"><ol class="breadcrumb">
+  <li class="breadcrumb-item"><a href="{% url 'account:UserDetails' pk=account.id %}">{{ account.username }}</a></li>
+  <li class="breadcrumb-item active" aria-current="page">{% trans 'Activity report' %}</li>
+</ol></nav>
+<div class="page-header">{% include 'account/components/_user.html' %}</div>
+{% include 'account/components/_report.html' with show_users=False %}
+{% endblock %}
+{% block script %}
+<script src="{% static 'js/chart.umd.min.js' %}"></script>
+<script src="{% static 'js/activity-report.js' %}" data-url="{% url 'account:APIReportUser' pk=account.id %}"></script>
+{% endblock %}

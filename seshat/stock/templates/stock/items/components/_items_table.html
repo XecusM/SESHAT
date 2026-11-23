@@ -1,0 +1,23 @@
+{% load static i18n humanize %}
+<div class="table-responsive">
+  <table class="table table-hover">
+    <thead><tr><th>{% trans 'Item' %}</th><th>{% trans 'Category' %}</th><th class="num">{% trans 'Quantity' %}</th><th class="num">{% trans 'Unit Price' %}</th></tr></thead>
+    <tbody>
+      {% for item in items %}
+      <tr>
+        <td>
+          <a class="d-flex align-items-center gap-2" href="{% url 'stock:ItemDetails' pk=item.id %}">
+            <img class="item-thumb" src="{% if item.photo %}{{ item.photo.url }}{% else %}{% static 'images/item.png' %}{% endif %}" alt="">
+            <span><span class="fw-semibold">{{ item.code }}</span>{% if item.is_assembly %} <span class="badge badge-accent">{% trans 'Assembly' %}</span>{% endif %}<br><small>{{ item.description|default:'' }}</small></span>
+          </a>
+        </td>
+        <td>{{ item.category.name }}</td>
+        <td class="num">{% if item.is_low_stock %}<span class="badge badge-danger-soft">{{ item.quantity }}</span>{% else %}{{ item.quantity }}{% endif %}</td>
+        <td class="num">{{ item.price|floatformat:2|intcomma }}</td>
+      </tr>
+      {% empty %}
+      <tr><td colspan="4">{% include 'components/_empty.html' with icon='fa-box' %}</td></tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</div>

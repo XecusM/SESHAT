@@ -1,82 +1,60 @@
-"""seshat URL Configuration
-
-The `urlpatterns` list routes URLs to views. For more information please see:
-    https://docs.djangoproject.com/en/3.0/topics/http/urls/
-Examples:
-Function views
-    1. Add an import:  from my_app import views
-    2. Add a URL to urlpatterns:  path('', views.home, name='home')
-Class-based views
-    1. Add an import:  from other_app.views import Home
-    2. Add a URL to urlpatterns:  path('', Home.as_view(), name='home')
-Including another URLconf
-    1. Import the include() function: from django.urls import include, path
-    2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
 """
-from django.contrib import admin
-from django.urls import path, include
-from django.conf.urls.static import static
-from django.views.static import serve
+SESHAT URL configuration
+
+https://docs.djangoproject.com/en/6.1/topics/http/urls/
+"""
 from django.conf import settings
 from django.conf.urls.i18n import i18n_patterns
+from django.conf.urls.static import static
+from django.urls import path, include
 
 from . import views
 
-
 urlpatterns = [
-    # multi langauge application
+    # multi language application
     path('i18n/', include('django.conf.urls.i18n')),
 ]
 
 urlpatterns += i18n_patterns(
-    # Index page
-    path('', views.Index.as_view(), name='index'),
+    # Index page (dashboard)
+    path('', views.index, name='Index'),
     # backup page
-    path('backup/', views.databackup, name='backup'),
+    path('backup/', views.backup, name='Backup'),
     # download backup file
     path(
-        'backup/download/<int:pk>',
-        views.databackup_download,
-        name='download_backup'),
+        'backup/download/<str:file_name>/',
+        views.backup_download,
+        name='DownloadBackup'),
     # restore page
-    path('restore/', views.datarestore, name='restore'),
+    path('restore/', views.restore, name='Restore'),
     # export page
-    path('export/', views.dataexport, name='export'),
+    path('export/', views.export_data, name='Export'),
     # import page
-    path('import/', views.dataimport, name='import'),
+    path('import/', views.import_data, name='Import'),
     # download import template file
     path(
-        'import/download/<int:pk>',
-        views.dataimport_template,
-        name='download_template'),
-    # account application for user accounts
-    path('accounts/', include('account.urls')),
-    # customer application for customers details
-    path('customers/', include('customer.urls')),
-    # purchase application for purchases details
-    path('purchases/', include('purchase.urls')),
-    # sell application for sells details
-    path('sales/', include('sale.urls')),
-    # stock application for stocks details
+        'import/template/<str:module>/',
+        views.import_template,
+        name='ImportTemplate'),
+    # account application for user accounts and administration
+    path('admin/', include('account.urls')),
+    # stock application for items, categories and locations
     path('stock/', include('stock.urls')),
-    # vendor application for vendors details
+    # customer application for customers and their companies
+    path('customers/', include('customer.urls')),
+    # vendor application for vendors and their companies
     path('vendors/', include('vendor.urls')),
+    # purchase application for purchase orders
+    path('purchases/', include('purchase.urls')),
+    # sale application for sale orders
+    path('sales/', include('sale.urls')),
     # remove prefix for the default language
     prefix_default_language=False,
 )
 
-# media settings
+# media and static files while developing
 if settings.DEBUG:
-    urlpatterns += static(
-                        settings.STATIC_URL,
-                        serve,
-                        document_root=settings.STATIC_ROOT
-    )
-    urlpatterns += static(
-                        settings.MEDIA_URL,
-                        serve,
-                        document_root=settings.MEDIA_ROOT
-    )
+    urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
 
 
 # error handlers

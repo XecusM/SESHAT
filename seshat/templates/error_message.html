@@ -1,0 +1,17 @@
+{% extends 'base_.html' %}
+{% load i18n %}
+{% block title %}{% trans 'Error' %} | {% endblock %}
+{% block content %}
+<div class="row justify-content-center">
+  <div class="col-md-7 col-lg-6">
+    <div class="card text-center">
+      <div class="card-body p-5">
+        <div class="stat-card stat-danger mb-3"><span class="stat-icon"><i class="fa-solid fa-triangle-exclamation"></i></span></div>
+        <h1 class="h4">{% trans "Something went wrong" %}</h1>
+        <p class="text-muted">{{ message }}</p>
+        <a href="{{ link }}" class="btn btn-primary"><i class="fa-solid fa-arrow-left sh-flip-rtl me-1"></i>{% trans 'Go back' %}</a>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}

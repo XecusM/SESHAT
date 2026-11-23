@@ -1,20 +1,8 @@
-{% extends "base_.html" %}
-{% load static %}
+{% extends 'error/error_base_.html' %}
 {% load i18n %}
-{% get_current_language as LANGUAGE_CODE %}
-{% block content %}
-  <h2 style="display: none;">error number 404</h2>
-  <div class="card text-center">
-    <div class="card-header">
-      404
-    </div>
-    <div class="card-body">
-    <p class="card-text">{% trans "Can't find page" %}</p>
-    <a href="{% url 'index' %}" class="btn btn-primary">{% trans 'To Home' %}</a>
-  </div>
-  </div>
-{% endblock %}
-
-{% block script %}
-
-{% endblock %}
+{% block code %}404{% endblock %}
+{% block code_display %}404{% endblock %}
+{% block icon %}fa-compass{% endblock %}
+{% block heading %}{% trans "Page not found" %}{% endblock %}
+{% block heading_display %}{% trans "Page not found" %}{% endblock %}
+{% block message %}{% trans "This page is not in our records. It may have been moved or deleted." %}{% endblock %}

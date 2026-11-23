@@ -1,0 +1,11 @@
+{% load i18n crispy_forms_tags %}
+<div class="formset-row row g-2 align-items-end" data-formset-row>
+  <div class="col-md-4">{{ line.item|as_crispy_field }}<small data-line-info></small></div>
+  <div class="col-4 col-md-2">{{ line.quantity|as_crispy_field }}</div>
+  <div class="col-4 col-md-2">{{ line.price|as_crispy_field }}</div>
+  <div class="col-md-3">{{ line.note|as_crispy_field }}</div>
+  <div class="col-4 col-md-1 text-end pb-3">
+    <span class="d-none">{{ line.DELETE }}</span>
+    <button type="button" class="btn btn-light" data-formset-remove aria-label="{% trans 'Remove' %}"><i class="fa-solid fa-xmark"></i></button>
+  </div>
+</div>

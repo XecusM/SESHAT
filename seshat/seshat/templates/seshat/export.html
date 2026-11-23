@@ -1,60 +1,30 @@
-{% extends 'base_.html' %}
-{% load static %}
+{% extends 'account/dashboard_base_.html' %}
 {% load i18n %}
-{% block content %}
-<nav aria-label="breadcrumb">
-  <ol class="breadcrumb">
-    <li class="breadcrumb-item">
-      <a href="{% url 'account:index' %}">{% trans 'Admin Dashboard' %}</a>
-    </li>
-    <li class="breadcrumb-item active" aria-current="page">
-      {% trans 'Export' %}
-    </li>
-  </ol>
-</nav>
-<div class="login">
-  <br>
-  <h4>{% trans 'Select module to export ....' %}</h4>
-  <hr>
-  <form action="{% url 'export' %}" method="POST">
-    {% csrf_token %}
-    <div class="row">
-      <div class="col-md-8">
-        <select class="form-control" name="export" required>
-          <option value="" selected>
-            {% trans 'Select Export' %}
-          </option>
-          <option value="stock.Item">
-            {% trans 'Items' %}
-          </option>
-          <option value="stock.Category">
-            {% trans "Items' categories" %}
-          </option>
-          <option value="stock.SubLocation">
-            {% trans "Items' locations" %}
-          </option>
-          <option value="customer.Customer">
-            {% trans "Customers" %}
-          </option>
-          <option value="customer.CustomerCompany">
-            {% trans "Customers' companies" %}
-          </option>
-          <option value="vendor.Vendor">
-            {% trans "Vendors"%}
-          </option>
-          <option value="vendor.VendorCompany">
-            {% trans "Vendors' companies" %}
-          </option>
-        </select>
-        <p></p>
+{% block title %}{% trans 'Export' %} | {% endblock %}
+{% block dashboard_content %}
+<div class="page-header">
+  <div>
+    <nav aria-label="breadcrumb"><ol class="breadcrumb">
+      <li class="breadcrumb-item"><a href="{% url 'account:Index' %}">{% trans 'Administration' %}</a></li>
+      <li class="breadcrumb-item active" aria-current="page">{% trans 'Export' %}</li>
+    </ol></nav>
+    <h1 class="page-title">{% trans 'Export data' %}</h1>
+    <p class="page-subtitle">{% trans 'Download any module as a CSV file that opens in every spreadsheet.' %}</p>
+  </div>
+</div>
+<div class="card" style="max-width: 40rem;">
+  <div class="card-body">
+    <form method="post">
+      {% csrf_token %}
+      <label class="form-label" for="module">{% trans 'Module' %}</label>
+      <select class="form-select" id="module" name="module" required>
+        <option value="">{% trans 'Select a module' %}</option>
+        {% for key, label in modules %}<option value="{{ key }}">{{ label }}</option>{% endfor %}
+      </select>
+      <div class="text-end mt-3">
+        <button type="submit" class="btn btn-primary"><i class="fa-solid fa-file-csv me-1"></i>{% trans 'Export' %}</button>
       </div>
-      <div class="col-md-4">
-        <input
-              class="btn btn-secondary" type="submit"
-              name="submit" value="{% trans 'Export' %}">
-      </div>
-    </div>
-  </form>
-  <hr>
+    </form>
+  </div>
 </div>
 {% endblock %}

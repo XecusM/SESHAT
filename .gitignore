@@ -25,7 +25,6 @@ wheels/
 .installed.cfg
 *.egg
 var/
-!var/imports/*template.csv
 
 
 # PyInstaller
@@ -117,3 +116,7 @@ staticroot/
 **/migrations/**
 !**/migrations
 !**/migrations/__init__.py
+
+# SESHAT runtime data
+seshat/var/
+.env

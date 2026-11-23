@@ -1,0 +1,20 @@
+{% extends 'base_.html' %}
+{% load i18n %}
+{% block content %}
+{% with url_name=request.resolver_match.url_name %}
+<div class="row g-4">
+  <div class="col-md-3 col-xl-2">
+    <nav class="nav flex-column side-nav" aria-label="{% trans 'Stock' %}">
+      <a class="nav-link{% if url_name == 'Index' %} active{% endif %}" href="{% url 'stock:Index' %}"><i class="fa-solid fa-gauge"></i>{% trans 'Overview' %}</a>
+      <a class="nav-link{% if url_name in 'ItemsList NewItem EditItem ItemDetails NewItemMove ItemMovesList NewItemTransfer' %} active{% endif %}" href="{% url 'stock:ItemsList' %}"><i class="fa-solid fa-box"></i>{% trans 'Items' %}</a>
+      <a class="nav-link{% if url_name in 'CategoriesList NewCategory EditCategory CategoryDetails' %} active{% endif %}" href="{% url 'stock:CategoriesList' %}"><i class="fa-solid fa-tags"></i>{% trans 'Categories' %}</a>
+      <a class="nav-link{% if url_name in 'LocationsList NewLocation EditLocation LocationDetails' %} active{% endif %}" href="{% url 'stock:LocationsList' %}"><i class="fa-solid fa-warehouse"></i>{% trans 'Locations' %}</a>
+      <a class="nav-link{% if url_name in 'SubLocationsList NewSubLocation EditSubLocation SubLocationDetails' %} active{% endif %}" href="{% url 'stock:SubLocationsList' %}"><i class="fa-solid fa-table-cells"></i>{% trans 'Sub-locations' %}</a>
+    </nav>
+  </div>
+  <div class="col-md-9 col-xl-10">
+    {% block stock_content %}{% endblock %}
+  </div>
+</div>
+{% endwith %}
+{% endblock %}

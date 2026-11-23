@@ -1,93 +1,75 @@
+from django.core.exceptions import ValidationError
+from django.db.utils import IntegrityError
 from django.test import TestCase
 
-from django.contrib.auth import get_user_model
+from vendor.models import VendorCompany, Vendor
+from seshat.testing import create_vendor_company, create_vendor
 
-from vendor import models as vendors_models
 
-
-class VendorModelsTests(TestCase):
+class CompanyModelTest(TestCase):
     '''
-    Test all models and methods in vendor application
+    Test the company model
     '''
-    def test_company_create(self):
-        '''
-        Test creating a new company with minimum values
-        '''
-        vendors_models.VendorCompany.objects.create(name='New Company')
 
-        self.assertEqual(
-                    vendors_models.VendorCompany.objects.all().count(), 1)
+    def setUp(self):
+        self.company = create_vendor_company('Acme')
 
-    def test_company_edited(self):
-        '''
-        Test edited method in Company model
-        '''
-        user = get_user_model().objects.create_user(
-                                                username='Xecus',
-                                                password='testpass')
-        compnay = vendors_models.VendorCompany.objects.create(
-                                                name='New Company')
+    def test_str_and_url(self):
+        self.assertEqual(str(self.company), 'Acme')
+        self.assertTrue(self.company.get_absolute_url().endswith(f'/company/{self.company.pk}/'))
 
-        compnay.edited(user)
+    def test_unique_name(self):
+        with self.assertRaises(IntegrityError):
+            VendorCompany.objects.create(name='Acme')
 
-        self.assertEqual(compnay.edited_by, user)
+    def test_clean_blank_unique_values(self):
+        self.company.phone = ''
+        self.company.tax_code = ''
+        self.company.clean()
+        self.assertIsNone(self.company.phone)
+        self.assertIsNone(self.company.tax_code)
 
-    def test_vendor_create(self):
-        '''
-        Test creating a new vendor with minimum values
-        '''
-        company = vendors_models.VendorCompany.objects.create(
-                                                name='New Company')
+    def test_invalid_phone_and_website(self):
+        self.company.phone = 'abc'
+        self.company.website = 'not a url'
+        with self.assertRaises(ValidationError) as error:
+            self.company.full_clean()
+        self.assertIn('phone', error.exception.message_dict)
+        self.assertIn('website', error.exception.message_dict)
 
-        vendors_models.Vendor.objects.create(
-                                        company=company,
-                                        first_name='Mohamed',
-                                        last_name='Aboel-fotouh', )
+    def test_contacts_and_delete_check(self):
+        self.assertTrue(self.company.can_be_deleted())
+        create_vendor(company=self.company, first_name='Zed')
+        create_vendor(company=self.company, first_name='Amy')
+        self.assertEqual([c.first_name for c in self.company.get_vendors()], ['Amy', 'Zed'])
+        self.assertFalse(self.company.can_be_deleted())
 
-        self.assertEqual(vendors_models.Vendor.objects.all().count(), 1)
 
-    def test_company_get_vendors(self):
-        '''
-        Test get_vendors method in Company model
-        '''
-        company = vendors_models.VendorCompany.objects.create(
-                                                name='New Company')
+class ContactModelTest(TestCase):
+    '''
+    Test the contact model
+    '''
 
-        vendor = vendors_models.Vendor.objects.create(
-                                            company=company,
-                                            first_name='Mohamed',
-                                            last_name='Aboel-fotouh', )
+    def test_full_name_and_url(self):
+        contact = create_vendor(first_name='Ann', last_name='Lee')
+        self.assertEqual(contact.full_name, 'Ann Lee')
+        self.assertEqual(str(contact), 'Ann Lee')
+        self.assertTrue(contact.get_absolute_url().endswith(f'/{contact.pk}/'))
 
-        self.assertEqual(company.get_vendors()[0], vendor)
+    def test_clean_blank_unique_values(self):
+        contact = Vendor(first_name='A', last_name='B', email='', phone='')
+        contact.clean()
+        self.assertIsNone(contact.email)
+        self.assertIsNone(contact.phone)
 
-    def test_vendor_edited(self):
-        '''
-        Test edited method in Vendor model
-        '''
-        user = get_user_model().objects.create_user(
-                                                username='Xecus',
-                                                password='testpass')
-        company = vendors_models.VendorCompany.objects.create(
-                                                name='New Company')
-        vendor = vendors_models.Vendor.objects.create(
-                                            company=company,
-                                            first_name='Mohamed',
-                                            last_name='Aboel-fotouh', )
-        vendor.edited(user)
+    def test_unique_email(self):
+        company = create_vendor_company()
+        create_vendor(company=company, email='a@b.com')
+        with self.assertRaises(IntegrityError):
+            create_vendor(company=company, email='a@b.com')
 
-        self.assertEqual(vendor.edited_by, user)
-
-    def test_vendor_full_name(self):
-        '''
-        Test full_name method in Vendor model
-        '''
-        company = vendors_models.VendorCompany.objects.create(
-                                            name='New Company')
-        vendor = vendors_models.Vendor.objects.create(
-                                            company=company,
-                                            first_name='Mohamed',
-                                            last_name='Aboel-fotouh', )
-
-        self.assertEqual(
-                        vendor.full_name,
-                        f"{vendor.first_name} {vendor.last_name}")
+    def test_company_protected(self):
+        from django.db.models import ProtectedError
+        contact = create_vendor()
+        with self.assertRaises(ProtectedError):
+            contact.company.delete()

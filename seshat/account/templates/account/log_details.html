@@ -1,0 +1,28 @@
+{% extends 'account/dashboard_base_.html' %}
+{% load i18n %}
+{% block title %}{% trans 'Log entry' %} | {% endblock %}
+{% block dashboard_content %}
+<div class="page-header">
+  <div>
+    <nav aria-label="breadcrumb"><ol class="breadcrumb">
+      <li class="breadcrumb-item"><a href="{% url 'account:LogEntryList' %}">{% trans 'Log entries' %}</a></li>
+      <li class="breadcrumb-item active" aria-current="page">#{{ object.id }}</li>
+    </ol></nav>
+    <h1 class="page-title">{% trans 'Log entry' %} #{{ object.id }}</h1>
+  </div>
+</div>
+<div class="card mb-3">
+  <table class="table table-details">
+    <tr><th scope="row">{% trans 'Level' %}</th><td>{{ object.get_level_display }}</td></tr>
+    <tr><th scope="row">{% trans 'Logger' %}</th><td class="font-mono">{{ object.logger_name }}</td></tr>
+    <tr><th scope="row">{% trans 'Date' %}</th><td>{{ object.create_datetime|date:'DATETIME_FORMAT' }}</td></tr>
+    <tr><th scope="row">{% trans 'Message' %}</th><td>{{ object.msg }}</td></tr>
+  </table>
+</div>
+{% if object.trace %}
+<div class="card">
+  <div class="card-header">{% trans 'Trace' %}</div>
+  <div class="card-body"><pre class="font-mono small mb-0" style="white-space: pre-wrap;">{{ object.trace }}</pre></div>
+</div>
+{% endif %}
+{% endblock %}

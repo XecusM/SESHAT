@@ -1,0 +1,25 @@
+{% load i18n %}
+<div class="table-responsive">
+  <table class="table table-hover">
+    <thead><tr>
+      {% if show_item %}<th>{% trans 'Item' %}</th>{% endif %}
+      <th>{% trans 'Type' %}</th><th>{% trans 'Related to' %}</th><th>{% trans 'Location' %}</th>
+      <th class="num">{% trans 'Quantity' %}</th><th>{% trans 'Notes' %}</th><th>{% trans 'Date' %}</th>
+    </tr></thead>
+    <tbody>
+      {% for move in moves %}
+      <tr>
+        {% if show_item %}<td><a class="fw-semibold" href="{% url 'stock:ItemDetails' pk=move.item_id %}">{{ move.item.code }}</a></td>{% endif %}
+        <td>{% if move.type == 'A' %}<span class="badge badge-success-soft"><i class="fa-solid fa-arrow-down me-1"></i>{{ move.get_type_display }}</span>{% else %}<span class="badge badge-danger-soft"><i class="fa-solid fa-arrow-up me-1"></i>{{ move.get_type_display }}</span>{% endif %}</td>
+        <td>{{ move.get_related_to_display }}</td>
+        <td>{{ move.location }}</td>
+        <td class="num fw-semibold">{{ move.signed_quantity }}</td>
+        <td><small>{{ move.note|default:''|truncatechars:40 }}</small></td>
+        <td class="text-nowrap"><small>{{ move.created_at|date:'SHORT_DATETIME_FORMAT' }}</small></td>
+      </tr>
+      {% empty %}
+      <tr><td colspan="7">{% trans 'No moves yet.' as empty_message %}{% include 'components/_empty.html' with icon='fa-right-left' message=empty_message %}</td></tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</div>

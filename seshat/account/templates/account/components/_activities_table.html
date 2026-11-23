@@ -1,0 +1,25 @@
+{% load i18n %}
+<div class="table-responsive">
+  <table class="table table-hover">
+    <thead>
+      <tr>
+        <th>{% trans 'Activity' %}</th>
+        <th>{% trans 'Details' %}</th>
+        {% if not hide_user %}<th>{% trans 'User' %}</th>{% endif %}
+        <th>{% trans 'Date' %}</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for activity in activities %}
+      <tr>
+        <td><span class="badge badge-soft">{{ activity.get_activity_display }}</span></td>
+        <td>{{ activity.message }}</td>
+        {% if not hide_user %}<td><a href="{% url 'account:UserDetails' pk=activity.user_id %}">{{ activity.user.username }}</a></td>{% endif %}
+        <td class="text-nowrap"><small>{{ activity.created_at|date:'DATETIME_FORMAT' }}</small></td>
+      </tr>
+      {% empty %}
+      <tr><td colspan="4">{% trans 'No activities found.' as empty_message %}{% include 'components/_empty.html' with icon='fa-feather-pointed' message=empty_message %}</td></tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</div>

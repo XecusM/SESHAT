@@ -1,0 +1,22 @@
+{% extends 'account/dashboard_base_.html' %}
+{% load i18n %}
+{% block title %}{{ account.username }} - {% trans 'Permissions' %} | {% endblock %}
+{% block dashboard_content %}
+<div class="page-header">
+  <div>
+    <nav aria-label="breadcrumb"><ol class="breadcrumb">
+      <li class="breadcrumb-item"><a href="{% url 'account:UsersList' %}">{% trans 'Accounts' %}</a></li>
+      <li class="breadcrumb-item"><a href="{% url 'account:UserDetails' pk=account.id %}">{{ account.username }}</a></li>
+      <li class="breadcrumb-item active" aria-current="page">{% trans 'Permissions' %}</li>
+    </ol></nav>
+    <h1 class="page-title">{% blocktrans with name=account.full_name %}Permissions of {{ name }}{% endblocktrans %}</h1>
+    {% if account.is_superuser %}<p class="page-subtitle"><i class="fa-solid fa-crown me-1"></i>{% trans 'Administrators have every permission.' %}</p>{% endif %}
+  </div>
+  <div class="page-actions">
+    {% if perms.account.change_user %}{% if not account.is_superuser or request.user.is_superuser %}
+    <a class="btn btn-primary" href="{% url 'account:EditPermission' pk=account.id %}"><i class="fa-solid fa-pen-to-square me-1"></i>{% trans 'Edit permissions' %}</a>
+    {% endif %}{% endif %}
+  </div>
+</div>
+{% include 'account/components/_permissions.html' with editable=False %}
+{% endblock %}

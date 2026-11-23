@@ -1,0 +1,6 @@
+{% load i18n %}
+<div class="input-group">
+  <span class="input-group-text bg-transparent"><i class="fa-solid fa-magnifying-glass text-muted"></i></span>
+  <input class="form-control" name="search" type="search" placeholder="{% trans 'Search' %}..." value="{{ search|default:'' }}" aria-label="{% trans 'Search' %}">
+  <button class="btn btn-outline-primary" type="submit">{% trans 'Search' %}</button>
+</div>

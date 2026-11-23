@@ -1,99 +1,27 @@
-from django.test import TestCase
+from django.test import SimpleTestCase
 from django.urls import reverse, resolve
 
 from vendor import views
 
 
-class VendorUrlsTest(TestCase):
+class VendorUrlsTest(SimpleTestCase):
     '''
-    Test all urls in the vendor applciation
+    Test the vendor urls
     '''
-    def test_new_company_resolved(self):
-        '''
-        Test new company url
-        '''
-        url = reverse('vendor:company_new')
-        self.assertEquals(
-                        resolve(url).func.view_class,
-                        views.CreateCompany)
 
-    def test_edit_company_resolved(self):
-        '''
-        Test edit company url
-        '''
-        url = reverse('vendor:company_edit', kwargs={'pk': 1})
-        self.assertEquals(
-                        resolve(url).func.view_class,
-                        views.EditCompany)
-
-    def test_company_details_resolved(self):
-        '''
-        Test company details url
-        '''
-        url = reverse('vendor:company_details', kwargs={'pk': 1})
-        self.assertEquals(
-                        resolve(url).func.view_class,
-                        views.CompanyDetails)
-
-    def test_companies_list_resolved(self):
-        '''
-        Test list companies url
-        '''
-        url = reverse('vendor:companies_list')
-        self.assertEquals(
-                        resolve(url).func.view_class,
-                        views.CompaniesList)
-
-    def test_delete_company_resolved(self):
-        '''
-        Test delete company url
-        '''
-        url = reverse('vendor:company_delete', kwargs={'pk': 1})
-        self.assertEquals(
-                        resolve(url).func,
-                        views.company_delete)
-
-    def test_new_vendor_resolved(self):
-        '''
-        Test new vendor url
-        '''
-        url = reverse('vendor:vendor_new', kwargs={'pk': 1})
-        self.assertEquals(
-                        resolve(url).func.view_class,
-                        views.CreateVendor)
-
-    def test_edit_vendor_resolved(self):
-        '''
-        Test edit vendor url
-        '''
-        url = reverse('vendor:vendor_edit', kwargs={'pk': 1})
-        self.assertEquals(
-                        resolve(url).func.view_class,
-                        views.EditVendor)
-
-    def test_vendor_details_resolved(self):
-        '''
-        Test vendor details url
-        '''
-        url = reverse('vendor:vendor_details', kwargs={'pk': 1})
-        self.assertEquals(
-                        resolve(url).func.view_class,
-                        views.VendorDetails)
-
-    def test_vendors_list_resolved(self):
-        '''
-        Test list vendors url
-        '''
-        url = reverse('vendor:vendors_list')
-        self.assertEquals(
-                        resolve(url).func.view_class,
-                        views.VendorsList)
-
-    def test_delete_vendor_resolved(self):
-        '''
-        Test delete vendor url
-        '''
-        url = reverse('vendor:vendor_delete', kwargs={'pk': 1})
-        self.assertEquals(
-                        resolve(url).func,
-                        views.vendor_delete)
+    def test_urls(self):
+        cases = [
+            ('vendor:NewCompany', views.NewCompany, None),
+            ('vendor:EditCompany', views.EditCompany, {'pk': 1}),
+            ('vendor:CompanyDetails', views.CompanyDetails, {'pk': 1}),
+            ('vendor:CompaniesList', views.CompaniesList, None),
+            ('vendor:DeleteCompany', views.delete_company, {'pk': 1}),
+            ('vendor:NewVendor', views.NewVendor, None),
+            ('vendor:EditVendor', views.EditVendor, {'pk': 1}),
+            ('vendor:VendorDetails', views.VendorDetails, {'pk': 1}),
+            ('vendor:VendorsList', views.VendorsList, None),
+            ('vendor:DeleteVendor', views.delete_vendor, {'pk': 1}),
+        ]
+        for name, view, kwargs in cases:
+            match = resolve(reverse(name, kwargs=kwargs))
+            self.assertEqual(getattr(match.func, 'view_class', match.func), view, name)
